@@ -57,7 +57,7 @@ Agents should **query** the checklist, then emit a **finding**. They must not ti
 | `deliverableId` | Drawing or document id |
 | `elementType` | Target element type (e.g. `balcony`) |
 | `requirementKind` | `regulatory`, `guidance` or `office_practice` |
-| `outputKind` | Output document lens: `client-brief`, `report`, `site-plan`, `demolition`, `plans`, `rcp`, `elevations`, `sections`, `details`, `roof-plan`, `schedules`, `specification`, `drawing-standards`, `record` |
+| `outputKind` | Output document kind. The UI lists these under each ARBV stage so planning drawings are not mixed with the contract set. |
 | `itemId` | Repeatable stable item id |
 | `input` | Repeatable available input id. Omitted required inputs are listed as missing. |
 

@@ -266,33 +266,136 @@ export function outputKindForItem(item: ChecklistItem): OutputKind | undefined {
 
 export type OutputLensGroup = {
   kind: OutputKind;
+  stageId: string;
   title: string;
   summary: string;
   items: ChecklistItem[];
 };
 
+export type StagedOutputLensGroup = {
+  stage: Stage;
+  documents: OutputLensGroup[];
+};
+
+const DRAWING_KINDS = [
+  "site-plan",
+  "demolition",
+  "plans",
+  "rcp",
+  "elevations",
+  "sections",
+  "details",
+  "roof-plan",
+  "drawing-standards",
+] as const;
+
+function isDrawingKind(kind: OutputKind): boolean {
+  return (DRAWING_KINDS as readonly string[]).includes(kind);
+}
+
+export function stageDocumentSetLabel(stage: Stage): string {
+  switch (stage.id) {
+    case "pre-design":
+      return "Pre-design";
+    case "concept":
+      return "Concept";
+    case "design-development":
+      return "Design development";
+    case "town-planning":
+      return "Planning";
+    case "documentation":
+      return "Contract documentation";
+    case "tender":
+      return "Tender";
+    case "contract-admin":
+      return "Contract administration";
+    case "practical-completion":
+      return "Practical completion";
+    case "defects-liability":
+      return "Defects liability";
+    case "final-certificate":
+      return "Final certificate";
+    case "post-occupancy":
+      return "Post-occupancy";
+    default:
+      return stage.title;
+  }
+}
+
+function lowerFirst(value: string): string {
+  if (value.length === 0) {
+    return value;
+  }
+  return value.slice(0, 1).toLowerCase() + value.slice(1);
+}
+
+export function stagedDocumentTitle(stage: Stage, kind: OutputKind): string {
+  return `${stageDocumentSetLabel(stage)} ${lowerFirst(outputKindLabel(kind))}`;
+}
+
+export function stagedDocumentSummary(stage: Stage, kind: OutputKind): string {
+  const base = OUTPUT_KIND_META[kind].summary;
+  if (stage.id === "town-planning" && isDrawingKind(kind)) {
+    return `${base} This is the planning application set, not the contract working drawings.`;
+  }
+  if (stage.id === "documentation" && isDrawingKind(kind)) {
+    return `${base} This is the contract / building-permit set, not the town planning drawings.`;
+  }
+  if (stage.id === "concept" && isDrawingKind(kind)) {
+    return `${base} Concept sketches only — not planning or contract drawings.`;
+  }
+  if (stage.id === "design-development" && isDrawingKind(kind)) {
+    return `${base} Design-development drawings before the planning set is frozen.`;
+  }
+  return base;
+}
+
 export function groupedOutputDocuments(
   template: TemplateDocument,
   typology: Typology,
-): OutputLensGroup[] {
+): StagedOutputLensGroup[] {
   const items = itemsForTypology(template.items, typology);
-  const buckets = new Map<OutputKind, ChecklistItem[]>();
-  for (const item of items) {
-    const kind = outputKindForItem(item);
-    if (!kind) {
-      continue;
-    }
-    const list = buckets.get(kind) ?? [];
-    list.push(item);
-    buckets.set(kind, list);
-  }
-  return OUTPUT_KINDS.filter((kind) => (buckets.get(kind) ?? []).length > 0).map(
-    (kind) => ({
-      kind,
-      title: OUTPUT_KIND_META[kind].title,
-      summary: OUTPUT_KIND_META[kind].summary,
-      items: buckets.get(kind) ?? [],
-    }),
+  return template.stages
+    .map((stage) => {
+      const buckets = new Map<OutputKind, ChecklistItem[]>();
+      for (const item of items.filter((entry) => entry.stageId === stage.id)) {
+        const kind = outputKindForItem(item);
+        if (!kind) {
+          continue;
+        }
+        const list = buckets.get(kind) ?? [];
+        list.push(item);
+        buckets.set(kind, list);
+      }
+      const documents = OUTPUT_KINDS.filter(
+        (kind) => (buckets.get(kind) ?? []).length > 0,
+      ).map((kind) => ({
+        kind,
+        stageId: stage.id,
+        title: stagedDocumentTitle(stage, kind),
+        summary: stagedDocumentSummary(stage, kind),
+        items: buckets.get(kind) ?? [],
+      }));
+      return { stage, documents };
+    })
+    .filter((group) => group.documents.length > 0);
+}
+
+export function flattenStagedDocuments(
+  groups: StagedOutputLensGroup[],
+): Array<OutputLensGroup & { stage: Stage }> {
+  return groups.flatMap((group) =>
+    group.documents.map((document) => ({ ...document, stage: group.stage })),
+  );
+}
+
+export function findStagedDocument(
+  groups: StagedOutputLensGroup[],
+  stageId: string,
+  kind: OutputKind,
+): (OutputLensGroup & { stage: Stage }) | undefined {
+  return flattenStagedDocuments(groups).find(
+    (entry) => entry.stageId === stageId && entry.kind === kind,
   );
 }
 

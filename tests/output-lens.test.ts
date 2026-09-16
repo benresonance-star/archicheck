@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { queryChecklistItems } from "../src/lib/agent/query";
 import {
+  flattenStagedDocuments,
   groupedOutputDocuments,
-  itemsGroupedByStage,
   outputKindForItem,
 } from "../src/lib/template/output-lens";
 import { BUNDLED_TEMPLATE } from "../src/lib/template/vic-residential";
@@ -15,10 +15,32 @@ test("every bundled item maps to one output document", () => {
   }
 });
 
-test("document lens lists plans, RCP, elevations, sections, details and spec per typology", () => {
+test("document lens is broken into stages and keeps planning drawings off the contract set", () => {
   for (const typology of ["house", "townhouse", "apartment"] as const) {
     const groups = groupedOutputDocuments(BUNDLED_TEMPLATE, typology);
-    const kinds = groups.map((group) => group.kind);
+    const stageIds = groups.map((group) => group.stage.id);
+    assert.ok(stageIds.includes("town-planning"), `${typology} town-planning`);
+    assert.ok(stageIds.includes("documentation"), `${typology} documentation`);
+
+    const planning = groups.find((group) => group.stage.id === "town-planning");
+    const contract = groups.find((group) => group.stage.id === "documentation");
+    assert.ok(planning);
+    assert.ok(contract);
+
+    const planningPlans = planning.documents.find((doc) => doc.kind === "plans");
+    const contractPlans = contract.documents.find((doc) => doc.kind === "plans");
+    assert.ok(planningPlans, `${typology} planning plans`);
+    assert.ok(contractPlans, `${typology} contract plans`);
+    assert.ok(planningPlans.title.includes("Planning"));
+    assert.ok(contractPlans.title.includes("Contract documentation"));
+    assert.ok(
+      planningPlans.items.every((item) => item.stageId === "town-planning"),
+    );
+    assert.ok(
+      contractPlans.items.every((item) => item.stageId === "documentation"),
+    );
+
+    const kinds = flattenStagedDocuments(groups).map((entry) => entry.kind);
     for (const kind of [
       "client-brief",
       "report",
@@ -33,40 +55,29 @@ test("document lens lists plans, RCP, elevations, sections, details and spec per
     ] as const) {
       assert.ok(kinds.includes(kind), `${typology} ${kind}`);
     }
-    const mapped = groups.flatMap((group) => group.items);
+
+    const mapped = flattenStagedDocuments(groups).flatMap((entry) => entry.items);
     const applicable = itemsForTypology(BUNDLED_TEMPLATE.items, typology);
     assert.equal(mapped.length, applicable.length);
     assert.equal(new Set(mapped.map((item) => item.id)).size, applicable.length);
   }
 });
 
-test("apartment document lens includes BADS plan checks that houses omit", () => {
-  const housePlans = groupedOutputDocuments(BUNDLED_TEMPLATE, "house").find(
-    (group) => group.kind === "plans",
+test("apartment planning plans include BADS checks that houses omit", () => {
+  const housePlans = groupedOutputDocuments(BUNDLED_TEMPLATE, "house")
+    .find((group) => group.stage.id === "concept")
+    ?.documents.find((doc) => doc.kind === "plans");
+  const apartmentPlans = groupedOutputDocuments(BUNDLED_TEMPLATE, "apartment")
+    .find((group) => group.stage.id === "concept")
+    ?.documents.find((doc) => doc.kind === "plans");
+  assert.equal(
+    housePlans?.items.some((item) => item.id === "cd-bads-pos"),
+    false,
   );
-  const apartmentPlans = groupedOutputDocuments(
-    BUNDLED_TEMPLATE,
-    "apartment",
-  ).find((group) => group.kind === "plans");
-  assert.equal(housePlans?.items.some((item) => item.id === "cd-bads-pos"), false);
   assert.equal(
     apartmentPlans?.items.some((item) => item.id === "cd-bads-pos"),
     true,
   );
-});
-
-test("document items stay grouped under their ARBV stage", () => {
-  const plans = groupedOutputDocuments(BUNDLED_TEMPLATE, "house").find(
-    (group) => group.kind === "plans",
-  );
-  assert.ok(plans);
-  const byStage = itemsGroupedByStage(BUNDLED_TEMPLATE, plans.items);
-  assert.ok(byStage.length >= 2);
-  assert.equal(
-    byStage.reduce((sum, group) => sum + group.items.length, 0),
-    plans.items.length,
-  );
-  assert.ok(byStage.every((group) => group.stage.id.length > 0));
 });
 
 test("query can filter by output document kind", () => {

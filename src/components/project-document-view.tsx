@@ -5,9 +5,10 @@ import { AppHeader } from "@/components/app-header";
 import { DocumentChecklist } from "@/components/document-checklist";
 import { loadProject, syncProjectImpacts } from "@/lib/client-store";
 import {
+  findStagedDocument,
+  flattenStagedDocuments,
   groupedOutputDocuments,
   isOutputKind,
-  outputKindLabel,
 } from "@/lib/template/output-lens";
 import {
   openImpactCount,
@@ -17,9 +18,11 @@ import {
 
 export function ProjectDocumentView({
   id,
+  stageId,
   outputKind,
 }: {
   id: string;
+  stageId: string;
   outputKind: string;
 }) {
   const [data, setData] = useState<{
@@ -70,9 +73,12 @@ export function ProjectDocumentView({
   }
 
   const groups = groupedOutputDocuments(template, project.site.typology);
-  const index = groups.findIndex((group) => group.kind === outputKind);
-  const group = groups[index];
-  if (!group) {
+  const flat = flattenStagedDocuments(groups);
+  const index = flat.findIndex(
+    (entry) => entry.stageId === stageId && entry.kind === outputKind,
+  );
+  const group = findStagedDocument(groups, stageId, outputKind);
+  if (!group || index < 0) {
     return (
       <div>
         <AppHeader backHref={`/p/${id}`} />
@@ -83,14 +89,18 @@ export function ProjectDocumentView({
     );
   }
 
-  const prev = groups[index - 1];
-  const next = groups[index + 1];
+  const prev = flat[index - 1];
+  const next = flat[index + 1];
 
   return (
     <div className="pb-[env(safe-area-inset-bottom)]">
-      <AppHeader title={outputKindLabel(outputKind)} backHref={`/p/${project.id}`} />
+      <AppHeader title={group.title} backHref={`/p/${project.id}`} />
       <main className="mx-auto max-w-3xl space-y-4 px-4 py-6">
-        <p className="text-sm text-muted-foreground">{group.summary}</p>
+        <p className="text-sm text-muted-foreground">
+          {String(group.stage.number).padStart(2, "0")} {group.stage.title}
+          {" · "}
+          {group.summary}
+        </p>
         {openImpactCount(project) > 0 ? (
           <p className="text-sm">
             This job has a template impact notice.{" "}
@@ -104,8 +114,12 @@ export function ProjectDocumentView({
           project={project}
           template={template}
           items={group.items}
-          prevHref={prev ? `/p/${project.id}/d/${prev.kind}` : undefined}
-          nextHref={next ? `/p/${project.id}/d/${next.kind}` : undefined}
+          prevHref={
+            prev ? `/p/${project.id}/d/${prev.stageId}/${prev.kind}` : undefined
+          }
+          nextHref={
+            next ? `/p/${project.id}/d/${next.stageId}/${next.kind}` : undefined
+          }
         />
       </main>
     </div>

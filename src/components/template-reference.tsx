@@ -31,7 +31,7 @@ import {
 } from "@/lib/template-reference";
 import {
   groupedOutputDocuments,
-  type OutputLensGroup,
+  type StagedOutputLensGroup,
 } from "@/lib/template/output-lens";
 import { typologyLabel, type ChecklistItem, type Typology } from "@/lib/types";
 import { TYPOLOGY_ORDER, typologyMeta } from "@/lib/typology";
@@ -287,7 +287,7 @@ function DocumentLensLists({
   rememberScroll,
   restoreScroll,
 }: {
-  groups: OutputLensGroup[];
+  groups: StagedOutputLensGroup[];
   typology: Typology;
   ticks: Record<string, boolean>;
   onTicked: (itemId: string, ticked: boolean) => void;
@@ -303,11 +303,12 @@ function DocumentLensLists({
       key={typology}
     >
       {groups.map((group) => {
-        const progress = referenceProgress(group.items, ticks);
+        const stageItems = group.documents.flatMap((document) => document.items);
+        const stageProgress = referenceProgress(stageItems, ticks);
         return (
           <AccordionItem
-            key={group.kind}
-            value={group.kind}
+            key={group.stage.id}
+            value={group.stage.id}
             className="[overflow-anchor:none]"
           >
             <AccordionTrigger
@@ -323,49 +324,83 @@ function DocumentLensLists({
               <span className="flex min-w-0 flex-1 items-center justify-between gap-3 pr-2">
                 <span className="min-w-0">
                   <span className="block font-heading text-lg leading-tight">
-                    {group.title}
+                    {String(group.stage.number).padStart(2, "0")}{" "}
+                    {group.stage.title}
                   </span>
                   <span className="block text-sm font-normal text-muted-foreground">
-                    {group.summary}
+                    {group.stage.summary}
                   </span>
                 </span>
                 <Badge variant="secondary" className="shrink-0">
-                  {progress.done}/{progress.total}
+                  {stageProgress.done}/{stageProgress.total}
                 </Badge>
               </span>
             </AccordionTrigger>
             <AccordionContent>
-              <div className="space-y-2 pb-2">
-                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Associated checklist
-                </p>
-                <ul className="space-y-2">
-                  {group.items.map((item) => {
-                    const stage = BUNDLED_TEMPLATE.stages.find(
-                      (entry) => entry.id === item.stageId,
-                    );
-                    return (
-                      <li key={item.id}>
-                        <ReferenceItem
-                          title={item.title}
-                          detail={item.detail}
-                          required={item.required}
-                          references={item.references}
-                          resources={item.resources}
-                          assessment={item.assessment}
-                          stageLabel={
-                            stage
-                              ? `${String(stage.number).padStart(2, "0")} ${stage.title}`
-                              : undefined
+              <Accordion
+                type="multiple"
+                defaultValue={[]}
+                className="[overflow-anchor:none]"
+              >
+                {group.documents.map((document) => {
+                  const progress = referenceProgress(document.items, ticks);
+                  return (
+                    <AccordionItem
+                      key={`${group.stage.id}-${document.kind}`}
+                      value={`${group.stage.id}-${document.kind}`}
+                      className="[overflow-anchor:none]"
+                    >
+                      <AccordionTrigger
+                        className="min-h-11 py-2 text-base hover:no-underline"
+                        onPointerDown={(event) => {
+                          rememberScroll();
+                          if (event.pointerType !== "mouse") {
+                            event.currentTarget.focus({ preventScroll: true });
                           }
-                          ticked={Boolean(ticks[item.id])}
-                          onTicked={(value) => onTicked(item.id, value)}
-                        />
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
+                        }}
+                        onKeyDown={rememberScroll}
+                      >
+                        <span className="flex min-w-0 flex-1 items-center justify-between gap-3 pr-2">
+                          <span className="min-w-0">
+                            <span className="block font-medium leading-tight">
+                              {document.title}
+                            </span>
+                            <span className="block text-sm font-normal text-muted-foreground">
+                              {document.summary}
+                            </span>
+                          </span>
+                          <Badge variant="outline" className="shrink-0">
+                            {progress.done}/{progress.total}
+                          </Badge>
+                        </span>
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <div className="space-y-2 pb-2">
+                          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                            Associated checklist
+                          </p>
+                          <ul className="space-y-2">
+                            {document.items.map((item) => (
+                              <li key={item.id}>
+                                <ReferenceItem
+                                  title={item.title}
+                                  detail={item.detail}
+                                  required={item.required}
+                                  references={item.references}
+                                  resources={item.resources}
+                                  assessment={item.assessment}
+                                  ticked={Boolean(ticks[item.id])}
+                                  onTicked={(value) => onTicked(item.id, value)}
+                                />
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  );
+                })}
+              </Accordion>
             </AccordionContent>
           </AccordionItem>
         );

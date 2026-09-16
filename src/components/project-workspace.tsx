@@ -165,7 +165,9 @@ function renderProjectLens(
           template={input.template}
           typology={input.project.site.typology}
           answers={input.project.answers}
-          hrefForDocument={(kind) => `/p/${input.project.id}/d/${kind}`}
+          hrefForDocument={(stageId, kind) =>
+            `/p/${input.project.id}/d/${stageId}/${kind}`
+          }
         />
       );
     case "stage":

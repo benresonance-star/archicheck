@@ -48,9 +48,10 @@ export default async function TypologyPage({
         <section className="space-y-3">
           <h2 className="font-heading text-2xl">Generic {meta.title.toLowerCase()} template</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Tick the bundled list as a quick reference, grouped by output
-            document or by ARBV stage. Start a project below when you need
-            notes, attachments and a ZIP.
+            Tick the bundled list as a quick reference, grouped by stage then
+            output document, or by ARBV stage. Planning drawings stay separate
+            from the contract set. Start a project below when you need notes,
+            attachments and a ZIP.
           </p>
           <TemplateReference typology={typology} showStartProject={false} />
         </section>
