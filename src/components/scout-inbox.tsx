@@ -276,14 +276,11 @@ function FindingCard({
       </CardHeader>
       <CardContent className="space-y-3">
         {finding.url ? (
-          <a
-            className="text-sm underline underline-offset-2"
-            href={finding.url}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Open source
-          </a>
+          <Button className="min-h-11 w-full sm:w-auto" asChild>
+            <a href={finding.url} target="_blank" rel="noreferrer">
+              Open source
+            </a>
+          </Button>
         ) : null}
         {stageLinks.length > 0 ? (
           <ul className="space-y-1 text-sm">
