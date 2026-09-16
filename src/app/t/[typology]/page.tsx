@@ -50,7 +50,8 @@ export default async function TypologyPage({
           <p className="text-sm text-muted-foreground leading-relaxed">
             Tick the bundled list as a quick reference. By document uses the
             ARBV stages (01–11) with Plans, Elevations and other outputs under
-            each stage. By stage shows the full stage checklist. Start a
+            each stage. By stage follows the ARBV sequence: each stage lists
+            its own checks, then that stage’s drawings and documents. Start a
             project below when you need notes, attachments and a ZIP.
           </p>
           <TemplateReference typology={typology} showStartProject={false} />

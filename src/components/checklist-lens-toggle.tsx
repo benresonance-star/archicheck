@@ -11,7 +11,7 @@ export function checklistLensSummary(lens: ChecklistLens): string {
     case "document":
       return "The same ARBV stages as the stage list (01–11), with Plans, Elevations and the other outputs under each stage.";
     case "stage":
-      return "Checks grouped by ARBV stage.";
+      return "Each ARBV stage lists its own checks, then the drawings and documents for that stage.";
     default:
       return assertNever(lens, `Unknown checklist lens: ${String(lens)}`);
   }

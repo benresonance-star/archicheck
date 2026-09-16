@@ -33,7 +33,9 @@ export default async function TemplatesPage({
               from construction documents.
             </p>
             <p>
-              <strong>By stage</strong> shows the full checklist.
+              <strong>By stage</strong> follows the ARBV sequence. Each stage
+              lists its own checks, then the drawings and documents for that
+              stage.
             </p>
           </div>
         </section>
