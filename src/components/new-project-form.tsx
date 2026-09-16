@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { createProject } from "@/lib/client-store";
 import type { Site, Typology } from "@/lib/types";
 
 export function NewProjectForm({ typology }: { typology: Typology }) {
@@ -30,19 +31,8 @@ export function NewProjectForm({ typology }: { typology: Typology }) {
     event.preventDefault();
     setPending(true);
     try {
-      const response = await fetch("/api/projects", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ site }),
-      });
-      const data = (await response.json()) as {
-        error?: string;
-        project?: { id: string };
-      };
-      if (!response.ok || !data.project) {
-        throw new Error(data.error ?? "Could not create project");
-      }
-      router.push(`/p/${data.project.id}`);
+      const created = await createProject(site);
+      router.push(`/p/${created.project.id}`);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Could not create");
       setPending(false);

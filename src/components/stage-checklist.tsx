@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { addAttachment, downloadBytes, readAttachment, setAnswer } from "@/lib/client-store";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -107,22 +108,8 @@ function ItemCard({
   async function save(patch: { status?: ItemStatus; notes?: string }) {
     setPending(true);
     try {
-      const response = await fetch(
-        `/api/projects/${project.id}/answers/${item.id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(patch),
-        },
-      );
-      const data = (await response.json()) as {
-        error?: string;
-        project?: ProjectDocument;
-      };
-      if (!response.ok || !data.project) {
-        throw new Error(data.error ?? "Could not save");
-      }
-      onProject(data.project);
+      const next = await setAnswer(project.id, item.id, patch);
+      onProject(next);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Could not save");
     } finally {
@@ -133,22 +120,15 @@ function ItemCard({
   async function upload(file: File) {
     setPending(true);
     try {
-      const form = new FormData();
-      form.set("file", file);
-      form.set("itemId", item.id);
-      const response = await fetch(`/api/projects/${project.id}/attachments`, {
-        method: "POST",
-        body: form,
+      const next = await addAttachment({
+        projectId: project.id,
+        itemId: item.id,
+        filename: file.name,
+        mimeType: file.type,
+        bytes: new Uint8Array(await file.arrayBuffer()),
       });
-      const data = (await response.json()) as {
-        error?: string;
-        project?: ProjectDocument;
-      };
-      if (!response.ok || !data.project) {
-        throw new Error(data.error ?? "Upload failed");
-      }
-      onProject(data.project);
-      toast.success("Attachment stored in the project JSON package");
+      onProject(next);
+      toast.success("Attachment stored in the project package");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Upload failed");
     } finally {
@@ -224,12 +204,22 @@ function ItemCard({
             <ul className="space-y-1 text-sm">
               {files.map((file) => (
                 <li key={file.id}>
-                  <a
+                  <button
+                    type="button"
                     className="underline underline-offset-2"
-                    href={`/api/projects/${project.id}/attachments/${file.id}`}
+                    onClick={() => {
+                      void (async () => {
+                        const row = await readAttachment(project.id, file.id);
+                        downloadBytes(
+                          file.filename,
+                          new Uint8Array(row.bytes),
+                          file.mimeType,
+                        );
+                      })();
+                    }}
                   >
                     {file.filename}
-                  </a>{" "}
+                  </button>{" "}
                   <span className="text-muted-foreground">
                     ({file.size} bytes)
                   </span>

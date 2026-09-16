@@ -2,13 +2,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AppHeader } from "@/components/app-header";
 import { StageIndex } from "@/components/stage-index";
+import { TypologyProjectList } from "@/components/typology-project-list";
 import { Button } from "@/components/ui/button";
-import { listProjects } from "@/lib/store";
 import { BUNDLED_TEMPLATE } from "@/lib/template/vic-residential";
 import { itemsForTypology } from "@/lib/types";
 import { parseTypologyParam, typologyMeta } from "@/lib/typology";
-
-export const dynamic = "force-dynamic";
 
 export default async function TypologyPage({
   params,
@@ -21,9 +19,6 @@ export default async function TypologyPage({
     notFound();
   }
   const meta = typologyMeta(typology);
-  const projects = (await listProjects()).filter(
-    (project) => project.typology === typology,
-  );
   const itemCount = itemsForTypology(BUNDLED_TEMPLATE.items, typology).length;
 
   return (
@@ -52,31 +47,7 @@ export default async function TypologyPage({
         </section>
         <section className="space-y-3">
           <h2 className="font-heading text-2xl">Projects</h2>
-          {projects.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              None yet. Stages below are the Victorian process for this
-              typology — start a project to tick them off.
-            </p>
-          ) : (
-            <ul className="space-y-2">
-              {projects.map((project) => (
-                <li key={project.id}>
-                  <Link
-                    href={`/p/${project.id}`}
-                    className="flex min-h-14 items-center justify-between rounded-xl border border-border bg-card px-4"
-                  >
-                    <span>
-                      <span className="block font-medium">{project.name}</span>
-                      <span className="text-xs text-muted-foreground">
-                        rev {project.revision} · {project.done}/{project.total}
-                      </span>
-                    </span>
-                    <span className="text-sm">Open</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
+          <TypologyProjectList typology={typology} />
         </section>
         <section className="space-y-3">
           <h2 className="font-heading text-2xl">Stages</h2>

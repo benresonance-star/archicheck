@@ -6,6 +6,7 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
+import { importProjectZip } from "@/lib/client-store";
 
 export function AppHeader({
   title,
@@ -21,21 +22,10 @@ export function AppHeader({
   async function onImport(file: File) {
     setImporting(true);
     try {
-      const form = new FormData();
-      form.set("file", file);
-      const response = await fetch("/api/import", { method: "POST", body: form });
-      const data = (await response.json()) as {
-        error?: string;
-        project?: { id: string };
-      };
-      if (!response.ok) {
-        throw new Error(data.error ?? "Import failed");
-      }
-      toast.success("Package restored");
-      if (data.project?.id) {
-        router.push(`/p/${data.project.id}`);
-        router.refresh();
-      }
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      const { project } = await importProjectZip(bytes);
+      toast.success("Package restored on this device");
+      router.push(`/p/${project.id}`);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Import failed");
     } finally {

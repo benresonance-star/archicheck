@@ -32,6 +32,6 @@ In the UI: **Export ZIP** on a project, then **Import ZIP** on a fresh install (
 
 Each stage has a named Grok Bot brief (copy the first task). Bots must not lodge permits or change the JSON except as a proposed patch.
 
-## Storage
+Projects live **on the device** (IndexedDB JSON). The ZIP is the portable archive (manifest, project, template, attachments). Server files under `data/projects` are only used by the Node test harness.
 
-Projects live as JSON under `data/projects/{id}/`. The ZIP is what you keep.
+To put this on the public internet: create a GitHub repo (Create repo in Cursor), then connect that repo to Vercel. Projects stay on each phone; Export ZIP to copy them.
