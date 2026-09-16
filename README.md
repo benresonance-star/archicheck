@@ -38,7 +38,7 @@ The home page and **Templates** (`/templates`) show the bundled house, townhouse
 
 The **home page** has a statewide noticeboard. **Scout process** (`/scout`) is where you change sites, cadence (1 / 7 / 14 / 28 days) and scout type: Cursor in-app, Grok Bot, or another person/process.
 
-Default sites include NCC (BPC and ABCB), ARBV, AIA Victorian Chapter, Master Builders Victoria, HIA, BPC news, planning schemes, Townhouse Code, Better Apartments, the developer bond page and the Gazette. Each source states what it looks for. You can disable, edit URLs, or add https sites.
+Default sites include NCC 2025 (BPC and ABCB), ARBV, AIA Victorian Chapter, Master Builders Victoria, HIA, BPC news, planning schemes, Townhouse Code, Better Apartments, the developer bond page and the Gazette. Each source states what it looks for. You can disable, edit URLs, or add https sites.
 
 Each **project** still has **Code scout** for that job’s municipality.
 

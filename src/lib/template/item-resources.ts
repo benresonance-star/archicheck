@@ -62,12 +62,19 @@ const BUILDING_REGS = link(
   "Building Regulations 2018 (Vic)",
   "https://www.legislation.vic.gov.au/in-force/statutory-rules/building-regulations-2018/007",
 );
-const NCC = link("NCC (ABCB)", "https://ncc.abcb.gov.au/");
+const NCC2025 = link(
+  "NCC 2025 (ABCB)",
+  "https://ncc.abcb.gov.au/editions/ncc-2025/adopted",
+);
+const NCC_CONDENSATION = link(
+  "NCC 2025 condensation changes",
+  "https://ncc.abcb.gov.au/ncc-2025/ncc-2025-key-changes/ncc-2025-condensation-mitigation-changes",
+);
 const NATHERS = link("NatHERS", "https://www.nathers.gov.au/");
 const BPC = link("Building and Plumbing Commission", "https://www.vba.vic.gov.au/");
 const BPC_NCC = link(
-  "NCC 2022 in Victoria (BPC)",
-  "https://www.vba.vic.gov.au/building/regulatory-framework/ncc-2022",
+  "NCC 2025 Victorian variations (BPC)",
+  "https://www.vba.vic.gov.au/building/regulatory-framework/ncc-2022/ncc-2025-amended-variations",
 );
 const DBC = link(
   "Domestic Building Contracts Act 1995 (Vic)",
@@ -132,13 +139,13 @@ export const ITEM_RESOURCES: Record<string, ChecklistResource[]> = {
   "cd-bads-depth": [BADS, CL58, CL5507],
   "cd-bads-setback": [BADS, CL58, CL5507],
   "cd-bads-storage": [BADS, CL58, CL5507],
-  "cd-energy": [NCC, NATHERS],
-  "cd-livable": [NCC, BPC_NCC],
+  "cd-energy": [NCC2025, NATHERS, BPC_NCC],
+  "cd-livable": [NCC2025, BPC_NCC],
   "cd-parking": [CL5206],
   "cd-signoff": [ARBV_WORK],
   "dd-gas": [PLANNING_VIC, VPP],
   "dd-consultants": [ARBV, ARCHITECTS_ACT],
-  "dd-nathers": [NATHERS, NCC],
+  "dd-nathers": [NATHERS, NCC2025],
   "dd-storm": [CL5318, MW],
   "dd-amenity": [CL54, CL55],
   "dd-landscape": [CL55, CL58],
@@ -165,13 +172,13 @@ export const ITEM_RESOURCES: Record<string, ChecklistResource[]> = {
   "tp-permit": [PE_ACT],
   "tp-subdivision": [SUBDIV],
   "doc-tp-match": [PE_ACT, BUILDING_ACT],
-  "doc-working": [NCC, BUILDING_ACT],
-  "doc-ncc": [NCC, BPC_NCC],
-  "doc-energy": [NATHERS, NCC],
-  "doc-livable": [NCC],
-  "doc-condensation": [NCC],
-  "doc-structure": [NCC, BUILDING_ACT],
-  "doc-waterproofing": [STANDARDS],
+  "doc-working": [NCC2025, BUILDING_ACT],
+  "doc-ncc": [NCC2025, BPC_NCC],
+  "doc-energy": [NATHERS, NCC2025],
+  "doc-livable": [NCC2025],
+  "doc-condensation": [NCC_CONDENSATION, NCC2025],
+  "doc-structure": [NCC2025, BUILDING_ACT],
+  "doc-waterproofing": [STANDARDS, NCC2025],
   "doc-part5": [BUILDING_REGS],
   "doc-manual": [BUILDING_REGS, BUILDING_ACT],
   "tn-set": [DBC, CONSUMER],
@@ -201,8 +208,8 @@ export const ITEM_RESOURCES: Record<string, ChecklistResource[]> = {
   "fc-issue": [DBC, CONSUMER],
   "fc-security": [DBC, SOP],
   "fc-archive": [ARBV_WORK, ARCHITECTS_ACT],
-  "poe-survey": [ARBV, NCC],
-  "poe-energy": [NATHERS, NCC],
+  "poe-survey": [ARBV, NCC2025],
+  "poe-energy": [NATHERS, NCC2025],
   "poe-landscape": [CL55, CL58],
   "poe-lessons": [ARBV_WORK],
 };

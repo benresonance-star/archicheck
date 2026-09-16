@@ -2,10 +2,10 @@
   "format": "vic-arch-checklist-template",
   "formatVersion": "1.0.0",
   "id": "vic-residential",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "title": "Victoria residential — houses, townhouses and apartments",
   "jurisdiction": "Victoria, Australia",
-  "description": "ARBV-aligned stages from pre-design through post-occupancy, with Clause 54 / 55 / 58, Better Apartments Design Standards (BADS) on apartment items, NCC 2022 (7-star and livable housing from 1 May 2024), and apartment developer-bond notes.",
+  "description": "ARBV-aligned stages from pre-design through post-occupancy, with Clause 54 / 55 / 58, Better Apartments Design Standards (BADS) on apartment items, NCC 2025 (in force in Victoria from 1 May 2026), and apartment developer-bond notes.",
   "stages": [
     {
       "id": "pre-design",
@@ -35,7 +35,7 @@
       "id": "documentation",
       "number": 5,
       "title": "Construction documentation",
-      "summary": "Working drawings and specifications that match endorsed planning drawings and NCC 2022 for a building permit."
+      "summary": "Working drawings and specifications that match endorsed planning drawings and NCC 2025 for a building permit."
     },
     {
       "id": "tender",
@@ -747,7 +747,7 @@
       "id": "cd-energy",
       "stageId": "concept",
       "title": "Orientation for 7-star NatHERS",
-      "detail": "Lock living-room solar access, glazing areas, shading and thermal mass so a 7-star NatHERS outcome is plausible. Victoria requires NCC 2022 energy provisions from 1 May 2024.",
+      "detail": "Lock living-room solar access, glazing areas, shading and thermal mass so a 7-star NatHERS outcome is plausible. Victoria’s 7-star and whole-of-home requirements continue under NCC 2025, in force from 1 May 2026.",
       "appliesTo": [
         "house",
         "townhouse",
@@ -755,17 +755,21 @@
       ],
       "required": true,
       "references": [
-        "NCC 2022",
-        "NatHERS 7-star (Vic from 1 May 2024)"
+        "NCC 2025",
+        "NatHERS 7-star (Vic)"
       ],
       "resources": [
         {
-          "label": "NCC (ABCB)",
-          "url": "https://ncc.abcb.gov.au/"
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
         },
         {
           "label": "NatHERS",
           "url": "https://www.nathers.gov.au/"
+        },
+        {
+          "label": "NCC 2025 Victorian variations (BPC)",
+          "url": "https://www.vba.vic.gov.au/building/regulatory-framework/ncc-2022/ncc-2025-amended-variations"
         }
       ],
       "grokbotId": "bot-concept"
@@ -782,17 +786,17 @@
       ],
       "required": true,
       "references": [
-        "NCC 2022 Livable Housing Design",
-        "VBA accessibility and energy fact sheet"
+        "NCC 2025 Livable Housing Design",
+        "ABCB Livable Housing Design Standard"
       ],
       "resources": [
         {
-          "label": "NCC (ABCB)",
-          "url": "https://ncc.abcb.gov.au/"
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
         },
         {
-          "label": "NCC 2022 in Victoria (BPC)",
-          "url": "https://www.vba.vic.gov.au/building/regulatory-framework/ncc-2022"
+          "label": "NCC 2025 Victorian variations (BPC)",
+          "url": "https://www.vba.vic.gov.au/building/regulatory-framework/ncc-2022/ncc-2025-amended-variations"
         }
       ],
       "grokbotId": "bot-concept"
@@ -908,7 +912,7 @@
       "required": true,
       "references": [
         "NatHERS",
-        "NCC 2022 energy"
+        "NCC 2025 energy"
       ],
       "resources": [
         {
@@ -916,8 +920,8 @@
           "url": "https://www.nathers.gov.au/"
         },
         {
-          "label": "NCC (ABCB)",
-          "url": "https://ncc.abcb.gov.au/"
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
         }
       ],
       "grokbotId": "bot-design-development"
@@ -1203,7 +1207,7 @@
       "references": [
         "Better Apartments Design Standards",
         "Clause 58.05-1",
-        "NCC 2022 Livable Housing Design"
+        "NCC 2025 Livable Housing Design"
       ],
       "resources": [
         {
@@ -1599,12 +1603,12 @@
       "required": true,
       "references": [
         "Building Act 1993 (Vic)",
-        "NCC 2022"
+        "NCC 2025"
       ],
       "resources": [
         {
-          "label": "NCC (ABCB)",
-          "url": "https://ncc.abcb.gov.au/"
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
         },
         {
           "label": "Building Act 1993 (Vic)",
@@ -1616,8 +1620,8 @@
     {
       "id": "doc-ncc",
       "stageId": "documentation",
-      "title": "NCC 2022 compliance notes",
-      "detail": "Classify the building (Class 1a / 1b / 2 / 7a carpark etc.), document performance solutions, fire, moisture, energy and accessibility.",
+      "title": "NCC 2025 compliance notes",
+      "detail": "Classify the building (Class 1a / 1b / 2 / 7a carpark etc.) and document performance solutions, fire, moisture, energy and accessibility against NCC 2025, in force in Victoria from 1 May 2026. Building work under a permit existing immediately before that date stays on the previous requirements unless the owner and relevant building surveyor agree to apply NCC 2025 (Building Act s 10). Plumbing: PCA 2025, including lead-free WaterMark products.",
       "appliesTo": [
         "house",
         "townhouse",
@@ -1625,17 +1629,17 @@
       ],
       "required": true,
       "references": [
-        "NCC 2022",
-        "Building Act 1993"
+        "NCC 2025",
+        "Building Act 1993 s 10"
       ],
       "resources": [
         {
-          "label": "NCC (ABCB)",
-          "url": "https://ncc.abcb.gov.au/"
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
         },
         {
-          "label": "NCC 2022 in Victoria (BPC)",
-          "url": "https://www.vba.vic.gov.au/building/regulatory-framework/ncc-2022"
+          "label": "NCC 2025 Victorian variations (BPC)",
+          "url": "https://www.vba.vic.gov.au/building/regulatory-framework/ncc-2022/ncc-2025-amended-variations"
         }
       ],
       "grokbotId": "bot-documentation"
@@ -1644,7 +1648,7 @@
       "id": "doc-energy",
       "stageId": "documentation",
       "title": "Final NatHERS 7-star and whole-of-home",
-      "detail": "Final energy report for the building permit application lodged after 1 May 2024.",
+      "detail": "Final energy report for the building permit. New permits: NCC 2025 energy (7-star fabric plus whole-of-home). Permits existing before 1 May 2026 may remain on NCC 2022 under Building Act s 10.",
       "appliesTo": [
         "house",
         "townhouse",
@@ -1652,7 +1656,7 @@
       ],
       "required": true,
       "references": [
-        "NCC 2022",
+        "NCC 2025",
         "NatHERS"
       ],
       "resources": [
@@ -1661,8 +1665,8 @@
           "url": "https://www.nathers.gov.au/"
         },
         {
-          "label": "NCC (ABCB)",
-          "url": "https://ncc.abcb.gov.au/"
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
         }
       ],
       "grokbotId": "bot-documentation"
@@ -1671,7 +1675,7 @@
       "id": "doc-livable",
       "stageId": "documentation",
       "title": "Livable housing details",
-      "detail": "Dimension step-free paths, 850 mm clear entries, sanitary facilities and adaptable bathrooms. Apartments: identify the 50% of dwellings that meet Design A or B.",
+      "detail": "Dimension step-free paths, 850 mm clear entries, sanitary facilities and adaptable bathrooms to the ABCB Livable Housing Design Standard (NCC 2025 Part H8). Apartments: identify the 50% of dwellings that meet Design A or B.",
       "appliesTo": [
         "house",
         "townhouse",
@@ -1679,12 +1683,12 @@
       ],
       "required": true,
       "references": [
-        "NCC 2022 Livable Housing Design"
+        "NCC 2025 Livable Housing Design"
       ],
       "resources": [
         {
-          "label": "NCC (ABCB)",
-          "url": "https://ncc.abcb.gov.au/"
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
         }
       ],
       "grokbotId": "bot-documentation"
@@ -1693,7 +1697,7 @@
       "id": "doc-condensation",
       "stageId": "documentation",
       "title": "Condensation management",
-      "detail": "Detail vapour control, roof and wall ventilation, and wet-area ventilation per NCC 2022 condensation provisions.",
+      "detail": "Detail climate-zone vapour permeance, wall membranes, and roof ventilation to NCC 2025. Most of Victoria is climate zone 6: a drained and ventilated wall cavity is required (also zones 7 and 8). Roof ventilation depends on whether insulation is parallel to the roof plane.",
       "appliesTo": [
         "house",
         "townhouse",
@@ -1701,12 +1705,17 @@
       ],
       "required": true,
       "references": [
-        "NCC 2022 condensation"
+        "NCC 2025 condensation",
+        "Housing Provisions Part 10.8"
       ],
       "resources": [
         {
-          "label": "NCC (ABCB)",
-          "url": "https://ncc.abcb.gov.au/"
+          "label": "NCC 2025 condensation changes",
+          "url": "https://ncc.abcb.gov.au/ncc-2025/ncc-2025-key-changes/ncc-2025-condensation-mitigation-changes"
+        },
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
         }
       ],
       "grokbotId": "bot-documentation"
@@ -1724,12 +1733,12 @@
       "required": true,
       "references": [
         "Building Act 1993 (Vic)",
-        "NCC 2022"
+        "NCC 2025"
       ],
       "resources": [
         {
-          "label": "NCC (ABCB)",
-          "url": "https://ncc.abcb.gov.au/"
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
         },
         {
           "label": "Building Act 1993 (Vic)",
@@ -1742,7 +1751,7 @@
       "id": "doc-waterproofing",
       "stageId": "documentation",
       "title": "Waterproofing and wet areas",
-      "detail": "Specify AS 3740 wet-area systems, balcony membranes, and inspection hold points.",
+      "detail": "Specify AS 3740 wet-area systems, inspection hold points, and AS 4654 external waterproofing for roofs, balconies and terraces over habitable rooms (NCC 2025 Part H2).",
       "appliesTo": [
         "house",
         "townhouse",
@@ -1750,12 +1759,18 @@
       ],
       "required": true,
       "references": [
-        "AS 3740"
+        "AS 3740",
+        "AS 4654",
+        "NCC 2025 Part H2"
       ],
       "resources": [
         {
           "label": "Standards Australia",
           "url": "https://www.standards.org.au/"
+        },
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
         }
       ],
       "grokbotId": "bot-documentation"
@@ -2503,7 +2518,7 @@
       "required": true,
       "references": [
         "ARBV Code of Professional Conduct",
-        "NCC 2022 energy and condensation intent"
+        "NCC 2025 energy and condensation intent"
       ],
       "resources": [
         {
@@ -2511,8 +2526,8 @@
           "url": "https://www.arbv.vic.gov.au/"
         },
         {
-          "label": "NCC (ABCB)",
-          "url": "https://ncc.abcb.gov.au/"
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
         }
       ],
       "grokbotId": "bot-post-occupancy"
@@ -2529,8 +2544,8 @@
       ],
       "required": true,
       "references": [
-        "NCC 2022",
-        "NatHERS 7-star (Vic from 1 May 2024)"
+        "NCC 2025",
+        "NatHERS 7-star (Vic)"
       ],
       "resources": [
         {
@@ -2538,8 +2553,8 @@
           "url": "https://www.nathers.gov.au/"
         },
         {
-          "label": "NCC (ABCB)",
-          "url": "https://ncc.abcb.gov.au/"
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
         }
       ],
       "grokbotId": "bot-post-occupancy"
@@ -2668,8 +2683,8 @@
       "name": "Working",
       "title": "Documentation checker",
       "stageId": "documentation",
-      "description": "Diffs the building-permit set against endorsed planning drawings and NCC 2022 energy, livable housing and condensation.",
-      "firstTask": "Compare notes in the project JSON against NCC 2022 items (7-star, livable housing, condensation, waterproofing). List gaps that would stall a Victorian building permit. Do not issue drawings.",
+      "description": "Diffs the building-permit set against endorsed planning drawings and NCC 2025 energy, livable housing and condensation.",
+      "firstTask": "Compare notes in the project JSON against NCC 2025 items (7-star, livable housing, condensation, waterproofing). List gaps that would stall a Victorian building permit. Note Building Act s 10 if a pre-1 May 2026 permit still sits on NCC 2022. Do not issue drawings.",
       "plugins": [
         "web",
         "files"
@@ -2783,5 +2798,5 @@
       ]
     }
   ],
-  "checksum": "daef121156e1ee1c5db6bb5b506bb411c07870814ad4db31c903e7c1d1960e03"
+  "checksum": "5f8f8bd779ad0bec517a737a6e17a0ecc505d538151688ee1c2938bb4c250812"
 }

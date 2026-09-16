@@ -51,13 +51,13 @@ export const DEFAULT_WATCH_SOURCES: WatchSource[] = [
   }),
   builtin({
     id: "ncc-vic",
-    title: "NCC 2022 in Victoria (BPC)",
-    url: "https://www.vba.vic.gov.au/building/regulatory-framework/ncc-2022",
+    title: "NCC 2025 in Victoria (BPC)",
+    url: "https://www.vba.vic.gov.au/building/regulatory-framework/ncc-2022/ncc-2025-amended-variations",
     category: "ncc",
-    itemIds: ["cd-energy", "doc-ncc", "doc-energy", "doc-livable", "doc-condensation"],
-    flag: "Victorian NCC 2022 commencement, 7-star NatHERS, livable housing and condensation / Vic variations.",
+    itemIds: ["cd-energy", "doc-ncc", "doc-energy", "doc-livable", "doc-condensation", "doc-waterproofing"],
+    flag: "Victorian NCC 2025 (from 1 May 2026): 7-star NatHERS, livable housing, condensation cavities and Vic variations.",
     proposedDetail:
-      "Victorian NCC 2022 guidance has changed. Confirm 7-star NatHERS, whole-of-home, livable housing and condensation provisions still match the building-permit set.",
+      "Victorian NCC 2025 guidance has changed. Confirm 7-star NatHERS, whole-of-home, livable housing, condensation and waterproofing still match the building-permit set, and whether Building Act s 10 keeps an older permit on NCC 2022.",
     appliesTo: ALL,
   }),
   builtin({
@@ -66,9 +66,9 @@ export const DEFAULT_WATCH_SOURCES: WatchSource[] = [
     url: "https://ncc.abcb.gov.au/",
     category: "ncc",
     itemIds: ["cd-energy", "doc-ncc", "doc-energy"],
-    flag: "National NCC editions, adoption dates and ABCB notices that Victoria may pick up.",
+    flag: "National NCC editions. Victoria’s in-force edition is NCC 2025 from 1 May 2026.",
     proposedDetail:
-      "ABCB has updated NCC guidance. Confirm which edition and Victorian variations apply to this permit set before freezing documentation.",
+      "ABCB has updated NCC guidance. Confirm NCC 2025 and the Victorian variations apply to this permit set before freezing documentation.",
     appliesTo: ALL,
   }),
   builtin({
@@ -76,10 +76,10 @@ export const DEFAULT_WATCH_SOURCES: WatchSource[] = [
     title: "NCC 2025 hub (ABCB)",
     url: "https://ncc.abcb.gov.au/ncc-2025",
     category: "ncc",
-    itemIds: ["cd-energy", "doc-ncc", "doc-energy"],
-    flag: "NCC 2025 release, notices and state/territory adoption dates that Victoria may follow.",
+    itemIds: ["cd-energy", "doc-ncc", "doc-energy", "doc-condensation", "doc-waterproofing"],
+    flag: "NCC 2025 in-force edition, ABCB notices and Victorian adoption (1 May 2026).",
     proposedDetail:
-      "The NCC 2025 hub has changed. Confirm Victorian adoption timing before treating NCC 2022 as the last word on this permit set.",
+      "The NCC 2025 hub has changed. Confirm the in-force Victorian edition and variations before freezing the building-permit set. New permits use NCC 2025; Building Act s 10 may keep a pre-1 May 2026 permit on NCC 2022.",
     appliesTo: ALL,
   }),
   builtin({

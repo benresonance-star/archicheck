@@ -28,7 +28,7 @@ export function typologyMeta(typology: Typology): TypologyMeta {
         notes: [
           "Garden area and neighbourhood character in GRZ/NRZ",
           "Report and consent if Part 5 siting is varied without a planning permit",
-          "NCC 2022 7-star NatHERS and livable housing from 1 May 2024",
+          "NCC 2025 (from 1 May 2026): 7-star NatHERS, livable housing, condensation cavities in climate zone 6+",
         ],
       };
     case "townhouse":
@@ -43,6 +43,7 @@ export function typologyMeta(typology: Typology): TypologyMeta {
           "Tree canopy 10% (≤1,000 m²) or 20% (>1,000 m²)",
           "Subdivision, common property and owners corporation",
           "Almost always a planning permit plus a building permit",
+          "NCC 2025 from 1 May 2026, including 7-star and condensation cavities",
         ],
       };
     case "apartment":
@@ -55,7 +56,7 @@ export function typologyMeta(typology: Typology): TypologyMeta {
         nccClass: "Class 2",
         notes: [
           "BADS: Clause 55.07 under 5 storeys, Clause 58 at 5+ storeys",
-          "Livable housing on at least 50% of dwellings",
+          "Livable housing on at least 50% of dwellings (NCC 2025)",
           "Wind, waste, acoustic and communal open space as storeys increase",
           "Occupancy permit before residents move in",
         ],

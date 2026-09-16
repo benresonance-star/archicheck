@@ -168,6 +168,11 @@ test("bundled watch list includes NCC, ARBV, AIA and builders associations", () 
   assert.ok(ids.includes("ncc-vic"));
   assert.ok(ids.includes("ncc-abcb"));
   assert.ok(ids.includes("ncc-abcb-2025"));
+  assert.ok(
+    settings.sources
+      .find((source) => source.id === "ncc-vic")
+      ?.url.includes("ncc-2025"),
+  );
   assert.ok(ids.includes("vic-building-regs"));
   assert.ok(ids.includes("arbv-process"));
   assert.ok(ids.includes("aia-vic"));
