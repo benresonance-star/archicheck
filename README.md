@@ -22,11 +22,7 @@ npm run dev
 
 Open [http://127.0.0.1:43181](http://127.0.0.1:43181) on the same machine.
 
-This app is used on iPhone. **Localhost is not visible there.** After each change we publish a public Vercel URL (temporary deploy to claim, or the GitHub-connected production URL once that exists).
-
-```bash
-npx vercel deploy --temporary --yes --prod
-```
+iPhone cannot open localhost. Production is **https://archicheck-gules.vercel.app**, deployed from [github.com/benresonance-star/archicheck](https://github.com/benresonance-star/archicheck). Push to `main` and Vercel rebuilds that URL.
 
 ## Acceptance test
 
@@ -52,4 +48,4 @@ Each stage has a named Grok Bot brief (copy the first task). Bots must not lodge
 
 Projects live **on the device** (IndexedDB JSON). The ZIP is the portable archive (manifest, project, template, attachments). Server files under `data/projects` are only used by the Node test harness.
 
-Public hosting: push `main` to GitHub, then connect that repo in Vercel so production updates on every push. Until GitHub exists, use the temporary Vercel deploy above and claim it.
+Source: [github.com/benresonance-star/archicheck](https://github.com/benresonance-star/archicheck). Production: [archicheck-gules.vercel.app](https://archicheck-gules.vercel.app).

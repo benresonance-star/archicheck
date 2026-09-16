@@ -9,7 +9,7 @@ The owner uses this app on iPhone. Cursor localhost Preview (`127.0.0.1`) is not
 
 After every change they should be able to see:
 
-1. Commit and push the working branch.
-2. If a **GitHub** remote exists, push `main` there. When that repo is connected to Vercel, send the **same stable production URL** (not a new temporary hostname).
-3. If GitHub is missing or Vercel is not git-linked, run `npx vercel deploy --temporary --yes --prod` and send the `https://temporary-*.vercel.app` URL **and** the claim link. Never tell them to open localhost.
+1. Commit and push `main` to GitHub (`https://github.com/benresonance-star/archicheck`). Vercel deploys from that repo.
+2. Send the **stable production URL** https://archicheck-gules.vercel.app (not a new temporary hostname, not localhost).
+3. Only if the git link is broken, run `npx vercel deploy --temporary --yes --prod` and send that URL **and** the claim link.
 4. Put the **public** https URL in the Preview card, not `127.0.0.1`.
