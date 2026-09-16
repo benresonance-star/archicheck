@@ -36,6 +36,8 @@ The **Templates** header link (`/templates`) shows the bundled house, townhouse 
 
 Each deliverable is a compact **browse** list (title + tick). Tapping a title opens a **requirement** sheet for understanding and **Audit** — the list does not expand in place. Signals such as Evidence missing sit on the row only when they are not To do. Ticks stay on the device; they are not a project ZIP.
 
+**Reorder / add** on a project edits that job’s template snapshot only (`job-…` ids, Job badge). Answers stay in the ZIP if a check is removed. The same control on **Templates** drafts the live template; **Review and publish** bumps the version and fans out impact notices. Job-only checks can be proposed for the live template from the requirement sheet. Agents still cannot silently rewrite ticks or the approved template.
+
 ## Code scout
 
 The **home page** has a statewide noticeboard. **Scout process** (`/scout`) is where you change sites, cadence (1 / 7 / 14 / 28 days) and scout type: Cursor in-app, Grok Bot, or another person/process.

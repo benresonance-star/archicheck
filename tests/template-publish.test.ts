@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { applyProposedToTemplate } from "../src/lib/scout/apply-wording";
 import type { ScoutFinding } from "../src/lib/scout/types";
+import { changeFromAddedItem, changeFromRemovedItem } from "../src/lib/template/checklist-crud";
 import {
   adoptSelected,
   bumpPatchVersion,
@@ -310,4 +311,76 @@ test("unselected items keep their previous wording and status", () => {
   );
   assert.equal(adopted.project.answers["tp-need"].status, "in_progress");
   assert.equal(adopted.project.impacts?.[0].changes[1].adopted, false);
+});
+
+test("adopting a remove drops the item and keeps the answer", () => {
+  const current = template([
+    item("pd-planning-context", "old wording"),
+    item("keep", "keep wording"),
+  ]);
+  const published = template([item("keep", "keep wording")]);
+  const job = projectDoc("house");
+  const change = changeFromRemovedItem(current.items[0]!, 0);
+  const notice = {
+    id: "66666666-6666-4666-8666-666666666666",
+    releaseId: "55555555-5555-4555-8555-555555555555",
+    findingId: "f",
+    sourceTitle: "Office",
+    sourceUrl: "https://example.test/office",
+    fromVersion: "1.0.5",
+    toVersion: "1.0.6",
+    publishedAt: "2026-09-16T01:00:00.000Z",
+    status: "open" as const,
+    changes: [{ ...change, adopted: false }],
+  };
+  job.impacts = [notice];
+  const adopted = adoptSelected({
+    project: job,
+    template: current,
+    publishedTemplate: published,
+    notice,
+    selectedItemIds: ["pd-planning-context"],
+    now: "2026-09-16T02:00:00.000Z",
+  });
+  assert.equal(
+    adopted.template.items.some((row) => row.id === "pd-planning-context"),
+    false,
+  );
+  assert.equal(adopted.project.answers["pd-planning-context"].notes, "Signed off last week");
+  assert.equal(adopted.project.answers["pd-planning-context"].status, "done");
+});
+
+test("adopting an add inserts the published item and marks needs recheck", () => {
+  const current = template([item("keep", "keep wording")]);
+  const extra = item("new-check", "Added from live template");
+  extra.title = "New check";
+  const published = template([item("keep", "keep wording"), extra]);
+  const job = projectDoc("house");
+  const change = changeFromAddedItem(extra, 1);
+  const notice = {
+    id: "66666666-6666-4666-8666-666666666666",
+    releaseId: "55555555-5555-4555-8555-555555555555",
+    findingId: "f",
+    sourceTitle: "Office",
+    sourceUrl: "https://example.test/office",
+    fromVersion: "1.0.5",
+    toVersion: "1.0.6",
+    publishedAt: "2026-09-16T01:00:00.000Z",
+    status: "open" as const,
+    changes: [{ ...change, adopted: false }],
+  };
+  job.impacts = [notice];
+  const adopted = adoptSelected({
+    project: job,
+    template: current,
+    publishedTemplate: published,
+    notice,
+    selectedItemIds: ["new-check"],
+    now: "2026-09-16T02:00:00.000Z",
+  });
+  assert.equal(
+    adopted.template.items.find((row) => row.id === "new-check")?.detail,
+    "Added from live template",
+  );
+  assert.equal(adopted.project.answers["new-check"].status, "needs_recheck");
 });

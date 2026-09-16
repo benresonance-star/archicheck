@@ -47,9 +47,13 @@ export function groupStageContent(
 
 export function stageContentSections(
   grouped: GroupedStageContent,
+  options?: { includeEmptyStageChecks?: boolean },
 ): StageContentSection[] {
   const sections: StageContentSection[] = [];
-  if (grouped.processItems.length > 0) {
+  if (
+    grouped.processItems.length > 0 ||
+    options?.includeEmptyStageChecks
+  ) {
     sections.push({ kind: "stage-checks", items: grouped.processItems });
   }
   for (const entry of grouped.deliverables) {

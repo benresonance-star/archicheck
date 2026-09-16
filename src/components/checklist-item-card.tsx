@@ -1,23 +1,51 @@
 "use client";
 
+import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { addAttachment, downloadBytes, readAttachment, setAnswer } from "@/lib/client-store";
 import {
   CheckBrowseRow,
   ProjectRequirementBody,
   ProjectRequirementSheet,
 } from "@/components/check-depths";
+import {
+  ChecklistItemForm,
+  newSectionDraft,
+} from "@/components/checklist-item-form";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { projectItemSignal } from "@/lib/check-depths";
+import {
+  addProjectItem,
+  addAttachment,
+  downloadBytes,
+  moveProjectItem,
+  proposeJobItemPromotion,
+  readAttachment,
+  removeProjectItem,
+  setAnswer,
+  updateProjectItem,
+} from "@/lib/client-store";
+import { draftFromItem, type ChecklistItemDraft } from "@/lib/template/checklist-crud";
+import type { OutputKind } from "@/lib/template/output-lens";
 import type {
   AttachmentMeta,
   ChecklistItem,
   ItemStatus,
   ProjectDocument,
+  TemplateDocument,
 } from "@/lib/types";
-import { ITEM_STATUSES, statusLabel } from "@/lib/types";
+import { ITEM_STATUSES, isJobOnlyItem, statusLabel } from "@/lib/types";
 
 export function AttachmentFileList({
   projectId,
@@ -56,23 +84,31 @@ export function AttachmentFileList({
 function ProjectInspectActions({
   item,
   project,
-  onProject,
+  template,
+  onWorkspace,
+  onEdit,
 }: {
   item: ChecklistItem;
   project: ProjectDocument;
-  onProject: (project: ProjectDocument) => void;
+  template: TemplateDocument;
+  onWorkspace: (next: {
+    project: ProjectDocument;
+    template: TemplateDocument;
+  }) => void;
+  onEdit: () => void;
 }) {
   const answer = project.answers[item.id];
   const status = answer?.status ?? "todo";
   const notes = answer?.notes ?? "";
   const files = project.attachments.filter((file) => file.itemId === item.id);
   const [pending, setPending] = useState(false);
+  const jobOnly = isJobOnlyItem(item);
 
   async function save(patch: { status?: ItemStatus; notes?: string }) {
     setPending(true);
     try {
       const next = await setAnswer(project.id, item.id, patch);
-      onProject(next);
+      onWorkspace({ project: next, template });
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Could not save");
     } finally {
@@ -90,10 +126,31 @@ function ProjectInspectActions({
         mimeType: file.type,
         bytes: new Uint8Array(await file.arrayBuffer()),
       });
-      onProject(next);
+      onWorkspace({ project: next, template });
       toast.success("Attachment stored in the project package");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Upload failed");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function remove() {
+    if (
+      !window.confirm(
+        "Remove this check from this job? Notes and attachments stay in the ZIP.",
+      )
+    ) {
+      return;
+    }
+    setPending(true);
+    try {
+      onWorkspace(
+        await removeProjectItem({ projectId: project.id, itemId: item.id }),
+      );
+      toast.success("Check removed from this job");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not remove");
     } finally {
       setPending(false);
     }
@@ -167,41 +224,275 @@ function ProjectInspectActions({
               <AttachmentFileList projectId={project.id} files={files} />
             )}
           </div>
+          <div className="grid grid-cols-1 gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="min-h-11"
+              disabled={pending}
+              onClick={onEdit}
+            >
+              Edit this check
+            </Button>
+            {jobOnly ? (
+              <PromoteJobItemForm
+                projectId={project.id}
+                itemId={item.id}
+                pending={pending}
+                setPending={setPending}
+              />
+            ) : null}
+            <Button
+              type="button"
+              variant="destructive"
+              className="min-h-11"
+              disabled={pending}
+              onClick={() => void remove()}
+            >
+              Remove from this job
+            </Button>
+          </div>
         </div>
       }
     />
   );
 }
 
+function PromoteJobItemForm({
+  projectId,
+  itemId,
+  pending,
+  setPending,
+}: {
+  projectId: string;
+  itemId: string;
+  pending: boolean;
+  setPending: (value: boolean) => void;
+}) {
+  const [sourceTitle, setSourceTitle] = useState("");
+  const [sourceUrl, setSourceUrl] = useState("");
+
+  async function promote() {
+    setPending(true);
+    try {
+      await proposeJobItemPromotion({
+        projectId,
+        itemId,
+        sourceTitle,
+        sourceUrl,
+      });
+      setSourceTitle("");
+      setSourceUrl("");
+      toast.success("Proposed for the live template. A reviewer still publishes.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not propose");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  return (
+    <div className="space-y-2 rounded-lg border border-border bg-muted/30 p-3">
+      <p className="text-sm font-medium">Propose for all projects</p>
+      <p className="text-sm text-muted-foreground">
+        Sends this job-only check to the statewide board. Publishing it later
+        updates the live template; this job is not rewritten.
+      </p>
+      <Input
+        className="min-h-11"
+        placeholder="Source name"
+        value={sourceTitle}
+        disabled={pending}
+        onChange={(event) => setSourceTitle(event.target.value)}
+      />
+      <Input
+        className="min-h-11"
+        placeholder="https://"
+        value={sourceUrl}
+        disabled={pending}
+        onChange={(event) => setSourceUrl(event.target.value)}
+      />
+      <Button
+        type="button"
+        variant="outline"
+        className="min-h-11 w-full"
+        disabled={pending}
+        onClick={() => void promote()}
+      >
+        Submit for review
+      </Button>
+    </div>
+  );
+}
+
+export type ProjectCheckSection = {
+  stageId: string;
+  deliverableId?: string;
+  outputKind?: OutputKind;
+};
+
 export function ProjectCheckList({
   items,
   project,
-  onProject,
+  template,
+  section,
+  onWorkspace,
 }: {
   items: ChecklistItem[];
   project: ProjectDocument;
-  onProject: (project: ProjectDocument) => void;
+  template: TemplateDocument;
+  section: ProjectCheckSection;
+  onWorkspace: (next: {
+    project: ProjectDocument;
+    template: TemplateDocument;
+  }) => void;
 }) {
   const [openId, setOpenId] = useState<string | null>(null);
+  const [reorder, setReorder] = useState(false);
+  const [editor, setEditor] = useState<
+    { mode: "add" } | { mode: "edit"; itemId: string } | null
+  >(null);
+  const [pending, setPending] = useState(false);
   const openItem = items.find((item) => item.id === openId);
+  const siblingIds = items.map((item) => item.id);
+  const editingItem =
+    editor?.mode === "edit"
+      ? (template.items.find((item) => item.id === editor.itemId) ??
+        items.find((item) => item.id === editor.itemId))
+      : undefined;
+
+  async function add(draft: ChecklistItemDraft) {
+    setPending(true);
+    try {
+      const next = await addProjectItem({
+        projectId: project.id,
+        draft,
+        afterItemId: siblingIds[siblingIds.length - 1],
+      });
+      onWorkspace(next);
+      setEditor(null);
+      toast.success("Check added on this job only");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not add");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function saveEdit(itemId: string, draft: ChecklistItemDraft) {
+    setPending(true);
+    try {
+      onWorkspace(
+        await updateProjectItem({
+          projectId: project.id,
+          itemId,
+          patch: draft,
+        }),
+      );
+      setEditor(null);
+      toast.success("Check updated on this job");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not save");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function move(itemId: string, direction: "up" | "down") {
+    setPending(true);
+    try {
+      onWorkspace(
+        await moveProjectItem({
+          projectId: project.id,
+          itemId,
+          siblingIds,
+          direction,
+        }),
+      );
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not move");
+    } finally {
+      setPending(false);
+    }
+  }
 
   return (
     <>
-      <ul className="divide-y divide-border">
-        {items.map((item) => (
-          <li key={item.id}>
-            <CheckBrowseRow
-              title={item.title}
-              signal={projectItemSignal(item, project)}
-              onInspect={() => setOpenId(item.id)}
-            />
-          </li>
-        ))}
-      </ul>
+      <div className="flex justify-end">
+        <Button
+          type="button"
+          variant={reorder ? "default" : "outline"}
+          className="min-h-11"
+          aria-pressed={reorder}
+          onClick={() => setReorder((current) => !current)}
+        >
+          {reorder ? "Done reordering" : "Reorder / add"}
+        </Button>
+      </div>
+      {items.length === 0 ? (
+        <p className="text-sm text-muted-foreground">No checks in this list yet.</p>
+      ) : (
+        <ul className="divide-y divide-border">
+          {items.map((item, index) => (
+            <li key={item.id}>
+              <CheckBrowseRow
+                title={item.title}
+                signal={projectItemSignal(item, project)}
+                onInspect={() => setOpenId(item.id)}
+                badge={
+                  isJobOnlyItem(item) ? (
+                    <Badge variant="secondary" className="shrink-0">
+                      Job
+                    </Badge>
+                  ) : null
+                }
+                trailing={
+                  reorder ? (
+                    <span className="flex shrink-0 gap-1">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        className="size-11"
+                        disabled={pending || index === 0}
+                        aria-label={`Move ${item.title} up`}
+                        onClick={() => void move(item.id, "up")}
+                      >
+                        <ChevronUpIcon />
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        className="size-11"
+                        disabled={pending || index === items.length - 1}
+                        aria-label={`Move ${item.title} down`}
+                        onClick={() => void move(item.id, "down")}
+                      >
+                        <ChevronDownIcon />
+                      </Button>
+                    </span>
+                  ) : null
+                }
+              />
+            </li>
+          ))}
+        </ul>
+      )}
+      {reorder ? (
+        <Button
+          type="button"
+          variant="outline"
+          className="min-h-11 w-full"
+          onClick={() => setEditor({ mode: "add" })}
+        >
+          Add check to this job
+        </Button>
+      ) : null}
       <ProjectRequirementSheet
         item={openItem}
         items={items}
-        open={openItem != null}
+        open={openItem != null && editor == null}
         onClose={() => setOpenId(null)}
         onSelect={setOpenId}
       >
@@ -210,10 +501,68 @@ export function ProjectCheckList({
             key={openItem.id}
             item={openItem}
             project={project}
-            onProject={onProject}
+            template={template}
+            onWorkspace={(next) => {
+              onWorkspace(next);
+              if (!next.template.items.some((entry) => entry.id === openItem.id)) {
+                setOpenId(null);
+              }
+            }}
+            onEdit={() => setEditor({ mode: "edit", itemId: openItem.id })}
           />
         ) : null}
       </ProjectRequirementSheet>
+      <Sheet
+        open={editor != null}
+        onOpenChange={(next) => {
+          if (!next) {
+            setEditor(null);
+          }
+        }}
+      >
+        <SheetContent
+          side="bottom"
+          className="h-[92dvh] max-h-[92dvh] gap-0 overflow-hidden rounded-t-2xl pb-[env(safe-area-inset-bottom)] md:inset-y-0 md:right-0 md:left-auto md:h-full md:max-h-none md:w-[28rem] md:max-w-none md:rounded-none md:border-t-0 md:border-l"
+        >
+          <SheetHeader className="border-b border-border pr-12">
+            <SheetTitle>
+              {editor?.mode === "edit" ? "Edit check" : "Add check"}
+            </SheetTitle>
+            <SheetDescription>
+              Changes apply to this job only. Existing projects keep their own
+              snapshot until they adopt a published template.
+            </SheetDescription>
+          </SheetHeader>
+          <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
+            {editor ? (
+              <ChecklistItemForm
+                key={editor.mode === "edit" ? editor.itemId : "add"}
+                template={template}
+                initial={
+                  editor.mode === "edit" && editingItem
+                    ? draftFromItem(editingItem)
+                    : newSectionDraft({
+                        stageId: section.stageId,
+                        appliesTo: [project.site.typology],
+                        deliverableId: section.deliverableId,
+                        outputKind: section.outputKind,
+                      })
+                }
+                submitLabel={editor.mode === "edit" ? "Save on this job" : "Add to this job"}
+                pending={pending}
+                onCancel={() => setEditor(null)}
+                onSubmit={(draft) => {
+                  if (editor.mode === "edit") {
+                    void saveEdit(editor.itemId, draft);
+                  } else {
+                    void add(draft);
+                  }
+                }}
+              />
+            ) : null}
+          </div>
+        </SheetContent>
+      </Sheet>
     </>
   );
 }

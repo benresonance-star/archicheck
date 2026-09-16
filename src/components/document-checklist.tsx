@@ -3,39 +3,53 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { ProjectCheckList } from "@/components/checklist-item-card";
-import { arbvStageHeading, itemsGroupedByStage } from "@/lib/template/output-lens";
-import type {
-  ChecklistItem,
-  ProjectDocument,
-  TemplateDocument,
+import {
+  arbvStageHeading,
+  itemsGroupedByStage,
+  outputKindForItem,
+  type OutputKind,
+} from "@/lib/template/output-lens";
+import {
+  itemsForTypology,
+  type ProjectDocument,
+  type TemplateDocument,
 } from "@/lib/types";
 
 export function DocumentChecklist({
   project,
   template,
-  items,
+  stageId,
+  outputKind,
   prevHref,
   nextHref,
+  onWorkspace,
 }: {
   project: ProjectDocument;
   template: TemplateDocument;
-  items: ChecklistItem[];
+  stageId: string;
+  outputKind: OutputKind;
   prevHref?: string;
   nextHref?: string;
+  onWorkspace?: (next: {
+    project: ProjectDocument;
+    template: TemplateDocument;
+  }) => void;
 }) {
   const router = useRouter();
-  const [local, setLocal] = useState(project);
-  const grouped = itemsGroupedByStage(template, items);
+  const [workspace, setWorkspace] = useState({ project, template });
+  const items = itemsForTypology(
+    workspace.template.items,
+    workspace.project.site.typology,
+  ).filter(
+    (item) =>
+      item.stageId === stageId && outputKindForItem(item) === outputKind,
+  );
+  const grouped = itemsGroupedByStage(workspace.template, items);
 
-  function onProject(next: ProjectDocument) {
-    setLocal(next);
+  function apply(next: { project: ProjectDocument; template: TemplateDocument }) {
+    setWorkspace(next);
+    onWorkspace?.(next);
     router.refresh();
   }
 
@@ -53,16 +67,14 @@ export function DocumentChecklist({
           </Button>
         ) : null}
       </div>
-      {items.length === 0 ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>No items for this typology</CardTitle>
-            <CardDescription>
-              This document has no {local.site.typology} items in template{" "}
-              {template.version}.
-            </CardDescription>
-          </CardHeader>
-        </Card>
+      {grouped.length === 0 ? (
+        <ProjectCheckList
+          items={[]}
+          project={workspace.project}
+          template={workspace.template}
+          section={{ stageId, outputKind }}
+          onWorkspace={apply}
+        />
       ) : (
         grouped.map((group) => (
           <div key={group.stage.id} className="space-y-3">
@@ -71,8 +83,10 @@ export function DocumentChecklist({
             </h2>
             <ProjectCheckList
               items={group.items}
-              project={local}
-              onProject={onProject}
+              project={workspace.project}
+              template={workspace.template}
+              section={{ stageId: group.stage.id, outputKind }}
+              onWorkspace={apply}
             />
           </div>
         ))

@@ -1,5 +1,10 @@
 import { applyProposedToTemplate } from "@/lib/scout/apply-wording";
 import type { ScoutFinding, ScoutProposed } from "@/lib/scout/types";
+import {
+  applyItemChangeToTemplate,
+  changeFromAddedItem,
+  changeNeedsRecheck,
+} from "@/lib/template/checklist-crud";
 import type {
   Answer,
   ImpactNotice,
@@ -9,10 +14,10 @@ import type {
   TemplateItemChange,
   TemplateRelease,
 } from "@/lib/types";
-import { itemsForTypology } from "@/lib/types";
+import { changeKind, itemsForTypology } from "@/lib/types";
 
 export function bumpPatchVersion(version: string): string {
-  const base = version.replace(/-draft\.\d+$/, "");
+  const base = version.replace(/-draft\.\d+$/, "").replace(/-job\.\d+$/, "");
   const match = base.match(/^(\d+)\.(\d+)\.(\d+)$/);
   if (!match) {
     return `${base}.1`;
@@ -27,18 +32,7 @@ export function comparisonRows(
 ): TemplateItemChange[] {
   if (finding.action === "add" && proposed.newItem) {
     const item = proposed.newItem;
-    return [
-      {
-        itemId: item.id,
-        title: item.title,
-        beforeTitle: "",
-        afterTitle: item.title,
-        beforeDetail: "",
-        afterDetail: proposed.detail ?? item.detail,
-        beforeReferences: [],
-        afterReferences: proposed.references ?? item.references,
-      },
-    ];
+    return [changeFromAddedItem(item, template.items.length)];
   }
 
   const rows: TemplateItemChange[] = [];
@@ -50,6 +44,7 @@ export function comparisonRows(
     rows.push({
       itemId: item.id,
       title: item.title,
+      kind: "wording",
       beforeTitle: item.title,
       afterTitle: proposed.title ?? item.title,
       beforeDetail: item.detail,
@@ -76,7 +71,9 @@ export function publishFindingToTemplate(input: {
   if (changes.length === 0) {
     throw new Error("No checklist items to publish");
   }
-  const fromVersion = input.template.version.replace(/-draft\.\d+$/, "");
+  const fromVersion = input.template.version
+    .replace(/-draft\.\d+$/, "")
+    .replace(/-job\.\d+$/, "");
   const next = applyProposedToTemplate(
     input.template,
     input.finding,
@@ -98,6 +95,51 @@ export function publishFindingToTemplate(input: {
   };
 }
 
+export function publishEditsToTemplate(input: {
+  template: TemplateDocument;
+  nextTemplate: TemplateDocument;
+  changes: TemplateItemChange[];
+  sourceTitle: string;
+  sourceUrl: string;
+  publishedAt: string;
+  releaseId: string;
+  findingId: string;
+}): { template: TemplateDocument; release: TemplateRelease } {
+  if (input.changes.length === 0) {
+    throw new Error("No checklist changes to publish");
+  }
+  const fromVersion = input.template.version
+    .replace(/-draft\.\d+$/, "")
+    .replace(/-job\.\d+$/, "");
+  const next = structuredClone(input.nextTemplate);
+  next.stages = structuredClone(input.template.stages);
+  next.deliverables = structuredClone(input.template.deliverables);
+  next.grokbots = structuredClone(input.template.grokbots);
+  next.id = input.template.id;
+  next.format = input.template.format;
+  next.formatVersion = input.template.formatVersion;
+  next.title = input.template.title;
+  next.jurisdiction = input.template.jurisdiction;
+  next.description = input.template.description;
+  if (next.items.length === 0) {
+    throw new Error("A template must keep at least one check");
+  }
+  next.version = bumpPatchVersion(fromVersion);
+  return {
+    template: next,
+    release: {
+      id: input.releaseId,
+      findingId: input.findingId,
+      sourceTitle: input.sourceTitle,
+      sourceUrl: input.sourceUrl,
+      fromVersion,
+      toVersion: next.version,
+      publishedAt: input.publishedAt,
+      changes: input.changes,
+    },
+  };
+}
+
 export function noticeFromRelease(input: {
   release: TemplateRelease;
   project: ProjectDocument;
@@ -113,6 +155,14 @@ export function noticeFromRelease(input: {
     ),
   );
   const changes = input.release.changes.filter((change) => {
+    const kind = changeKind(change);
+    if (kind === "add") {
+      const applies = change.afterAppliesTo;
+      if (applies && applies.length > 0) {
+        return applies.includes(input.project.site.typology);
+      }
+      return true;
+    }
     if (applicable.has(change.itemId)) {
       return true;
     }
@@ -161,7 +211,7 @@ export function adoptSelected(input: {
   now: string;
 }): { project: ProjectDocument; template: TemplateDocument } {
   const selected = new Set(input.selectedItemIds);
-  const nextTemplate = structuredClone(input.template);
+  let nextTemplate = structuredClone(input.template);
   const nextProject = structuredClone(input.project);
   const notice = (nextProject.impacts ?? []).find(
     (row) => row.id === input.notice.id,
@@ -176,24 +226,17 @@ export function adoptSelected(input: {
     if (!take) {
       continue;
     }
-    let item = nextTemplate.items.find((entry) => entry.id === change.itemId);
-    if (!item) {
-      const published = input.publishedTemplate.items.find(
-        (entry) => entry.id === change.itemId,
-      );
-      if (!published) {
-        throw new Error(`Checklist item ${change.itemId} is not in the published template`);
-      }
-      item = structuredClone(published);
-      nextTemplate.items.push(item);
-    }
-    item.title = change.afterTitle;
-    item.detail = change.afterDetail;
-    item.references = [...change.afterReferences];
-    nextProject.answers[change.itemId] = nextAnswer(
-      nextProject.answers[change.itemId],
-      input.now,
+    nextTemplate = applyItemChangeToTemplate(
+      nextTemplate,
+      change,
+      input.publishedTemplate,
     );
+    if (changeNeedsRecheck(change)) {
+      nextProject.answers[change.itemId] = nextAnswer(
+        nextProject.answers[change.itemId],
+        input.now,
+      );
+    }
   }
 
   notice.status = "adopted";

@@ -96,9 +96,10 @@ export function ImpactNoticeCard({
         </div>
         <CardTitle className="text-lg">{notice.sourceTitle}</CardTitle>
         <CardDescription>
-          Template {notice.toVersion} is published. Choose which wording this job
+          Template {notice.toVersion} is published. Choose which changes this job
           should take. Answers, notes and attachments stay on the item; adopted
-          checks become Needs recheck.
+          wording and new checks become Needs recheck. Removed checks leave
+          their answers in the ZIP.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">

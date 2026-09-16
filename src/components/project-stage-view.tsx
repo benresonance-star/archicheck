@@ -6,7 +6,6 @@ import { StageChecklist } from "@/components/stage-checklist";
 import { loadProject, syncProjectImpacts } from "@/lib/client-store";
 import { grokbotForStage } from "@/lib/template/vic-residential";
 import {
-  itemsForTypology,
   openImpactCount,
   type ProjectDocument,
   type TemplateDocument,
@@ -67,9 +66,6 @@ export function ProjectStageView({
       </div>
     );
   }
-  const items = itemsForTypology(template.items, project.site.typology).filter(
-    (item) => item.stageId === stage.id,
-  );
   const prev = template.stages[stageIndex - 1];
   const next = template.stages[stageIndex + 1];
   const grokbot = grokbotForStage(template, stage.id);
@@ -95,10 +91,10 @@ export function ProjectStageView({
           project={project}
           template={template}
           stage={stage}
-          items={items}
           grokbot={grokbot}
           prevHref={prev ? `/p/${project.id}/s/${prev.id}` : undefined}
           nextHref={next ? `/p/${project.id}/s/${next.id}` : undefined}
+          onWorkspace={setData}
         />
       </main>
     </div>

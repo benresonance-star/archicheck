@@ -80,31 +80,30 @@ export function ProjectDocumentView({
     (entry) => entry.stageId === stageId && entry.kind === outputKind,
   );
   const group = findStagedDocument(groups, stageId, outputKind);
-  if (!group || index < 0) {
+  const stage = template.stages.find((entry) => entry.id === stageId);
+  if (!stage) {
     return (
       <div>
         <AppHeader backHref={`/p/${id}`} />
-        <main className="mx-auto max-w-3xl px-4 py-8">
-          This document has no {project.site.typology} checks.
-        </main>
+        <main className="mx-auto max-w-3xl px-4 py-8">Unknown stage.</main>
       </div>
     );
   }
 
-  const prev = flat[index - 1];
-  const next = flat[index + 1];
+  const prev = index >= 0 ? flat[index - 1] : undefined;
+  const next = index >= 0 ? flat[index + 1] : undefined;
+  const heading = group
+    ? stagedDocumentHeading(group.stage, group.kind)
+    : stagedDocumentHeading(stage, outputKind);
+  const summary = group?.summary ?? "";
 
   return (
     <div className="pb-[env(safe-area-inset-bottom)]">
-      <AppHeader
-        title={stagedDocumentHeading(group.stage, group.kind)}
-        backHref={`/p/${project.id}`}
-      />
+      <AppHeader title={heading} backHref={`/p/${project.id}`} />
       <main className="mx-auto max-w-3xl space-y-4 px-4 py-6">
         <p className="text-sm text-muted-foreground">
-          {arbvStageHeading(group.stage)}
-          {" · "}
-          {group.summary}
+          {arbvStageHeading(stage)}
+          {summary ? ` · ${summary}` : ""}
         </p>
         {openImpactCount(project) > 0 ? (
           <p className="text-sm">
@@ -118,7 +117,9 @@ export function ProjectDocumentView({
         <DocumentChecklist
           project={project}
           template={template}
-          items={group.items}
+          stageId={stageId}
+          outputKind={outputKind}
+          onWorkspace={setData}
           prevHref={
             prev ? `/p/${project.id}/d/${prev.stageId}/${prev.kind}` : undefined
           }

@@ -14,10 +14,25 @@ import {
   type Site,
   type TemplateDocument,
   type TemplateRelease,
+  isJobOnlyItemId,
   mergeAnswer,
   openImpactCount,
   progressForProject,
 } from "@/lib/types";
+import {
+  addItemToTemplate,
+  buildChecklistItem,
+  bumpJobVersion,
+  diffTemplateItems,
+  moveItemAmongSiblings,
+  newJobItemId,
+  promoteItemCopy,
+  removeItemFromTemplate,
+  updateItemInTemplate,
+  type ChecklistItemDraft,
+  type ChecklistItemPatch,
+  type MoveDirection,
+} from "@/lib/template/checklist-crud";
 import { validateProjectDocument, validateTemplateDocument } from "@/lib/validate";
 import { applyProposedToTemplate } from "@/lib/scout/apply-wording";
 import { appendFinding } from "@/lib/agent/findings";
@@ -38,6 +53,7 @@ import {
   adoptSelected,
   dismissNotice,
   noticeFromRelease,
+  publishEditsToTemplate,
   publishFindingToTemplate,
 } from "@/lib/template/publish";
 
@@ -558,6 +574,8 @@ export async function addSourcedProposal(input: {
   flag: string;
   itemIds: string[];
   detail: string;
+  action?: ScoutFinding["action"];
+  proposed?: ScoutProposed;
 }): Promise<ScoutReport> {
   const sourceTitle = input.sourceTitle.trim();
   const sourceUrl = input.sourceUrl.trim();
@@ -569,10 +587,10 @@ export async function addSourcedProposal(input: {
   if (!sourceUrl.startsWith("https://")) {
     throw new Error("Source URL must start with https://");
   }
-  if (input.itemIds.length === 0) {
+  if (input.itemIds.length === 0 && !input.proposed?.newItem) {
     throw new Error("Pick at least one checklist item");
   }
-  if (!detail) {
+  if (!detail && !input.proposed?.newItem) {
     throw new Error("Write the proposed wording");
   }
   const existing = await loadScoutReport(STATEWIDE_BOARD_ID);
@@ -582,10 +600,10 @@ export async function addSourcedProposal(input: {
     sourceTitle,
     url: sourceUrl,
     scope: "statewide",
-    action: "replace",
+    action: input.action ?? "replace",
     itemIds: input.itemIds,
     flag: flag || "Sourced wording change proposed for review.",
-    proposed: {
+    proposed: input.proposed ?? {
       detail,
       references: [sourceUrl],
     },
@@ -845,6 +863,173 @@ async function persistScoutResponse(response: Response): Promise<ScoutReport> {
   }
   await saveScoutReport(data.report);
   return data.report;
+}
+
+async function mutateWorkspace(
+  projectId: string,
+  mutate: (project: ProjectDocument, template: TemplateDocument) => void,
+): Promise<{ project: ProjectDocument; template: TemplateDocument }> {
+  const { project, template } = await loadProject(projectId);
+  mutate(project, template);
+  await stampTemplateChecksum(template);
+  project.template = {
+    id: template.id,
+    version: template.version,
+    checksum: template.checksum,
+  };
+  project.revision += 1;
+  project.updatedAt = new Date().toISOString();
+  await writeProject(project, template);
+  return { project, template };
+}
+
+export async function addProjectItem(input: {
+  projectId: string;
+  draft: ChecklistItemDraft;
+  afterItemId?: string;
+}): Promise<{ project: ProjectDocument; template: TemplateDocument }> {
+  return mutateWorkspace(input.projectId, (project, template) => {
+    const item = buildChecklistItem({
+      id: newJobItemId(),
+      draft: input.draft,
+    });
+    const next = addItemToTemplate(template, item, input.afterItemId);
+    template.items = next.items;
+    template.version = bumpJobVersion(template.version);
+  });
+}
+
+export async function updateProjectItem(input: {
+  projectId: string;
+  itemId: string;
+  patch: ChecklistItemPatch;
+}): Promise<{ project: ProjectDocument; template: TemplateDocument }> {
+  return mutateWorkspace(input.projectId, (_project, template) => {
+    const next = updateItemInTemplate(template, input.itemId, input.patch);
+    template.items = next.items;
+    template.version = bumpJobVersion(template.version);
+  });
+}
+
+export async function removeProjectItem(input: {
+  projectId: string;
+  itemId: string;
+}): Promise<{ project: ProjectDocument; template: TemplateDocument }> {
+  return mutateWorkspace(input.projectId, (_project, template) => {
+    const next = removeItemFromTemplate(template, input.itemId);
+    template.items = next.items;
+    template.version = bumpJobVersion(template.version);
+  });
+}
+
+export async function moveProjectItem(input: {
+  projectId: string;
+  itemId: string;
+  siblingIds: string[];
+  direction: MoveDirection;
+}): Promise<{ project: ProjectDocument; template: TemplateDocument }> {
+  return mutateWorkspace(input.projectId, (_project, template) => {
+    const next = moveItemAmongSiblings(
+      template,
+      input.siblingIds,
+      input.itemId,
+      input.direction,
+    );
+    template.items = next.items;
+    template.version = bumpJobVersion(template.version);
+  });
+}
+
+export async function publishLiveTemplateEdits(input: {
+  draft: TemplateDocument;
+  sourceTitle: string;
+  sourceUrl: string;
+}): Promise<{ template: TemplateDocument; release: TemplateRelease }> {
+  const sourceTitle = input.sourceTitle.trim();
+  const sourceUrl = input.sourceUrl.trim();
+  if (!sourceTitle) {
+    throw new Error("Give the source a name");
+  }
+  if (!sourceUrl.startsWith("https://")) {
+    throw new Error("Source URL must start with https://");
+  }
+  const live = await loadLiveTemplate();
+  const changes = diffTemplateItems(live.template, input.draft);
+  if (changes.length === 0) {
+    throw new Error("No checklist changes to publish");
+  }
+  const publishedAt = new Date().toISOString();
+  const published = publishEditsToTemplate({
+    template: live.template,
+    nextTemplate: input.draft,
+    changes,
+    sourceTitle,
+    sourceUrl,
+    publishedAt,
+    releaseId: crypto.randomUUID(),
+    findingId: `live-edit-${crypto.randomUUID()}`,
+  });
+  await stampTemplateChecksum(published.template);
+  await saveLiveTemplate(published.template, [
+    ...live.releases,
+    published.release,
+  ]);
+  const summaries = await listProjects();
+  for (const summary of summaries) {
+    const loaded = await loadProject(summary.id);
+    const notice = noticeFromRelease({
+      release: published.release,
+      project: loaded.project,
+      template: loaded.template,
+      noticeId: crypto.randomUUID(),
+    });
+    if (!notice) {
+      continue;
+    }
+    loaded.project.impacts = [...(loaded.project.impacts ?? []), notice];
+    loaded.project.revision += 1;
+    loaded.project.updatedAt = publishedAt;
+    await writeProject(loaded.project, loaded.template);
+  }
+  return {
+    template: published.template,
+    release: published.release,
+  };
+}
+
+export async function proposeJobItemPromotion(input: {
+  projectId: string;
+  itemId: string;
+  sourceTitle: string;
+  sourceUrl: string;
+  flag?: string;
+}): Promise<ScoutReport> {
+  const { template } = await loadProject(input.projectId);
+  const item = template.items.find((entry) => entry.id === input.itemId);
+  if (!item) {
+    throw new Error("Checklist item is not in this project's template");
+  }
+  if (!isJobOnlyItemId(item.id)) {
+    throw new Error("Only job-only checks can be proposed for the live template");
+  }
+  const promoted = promoteItemCopy(item);
+  return addSourcedProposal({
+    sourceTitle: input.sourceTitle,
+    sourceUrl: input.sourceUrl,
+    flag:
+      input.flag?.trim() ||
+      "Job-only check proposed for the live template that populates new projects.",
+    itemIds: [],
+    detail: promoted.detail || promoted.title,
+    action: "add",
+    proposed: {
+      title: promoted.title,
+      detail: promoted.detail,
+      references: promoted.references,
+      appliesTo: promoted.appliesTo,
+      newItem: promoted,
+    },
+  });
 }
 
 export async function runProjectScout(projectId: string): Promise<ScoutReport> {

@@ -1,6 +1,7 @@
 import {
   assertNever,
   findingResultLabel,
+  isJobOnlyItem,
   requirementKindLabel,
   statusLabel,
   typologyLabel,
@@ -270,6 +271,9 @@ function shortRequirementKind(kind: RequirementKind): string {
 
 export function itemRestrictionParts(item: ChecklistItem): string[] {
   const parts: string[] = [];
+  if (isJobOnlyItem(item)) {
+    parts.push("Job");
+  }
   if (!item.required) {
     parts.push("Optional");
   }

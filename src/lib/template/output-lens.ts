@@ -254,6 +254,9 @@ export function outputKindLabel(kind: OutputKind): string {
 }
 
 export function outputKindForItem(item: ChecklistItem): OutputKind | undefined {
+  if (item.outputKind && isOutputKind(item.outputKind)) {
+    return item.outputKind;
+  }
   const explicit = ITEM_OUTPUT_KIND[item.id];
   if (explicit) {
     return explicit;

@@ -7,12 +7,6 @@ import { addAttachment } from "@/lib/client-store";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { projectListRollup } from "@/lib/check-depths";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { GrokbotPanel } from "@/components/grokbot-panel";
 import {
@@ -29,6 +23,7 @@ import {
 } from "@/lib/template/group-stage";
 import {
   assertNever,
+  itemsForTypology,
   type ChecklistItem,
   type GrokBotBrief,
   type ProjectDocument,
@@ -41,30 +36,38 @@ export function StageChecklist({
   project,
   template,
   stage,
-  items,
   grokbot,
   prevHref,
   nextHref,
+  onWorkspace,
 }: {
   project: ProjectDocument;
   template: TemplateDocument;
   stage: Stage;
-  items: ChecklistItem[];
   grokbot?: GrokBotBrief;
   prevHref?: string;
   nextHref?: string;
+  onWorkspace?: (next: {
+    project: ProjectDocument;
+    template: TemplateDocument;
+  }) => void;
 }) {
   const router = useRouter();
-  const [local, setLocal] = useState(project);
+  const [workspace, setWorkspace] = useState({ project, template });
+  const items = itemsForTypology(
+    workspace.template.items,
+    workspace.project.site.typology,
+  ).filter((item) => item.stageId === stage.id);
   const grouped = groupStageContent(
-    template,
+    workspace.template,
     stage.id,
-    local.site.typology,
+    workspace.project.site.typology,
     items,
   );
 
-  function onProject(next: ProjectDocument) {
-    setLocal(next);
+  function apply(next: { project: ProjectDocument; template: TemplateDocument }) {
+    setWorkspace(next);
+    onWorkspace?.(next);
     router.refresh();
   }
 
@@ -82,60 +85,51 @@ export function StageChecklist({
           </Button>
         ) : null}
       </div>
-      {items.length === 0 ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>No items for this typology</CardTitle>
-            <CardDescription>
-              This stage has no {local.site.typology} items in template{" "}
-              {template.version}.
-            </CardDescription>
-          </CardHeader>
-        </Card>
-      ) : (
-        <>
-          {stageContentSections(grouped).map((section) => {
-            switch (section.kind) {
-              case "stage-checks":
-                return (
-                  <div
-                    key="stage-checks"
-                    className="space-y-3 rounded-2xl border border-border bg-muted/30 p-3"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <StageChecksHeading />
-                      <Badge variant="outline" className="shrink-0">
-                        {projectListRollup(section.items, local)}
-                      </Badge>
-                    </div>
-                    <ProjectCheckList
-                      items={section.items}
-                      project={local}
-                      onProject={onProject}
-                    />
+      {stageContentSections(grouped, { includeEmptyStageChecks: true }).map(
+        (section) => {
+          switch (section.kind) {
+            case "stage-checks":
+              return (
+                <div
+                  key="stage-checks"
+                  className="space-y-3 rounded-2xl border border-border bg-muted/30 p-3"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <StageChecksHeading />
+                    <Badge variant="outline" className="shrink-0">
+                      {projectListRollup(section.items, workspace.project)}
+                    </Badge>
                   </div>
-                );
-              case "deliverable":
-                return (
-                  <DeliverableProjectBlock
-                    key={section.deliverable.id}
-                    deliverable={section.deliverable}
+                  <ProjectCheckList
                     items={section.items}
-                    project={local}
-                    onProject={onProject}
+                    project={workspace.project}
+                    template={workspace.template}
+                    section={{ stageId: stage.id }}
+                    onWorkspace={apply}
                   />
-                );
-              default:
-                return assertNever(
-                  section,
-                  `Unknown stage section: ${String(section)}`,
-                );
-            }
-          })}
-        </>
+                </div>
+              );
+            case "deliverable":
+              return (
+                <DeliverableProjectBlock
+                  key={section.deliverable.id}
+                  deliverable={section.deliverable}
+                  items={section.items}
+                  project={workspace.project}
+                  template={workspace.template}
+                  onWorkspace={apply}
+                />
+              );
+            default:
+              return assertNever(
+                section,
+                `Unknown stage section: ${String(section)}`,
+              );
+          }
+        },
       )}
       {grokbot ? (
-        <GrokbotPanel bot={grokbot} project={local} stage={stage} />
+        <GrokbotPanel bot={grokbot} project={workspace.project} stage={stage} />
       ) : null}
     </div>
   );
@@ -145,12 +139,17 @@ function DeliverableProjectBlock({
   deliverable,
   items,
   project,
-  onProject,
+  template,
+  onWorkspace,
 }: {
   deliverable: StageDeliverable;
   items: ChecklistItem[];
   project: ProjectDocument;
-  onProject: (project: ProjectDocument) => void;
+  template: TemplateDocument;
+  onWorkspace: (next: {
+    project: ProjectDocument;
+    template: TemplateDocument;
+  }) => void;
 }) {
   const files = project.attachments.filter(
     (file) => file.deliverableId === deliverable.id,
@@ -168,7 +167,7 @@ function DeliverableProjectBlock({
         mimeType: file.type,
         bytes: new Uint8Array(await file.arrayBuffer()),
       });
-      onProject(next);
+      onWorkspace({ project: next, template });
       toast.success("Drawing or document stored on this stage");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Upload failed");
@@ -211,7 +210,12 @@ function DeliverableProjectBlock({
       <ProjectCheckList
         items={items}
         project={project}
-        onProject={onProject}
+        template={template}
+        section={{
+          stageId: deliverable.stageId,
+          deliverableId: deliverable.id,
+        }}
+        onWorkspace={onWorkspace}
       />
     </div>
   );

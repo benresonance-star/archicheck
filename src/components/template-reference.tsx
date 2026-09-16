@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArbvStageHeader } from "@/components/arbv-stage-header";
-import { TemplateCheckList } from "@/components/check-depths";
+import { ReferenceCheckList } from "@/components/template-check-editor";
 import {
   DeliverableHeading,
   StageChecksHeading,
@@ -36,6 +36,7 @@ import {
   assertNever,
   typologyLabel,
   type Stage,
+  type TemplateDocument,
   type Typology,
 } from "@/lib/types";
 import { TYPOLOGY_ORDER, typologyMeta } from "@/lib/typology";
@@ -45,11 +46,15 @@ export function TemplateReference({
   stageId,
   initialTypology = "house",
   showStartProject = true,
+  template = BUNDLED_TEMPLATE,
+  onTemplate,
 }: {
   typology?: Typology;
   stageId?: string;
   initialTypology?: Typology;
   showStartProject?: boolean;
+  template?: TemplateDocument;
+  onTemplate?: (next: TemplateDocument) => void;
 }) {
   const [selected, setSelected] = useState<Typology>(
     lockedTypology ?? initialTypology,
@@ -69,8 +74,8 @@ export function TemplateReference({
 
   const typology = lockedTypology ?? selected;
   const groups = useMemo(
-    () => groupedTemplateStages(BUNDLED_TEMPLATE, typology),
-    [typology],
+    () => groupedTemplateStages(template, typology),
+    [template, typology],
   );
   const scrollYRef = useRef(0);
 
@@ -94,8 +99,8 @@ export function TemplateReference({
     ? groups.filter((group) => group.stage.id === stageId)
     : groups;
   const documentGroups = useMemo(
-    () => groupedOutputDocuments(BUNDLED_TEMPLATE, typology),
-    [typology],
+    () => groupedOutputDocuments(template, typology),
+    [template, typology],
   );
   const allItems = useMemo(
     () => visibleGroups.flatMap((group) => group.items),
@@ -139,12 +144,12 @@ export function TemplateReference({
       {lockedTypology ? null : (
         <div className="grid grid-cols-3 gap-2">
           {TYPOLOGY_ORDER.map((id) => {
-            const count = groupedTemplateStages(BUNDLED_TEMPLATE, id).reduce(
+            const count = groupedTemplateStages(template, id).reduce(
               (sum, group) => sum + group.items.length,
               0,
             );
             const done = referenceProgress(
-              groupedTemplateStages(BUNDLED_TEMPLATE, id).flatMap(
+              groupedTemplateStages(template, id).flatMap(
                 (group) => group.items,
               ),
               ticks[id],
@@ -173,9 +178,9 @@ export function TemplateReference({
       )}
       <div className="space-y-1">
         <p className="text-sm text-muted-foreground leading-relaxed">
-          Bundled template {BUNDLED_TEMPLATE.version} · {meta.clause}. Ticks
-          stay on this phone as a quick reference. They are not a project and
-          are not stored in a ZIP.
+          Template {template.version} · {meta.clause}. Ticks stay on this phone
+          as a quick reference. They are not a project and are not stored in a
+          ZIP.
         </p>
         <p className="text-sm">
           {progress.done} of {progress.total} {meta.title.toLowerCase()} items
@@ -196,6 +201,9 @@ export function TemplateReference({
           onTicked={setTicked}
           rememberScroll={rememberScroll}
           restoreScroll={restoreScroll}
+          template={template}
+          typology={typology}
+          onTemplate={onTemplate}
         />
       ) : lens === "document" ? (
         <DocumentLensLists
@@ -205,6 +213,8 @@ export function TemplateReference({
           onTicked={setTicked}
           rememberScroll={rememberScroll}
           restoreScroll={restoreScroll}
+          template={template}
+          onTemplate={onTemplate}
         />
       ) : (
         <div className="space-y-4" key={typology}>
@@ -231,6 +241,9 @@ export function TemplateReference({
                   onTicked={setTicked}
                   rememberScroll={rememberScroll}
                   restoreScroll={restoreScroll}
+                  template={template}
+                  typology={typology}
+                  onTemplate={onTemplate}
                 />
               </StagePanel>
             );
@@ -352,6 +365,8 @@ function DocumentLensLists({
   onTicked,
   rememberScroll,
   restoreScroll,
+  template,
+  onTemplate,
 }: {
   groups: StagedOutputLensGroup[];
   typology: Typology;
@@ -359,6 +374,8 @@ function DocumentLensLists({
   onTicked: (itemId: string, ticked: boolean) => void;
   rememberScroll: () => void;
   restoreScroll: () => void;
+  template: TemplateDocument;
+  onTemplate?: (next: TemplateDocument) => void;
 }) {
   return (
     <div className="space-y-4" key={typology}>
@@ -408,12 +425,17 @@ function DocumentLensLists({
                       </span>
                     }
                   >
-                    <TemplateCheckList
+                    <ReferenceCheckList
                       items={document.items}
                       ticks={ticks}
                       onTicked={onTicked}
-                      templateVersion={BUNDLED_TEMPLATE.version}
-                      templateChecksum={BUNDLED_TEMPLATE.checksum}
+                      template={template}
+                      typology={typology}
+                      section={{
+                        stageId: group.stage.id,
+                        outputKind: document.kind,
+                      }}
+                      onTemplate={onTemplate}
                     />
                   </CollapseSection>
                 );
@@ -432,16 +454,24 @@ function StageReferenceLists({
   onTicked,
   rememberScroll,
   restoreScroll,
+  template,
+  typology,
+  onTemplate,
 }: {
   group: TemplateStageGroup;
   ticks: Record<string, boolean>;
   onTicked: (itemId: string, ticked: boolean) => void;
   rememberScroll?: () => void;
   restoreScroll?: () => void;
+  template: TemplateDocument;
+  typology: Typology;
+  onTemplate?: (next: TemplateDocument) => void;
 }) {
   return (
     <div className="space-y-3">
-      {stageContentSections(group).map((section) => {
+      {stageContentSections(group, {
+        includeEmptyStageChecks: onTemplate != null,
+      }).map((section) => {
         switch (section.kind) {
           case "stage-checks":
             return (
@@ -463,12 +493,14 @@ function StageReferenceLists({
                   </span>
                 }
               >
-                <TemplateCheckList
+                <ReferenceCheckList
                   items={section.items}
                   ticks={ticks}
                   onTicked={onTicked}
-                  templateVersion={BUNDLED_TEMPLATE.version}
-                  templateChecksum={BUNDLED_TEMPLATE.checksum}
+                  template={template}
+                  typology={typology}
+                  section={{ stageId: group.stage.id }}
+                  onTemplate={onTemplate}
                 />
               </CollapseSection>
             );
@@ -492,12 +524,17 @@ function StageReferenceLists({
                   </span>
                 }
               >
-                <TemplateCheckList
+                <ReferenceCheckList
                   items={section.items}
                   ticks={ticks}
                   onTicked={onTicked}
-                  templateVersion={BUNDLED_TEMPLATE.version}
-                  templateChecksum={BUNDLED_TEMPLATE.checksum}
+                  template={template}
+                  typology={typology}
+                  section={{
+                    stageId: group.stage.id,
+                    deliverableId: section.deliverable.id,
+                  }}
+                  onTemplate={onTemplate}
                 />
               </CollapseSection>
             );

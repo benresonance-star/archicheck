@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { ItemResources } from "@/components/item-resources";
 import { SourceCitations } from "@/components/source-citations";
@@ -63,15 +64,19 @@ export function CheckBrowseRow({
   title,
   signal,
   leading,
+  trailing,
+  badge,
   onInspect,
 }: {
   title: string;
   signal: CheckSignal;
   leading?: ReactNode;
+  trailing?: ReactNode;
+  badge?: ReactNode;
   onInspect: () => void;
 }) {
   return (
-    <div className="flex items-center gap-3 py-1.5">
+    <div className="flex items-center gap-2 py-1.5">
       {leading}
       <button
         type="button"
@@ -82,8 +87,10 @@ export function CheckBrowseRow({
         <span className="min-w-0 flex-1 text-sm font-medium leading-snug break-words">
           {title}
         </span>
+        {badge}
         {rowShowsSignal(signal) ? <SignalBadge signal={signal} /> : null}
       </button>
+      {trailing}
     </div>
   );
 }
@@ -363,18 +370,26 @@ export function TemplateCheckList({
   onTicked,
   templateVersion,
   templateChecksum,
+  reorder,
+  onMove,
+  onEditItem,
+  trailing,
 }: {
   items: ChecklistItem[];
   ticks: Record<string, boolean>;
   onTicked: (itemId: string, ticked: boolean) => void;
   templateVersion: string;
   templateChecksum: string;
+  reorder?: boolean;
+  onMove?: (itemId: string, direction: "up" | "down") => void;
+  onEditItem?: (itemId: string) => void;
+  trailing?: ReactNode;
 }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const openIndex = items.findIndex((item) => item.id === openId);
   const openItem = openIndex >= 0 ? items[openIndex] : undefined;
 
-  if (items.length === 0) {
+  if (items.length === 0 && !trailing) {
     return (
       <p className="text-sm text-muted-foreground">No checks on this document.</p>
     );
@@ -382,25 +397,72 @@ export function TemplateCheckList({
 
   return (
     <>
-      <ul className="divide-y divide-border">
-        {items.map((item) => (
-          <li key={item.id}>
-            <CheckBrowseRow
-              title={item.title}
-              signal={templateCheckSignal(Boolean(ticks[item.id]))}
-              onInspect={() => setOpenId(item.id)}
-              leading={
-                <Checkbox
-                  className="size-5 shrink-0"
-                  checked={Boolean(ticks[item.id])}
-                  aria-label={`Tick ${item.title}`}
-                  onCheckedChange={(value) => onTicked(item.id, value === true)}
-                />
-              }
-            />
-          </li>
-        ))}
-      </ul>
+      {items.length === 0 ? (
+        <p className="text-sm text-muted-foreground">No checks on this document.</p>
+      ) : (
+        <ul className="divide-y divide-border">
+          {items.map((item, index) => (
+            <li key={item.id}>
+              <CheckBrowseRow
+                title={item.title}
+                signal={templateCheckSignal(Boolean(ticks[item.id]))}
+                onInspect={() => setOpenId(item.id)}
+                leading={
+                  <Checkbox
+                    className="size-5 shrink-0"
+                    checked={Boolean(ticks[item.id])}
+                    aria-label={`Tick ${item.title}`}
+                    onCheckedChange={(value) => onTicked(item.id, value === true)}
+                  />
+                }
+                trailing={
+                  reorder ? (
+                    <span className="flex shrink-0 gap-1">
+                      {onMove ? (
+                        <>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="size-11"
+                            disabled={index === 0}
+                            aria-label={`Move ${item.title} up`}
+                            onClick={() => onMove(item.id, "up")}
+                          >
+                            <ChevronUpIcon />
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="size-11"
+                            disabled={index === items.length - 1}
+                            aria-label={`Move ${item.title} down`}
+                            onClick={() => onMove(item.id, "down")}
+                          >
+                            <ChevronDownIcon />
+                          </Button>
+                        </>
+                      ) : null}
+                      {onEditItem ? (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="min-h-11 px-3"
+                          onClick={() => onEditItem(item.id)}
+                        >
+                          Edit
+                        </Button>
+                      ) : null}
+                    </span>
+                  ) : null
+                }
+              />
+            </li>
+          ))}
+        </ul>
+      )}
+      {trailing}
       <CheckRequirementSheet
         item={openItem}
         open={openItem != null}

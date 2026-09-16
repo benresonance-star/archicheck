@@ -86,15 +86,39 @@ export type Answer = {
   previousStatus?: ItemStatus;
 };
 
+export const TEMPLATE_CHANGE_KINDS = [
+  "wording",
+  "add",
+  "edit",
+  "remove",
+  "move",
+] as const;
+export type TemplateChangeKind = (typeof TEMPLATE_CHANGE_KINDS)[number];
+
 export type TemplateItemChange = {
   itemId: string;
   title: string;
+  kind?: TemplateChangeKind;
   beforeTitle: string;
   afterTitle: string;
   beforeDetail: string;
   afterDetail: string;
   beforeReferences: string[];
   afterReferences: string[];
+  beforeStageId?: string;
+  afterStageId?: string;
+  beforeDeliverableId?: string | null;
+  afterDeliverableId?: string | null;
+  beforeRequired?: boolean;
+  afterRequired?: boolean;
+  beforeAppliesTo?: Typology[];
+  afterAppliesTo?: Typology[];
+  beforeResources?: ChecklistResource[];
+  afterResources?: ChecklistResource[];
+  beforeOutputKind?: string | null;
+  afterOutputKind?: string | null;
+  beforeIndex?: number;
+  afterIndex?: number;
 };
 
 export type TemplateRelease = {
@@ -253,6 +277,7 @@ export type ChecklistItem = {
   resources: ChecklistResource[];
   grokbotId: string;
   deliverableId?: string;
+  outputKind?: string;
   assessment?: ItemAssessment;
 };
 
@@ -396,6 +421,43 @@ export function isFindingResult(value: string): value is FindingResult {
 
 export function isChecklistIssueKind(value: string): value is ChecklistIssueKind {
   return (CHECKLIST_ISSUE_KINDS as readonly string[]).includes(value);
+}
+
+export function isTemplateChangeKind(value: string): value is TemplateChangeKind {
+  return (TEMPLATE_CHANGE_KINDS as readonly string[]).includes(value);
+}
+
+export function changeKind(change: TemplateItemChange): TemplateChangeKind {
+  return change.kind ?? "wording";
+}
+
+export function isJobOnlyItemId(itemId: string): boolean {
+  return itemId.startsWith("job-");
+}
+
+export function isJobOnlyItem(item: ChecklistItem): boolean {
+  return isJobOnlyItemId(item.id);
+}
+
+export function isTemplateAuthoredItemId(itemId: string): boolean {
+  return itemId.startsWith("tpl-");
+}
+
+export function templateChangeKindLabel(kind: TemplateChangeKind): string {
+  switch (kind) {
+    case "wording":
+      return "Wording";
+    case "add":
+      return "Add";
+    case "edit":
+      return "Edit";
+    case "remove":
+      return "Remove";
+    case "move":
+      return "Move";
+    default:
+      return assertNever(kind, `Unknown template change: ${String(kind)}`);
+  }
 }
 
 export function openImpactCount(project: ProjectDocument): number {

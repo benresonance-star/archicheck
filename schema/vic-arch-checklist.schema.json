@@ -61,6 +61,29 @@
         "previousStatus": { "$ref": "#/$defs/itemStatus" }
       }
     },
+    "outputKind": {
+      "type": "string",
+      "enum": [
+        "client-brief",
+        "report",
+        "site-plan",
+        "demolition",
+        "plans",
+        "rcp",
+        "elevations",
+        "sections",
+        "details",
+        "roof-plan",
+        "schedules",
+        "specification",
+        "drawing-standards",
+        "record"
+      ]
+    },
+    "templateChangeKind": {
+      "type": "string",
+      "enum": ["wording", "add", "edit", "remove", "move"]
+    },
     "templateItemChange": {
       "type": "object",
       "additionalProperties": false,
@@ -77,6 +100,7 @@
       "properties": {
         "itemId": { "type": "string", "minLength": 1 },
         "title": { "type": "string" },
+        "kind": { "$ref": "#/$defs/templateChangeKind" },
         "beforeTitle": { "type": "string" },
         "afterTitle": { "type": "string" },
         "beforeDetail": { "type": "string" },
@@ -88,7 +112,37 @@
         "afterReferences": {
           "type": "array",
           "items": { "type": "string" }
-        }
+        },
+        "beforeStageId": { "type": "string" },
+        "afterStageId": { "type": "string" },
+        "beforeDeliverableId": { "type": ["string", "null"] },
+        "afterDeliverableId": { "type": ["string", "null"] },
+        "beforeRequired": { "type": "boolean" },
+        "afterRequired": { "type": "boolean" },
+        "beforeAppliesTo": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/typology" }
+        },
+        "afterAppliesTo": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/typology" }
+        },
+        "beforeResources": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/checklistResource" }
+        },
+        "afterResources": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/checklistResource" }
+        },
+        "beforeOutputKind": {
+          "type": ["string", "null"]
+        },
+        "afterOutputKind": {
+          "type": ["string", "null"]
+        },
+        "beforeIndex": { "type": "integer", "minimum": 0 },
+        "afterIndex": { "type": "integer", "minimum": 0 }
       }
     },
     "impactChange": {
@@ -108,6 +162,7 @@
       "properties": {
         "itemId": { "type": "string", "minLength": 1 },
         "title": { "type": "string" },
+        "kind": { "$ref": "#/$defs/templateChangeKind" },
         "beforeTitle": { "type": "string" },
         "afterTitle": { "type": "string" },
         "beforeDetail": { "type": "string" },
@@ -120,6 +175,36 @@
           "type": "array",
           "items": { "type": "string" }
         },
+        "beforeStageId": { "type": "string" },
+        "afterStageId": { "type": "string" },
+        "beforeDeliverableId": { "type": ["string", "null"] },
+        "afterDeliverableId": { "type": ["string", "null"] },
+        "beforeRequired": { "type": "boolean" },
+        "afterRequired": { "type": "boolean" },
+        "beforeAppliesTo": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/typology" }
+        },
+        "afterAppliesTo": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/typology" }
+        },
+        "beforeResources": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/checklistResource" }
+        },
+        "afterResources": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/checklistResource" }
+        },
+        "beforeOutputKind": {
+          "type": ["string", "null"]
+        },
+        "afterOutputKind": {
+          "type": ["string", "null"]
+        },
+        "beforeIndex": { "type": "integer", "minimum": 0 },
+        "afterIndex": { "type": "integer", "minimum": 0 },
         "adopted": { "type": "boolean" }
       }
     },
@@ -514,6 +599,7 @@
         },
         "grokbotId": { "type": "string", "minLength": 1 },
         "deliverableId": { "type": "string", "minLength": 1 },
+        "outputKind": { "$ref": "#/$defs/outputKind" },
         "assessment": { "$ref": "#/$defs/itemAssessment" }
       }
     },
