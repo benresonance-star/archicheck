@@ -1,0 +1,1543 @@
+{
+  "format": "vic-arch-checklist-template",
+  "formatVersion": "1.0.0",
+  "id": "vic-residential",
+  "version": "1.0.0",
+  "title": "Victoria residential — houses, townhouses and apartments",
+  "jurisdiction": "Victoria, Australia",
+  "description": "ARBV-aligned stages from pre-design through post-occupancy, with Clause 54 / 55 / 58, NCC 2022 (7-star and livable housing from 1 May 2024), and apartment developer-bond notes.",
+  "stages": [
+    {
+      "id": "pre-design",
+      "number": 1,
+      "title": "Pre-design",
+      "summary": "Brief, title, planning context, budget and what is possible on the site before sketching."
+    },
+    {
+      "id": "concept",
+      "number": 2,
+      "title": "Concept / sketch design",
+      "summary": "Options, massing and a preferred concept the client can sign, tested against Vic planning and 7-star orientation."
+    },
+    {
+      "id": "design-development",
+      "number": 3,
+      "title": "Design development",
+      "summary": "Resolve the preferred scheme with consultants, materials, ESD and amenity so it is ready to lodge."
+    },
+    {
+      "id": "town-planning",
+      "number": 4,
+      "title": "Town planning",
+      "summary": "Confirm whether a planning permit is required and run Clause 54, 55 or 58 through to endorsed plans."
+    },
+    {
+      "id": "documentation",
+      "number": 5,
+      "title": "Construction documentation",
+      "summary": "Working drawings and specifications that match endorsed planning drawings and NCC 2022 for a building permit."
+    },
+    {
+      "id": "tender",
+      "number": 6,
+      "title": "Tender and contractor selection",
+      "summary": "Issue the tender set, compare builders, and appoint under a written building contract."
+    },
+    {
+      "id": "contract-admin",
+      "number": 7,
+      "title": "Building contract administration",
+      "summary": "Building permit, inspections, variations, progress certificates, and occupancy."
+    },
+    {
+      "id": "practical-completion",
+      "number": 8,
+      "title": "Practical completion",
+      "summary": "Inspect, list defects, collect keys and manuals, and certify practical completion."
+    },
+    {
+      "id": "defects-liability",
+      "number": 9,
+      "title": "Defects liability (post-occupancy)",
+      "summary": "Track and close defects during the contractual DLP and any apartment bond inspections."
+    },
+    {
+      "id": "final-certificate",
+      "number": 10,
+      "title": "Final certificate",
+      "summary": "Issue the final certificate after DLP, start domestic building warranties, and archive the record."
+    },
+    {
+      "id": "post-occupancy",
+      "number": 11,
+      "title": "Post-occupancy evaluation",
+      "summary": "Seasonal comfort, energy, landscape and lessons learned after people have lived in the building."
+    }
+  ],
+  "items": [
+    {
+      "id": "pd-arbv",
+      "stageId": "pre-design",
+      "title": "Confirm architect registration",
+      "detail": "Check the architect (and any company) is registered with the Architects Registration Board of Victoria before engagement.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "ARBV — Find an architect",
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "grokbotId": "bot-pre-design"
+    },
+    {
+      "id": "pd-agreement",
+      "stageId": "pre-design",
+      "title": "Written client–architect agreement",
+      "detail": "Do not start work until a written agreement is signed. Record stages, fees, consultants, and whether planning and contract administration are included.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "ARBV Guideline — Client-architect agreements"
+      ],
+      "grokbotId": "bot-pre-design"
+    },
+    {
+      "id": "pd-brief",
+      "stageId": "pre-design",
+      "title": "Project brief",
+      "detail": "Record household or dwelling mix, accessibility, working from home, storage, parking, landscape, budget range, and must-not-change constraints.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-pre-design"
+    },
+    {
+      "id": "pd-title",
+      "stageId": "pre-design",
+      "title": "Title, easements, covenants and restrictions",
+      "detail": "Obtain a current title, plan of subdivision, easements, covenants, S173 agreements, and any owners corporation rules that constrain siting or materials.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Land Use Victoria title search"
+      ],
+      "grokbotId": "bot-pre-design"
+    },
+    {
+      "id": "pd-oc",
+      "stageId": "pre-design",
+      "title": "Owners corporation and common property",
+      "detail": "Identify OC plan, common property, exclusive-use areas, and whether a special resolution is needed for works.",
+      "appliesTo": [
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Subdivision Act 1988",
+        "Owners Corporations Act 2006"
+      ],
+      "grokbotId": "bot-pre-design"
+    },
+    {
+      "id": "pd-planning-context",
+      "stageId": "pre-design",
+      "title": "Zone, overlays and planning scheme",
+      "detail": "Record municipality, planning scheme, zone, overlays (heritage, flood, bushfire, special building, DDO, SLO, HO, BMO, LSIO, SBO) and whether a planning permit is likely.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Victoria Planning Provisions",
+        "Planning scheme maps"
+      ],
+      "grokbotId": "bot-pre-design"
+    },
+    {
+      "id": "pd-clauses",
+      "stageId": "pre-design",
+      "title": "Applicable residential clause",
+      "detail": "House or small second dwelling: Clause 54 if a planning permit is required. Two or more dwellings / townhouses / low-rise apartments to three storeys: Clause 55 (Townhouse and Low-Rise Code). Apartments of five storeys or more: Clause 58. Confirm storeys and dwelling count.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "VPP Clause 54",
+        "VPP Clause 55",
+        "VPP Clause 58"
+      ],
+      "grokbotId": "bot-pre-design"
+    },
+    {
+      "id": "pd-survey",
+      "stageId": "pre-design",
+      "title": "Feature and level survey",
+      "detail": "Commission a site survey with levels, trees, crossovers, services, adjoining windows and secluded private open space relevant to ResCode.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-pre-design"
+    },
+    {
+      "id": "pd-services",
+      "stageId": "pre-design",
+      "title": "Services and authority constraints",
+      "detail": "Locate sewer, stormwater, water, power, gas, NBN, and any build-over or asset-protection requirements. Flag septic or unsewered lots.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-pre-design"
+    },
+    {
+      "id": "pd-hazards",
+      "stageId": "pre-design",
+      "title": "Bushfire, flood, contamination and heritage",
+      "detail": "Record BAL if BMO or BAL construction may apply, flood levels, heritage citation, and potential contamination on infill lots.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "AS 3959",
+        "Building Regulations 2018",
+        "Heritage Overlay"
+      ],
+      "grokbotId": "bot-pre-design"
+    },
+    {
+      "id": "pd-budget",
+      "stageId": "pre-design",
+      "title": "Budget, program and GST",
+      "detail": "Set a working construction budget, consultant budget, authority fees, and a program that includes planning time. Note GST treatment.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-pre-design"
+    },
+    {
+      "id": "pd-neighbours",
+      "stageId": "pre-design",
+      "title": "Neighbourhood context photos",
+      "detail": "Photograph streetscape, adjoining dwellings, existing trees, and likely overlooking/overshadowing interfaces.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": false,
+      "references": [],
+      "grokbotId": "bot-pre-design"
+    },
+    {
+      "id": "cd-site-analysis",
+      "stageId": "concept",
+      "title": "Site analysis",
+      "detail": "Sun path, prevailing wind, views, privacy, significant trees, slope, and street character. This feeds the design response.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Clause 54.01 / 55.01 neighbourhood and site description"
+      ],
+      "grokbotId": "bot-concept"
+    },
+    {
+      "id": "cd-options",
+      "stageId": "concept",
+      "title": "Concept options",
+      "detail": "Issue at least one preferred sketch scheme (and alternatives if the agreement requires). Record client comments against each.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-concept"
+    },
+    {
+      "id": "cd-massing",
+      "stageId": "concept",
+      "title": "Height, setbacks and garden area",
+      "detail": "Test building height, street setback, site coverage, permeability and garden-area requirements of the zone before locking a plan.",
+      "appliesTo": [
+        "house"
+      ],
+      "required": true,
+      "references": [
+        "GRZ/NRZ garden area",
+        "Clause 54 neighbourhood character standards"
+      ],
+      "grokbotId": "bot-concept"
+    },
+    {
+      "id": "cd-cl55",
+      "stageId": "concept",
+      "title": "Clause 55 deemed-to-comply check",
+      "detail": "Run an early check against street setback, height, side/rear setbacks, walls on boundaries, site coverage, access, tree canopy and front fence. Flag where the Townhouse and Low-Rise Code deemed-to-comply path is intended.",
+      "appliesTo": [
+        "townhouse"
+      ],
+      "required": true,
+      "references": [
+        "Clause 55 Townhouse and Low-Rise Code (from 31 March 2025)"
+      ],
+      "grokbotId": "bot-concept"
+    },
+    {
+      "id": "cd-canopy",
+      "stageId": "concept",
+      "title": "Tree canopy target",
+      "detail": "Design for 10% canopy cover on sites up to 1,000 m² and 20% above 1,000 m², counting existing trees where they will be retained.",
+      "appliesTo": [
+        "townhouse"
+      ],
+      "required": true,
+      "references": [
+        "Clause 55 tree canopy"
+      ],
+      "grokbotId": "bot-concept"
+    },
+    {
+      "id": "cd-apartments",
+      "stageId": "concept",
+      "title": "Apartment mix, communal space and BADS",
+      "detail": "Set dwelling mix, apartment depths, communal open space, outlook and building separation against Better Apartments / Clause 55.07 or 58.",
+      "appliesTo": [
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Better Apartments Design Standards",
+        "Clause 55.07",
+        "Clause 58"
+      ],
+      "grokbotId": "bot-concept"
+    },
+    {
+      "id": "cd-energy",
+      "stageId": "concept",
+      "title": "Orientation for 7-star NatHERS",
+      "detail": "Lock living-room solar access, glazing areas, shading and thermal mass so a 7-star NatHERS outcome is plausible. Victoria requires NCC 2022 energy provisions from 1 May 2024.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2022",
+        "NatHERS 7-star (Vic from 1 May 2024)"
+      ],
+      "grokbotId": "bot-concept"
+    },
+    {
+      "id": "cd-livable",
+      "stageId": "concept",
+      "title": "Livable housing path of travel",
+      "detail": "Plan a step-free path, entrance width, and adaptable bathroom location. For Class 2, at least 50% of dwellings must meet the NCC livable housing provisions (or the higher VPP standard where it applies).",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2022 Livable Housing Design",
+        "VBA accessibility and energy fact sheet"
+      ],
+      "grokbotId": "bot-concept"
+    },
+    {
+      "id": "cd-parking",
+      "stageId": "concept",
+      "title": "Parking, crossovers and waste",
+      "detail": "Check Clause 52.06 parking, crossover locations, visitor parking, and whether waste collection is kerbside or on-site.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Clause 52.06"
+      ],
+      "grokbotId": "bot-concept"
+    },
+    {
+      "id": "cd-signoff",
+      "stageId": "concept",
+      "title": "Client sign-off of preferred concept",
+      "detail": "Written approval of the preferred concept, with a cost check against the brief, before design development.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-concept"
+    },
+    {
+      "id": "dd-gas",
+      "stageId": "design-development",
+      "title": "Coordinated GA drawings",
+      "detail": "Plans, sections and elevations at a scale suitable for planning, with levels, materials, and adjoining interfaces.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-design-development"
+    },
+    {
+      "id": "dd-consultants",
+      "stageId": "design-development",
+      "title": "Consultant team engaged",
+      "detail": "Appoint as needed: land surveyor, structural, civil/hydraulic, energy assessor, landscape, ESD, fire, acoustic, traffic, waste, geotech, quantity surveyor.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-design-development"
+    },
+    {
+      "id": "dd-nathers",
+      "stageId": "design-development",
+      "title": "Preliminary NatHERS and whole-of-home",
+      "detail": "Run a preliminary 7-star rating and whole-of-home assessment. Adjust fabric before planning freeze.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NatHERS",
+        "NCC 2022 energy"
+      ],
+      "grokbotId": "bot-design-development"
+    },
+    {
+      "id": "dd-storm",
+      "stageId": "design-development",
+      "title": "Stormwater and permeability",
+      "detail": "STORM or MUSIC assessment, on-site detention if required, and permeability consistent with the planning standard.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Clause 53.18 / stormwater",
+        "Melbourne Water",
+        "local WSUD policy"
+      ],
+      "grokbotId": "bot-design-development"
+    },
+    {
+      "id": "dd-amenity",
+      "stageId": "design-development",
+      "title": "Overlooking, overshadowing and daylight",
+      "detail": "Prepare diagrams for overlooking, overshadowing of secluded private open space, daylight to existing windows, and protection of existing rooftop solar.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Clause 54/55 amenity standards"
+      ],
+      "grokbotId": "bot-design-development"
+    },
+    {
+      "id": "dd-landscape",
+      "stageId": "design-development",
+      "title": "Landscape and deep soil",
+      "detail": "Landscape concept with canopy trees, deep-soil volumes, and front-garden character. Apartments: deep-soil / canopy tables in 55.07 or 58.03.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Clause 55.07 / 58.03 landscaping"
+      ],
+      "grokbotId": "bot-design-development"
+    },
+    {
+      "id": "dd-bess",
+      "stageId": "design-development",
+      "title": "ESD / BESS (apartments and larger townhouse sites)",
+      "detail": "Where council policy requires it, prepare a BESS or equivalent ESD report covering energy, water, IEQ, stormwater and waste.",
+      "appliesTo": [
+        "townhouse",
+        "apartment"
+      ],
+      "required": false,
+      "references": [
+        "local ESD policy",
+        "BESS"
+      ],
+      "grokbotId": "bot-design-development"
+    },
+    {
+      "id": "dd-wind",
+      "stageId": "design-development",
+      "title": "Wind assessment",
+      "detail": "Commission a wind assessment for apartment buildings of five storeys or more, and earlier if the site is exposed.",
+      "appliesTo": [
+        "apartment"
+      ],
+      "required": false,
+      "references": [
+        "Clause 58 wind impacts"
+      ],
+      "grokbotId": "bot-design-development"
+    },
+    {
+      "id": "dd-acoustic",
+      "stageId": "design-development",
+      "title": "Acoustic strategy",
+      "detail": "Address road/rail noise, apartment-to-apartment acoustic separation, and plant noise. Required on busy transport corridors.",
+      "appliesTo": [
+        "apartment"
+      ],
+      "required": false,
+      "references": [
+        "Clause 58.04 / Better Apartments noise"
+      ],
+      "grokbotId": "bot-design-development"
+    },
+    {
+      "id": "dd-waste",
+      "stageId": "design-development",
+      "title": "Waste management plan",
+      "detail": "Apartment (and larger townhouse) waste rooms, collection vehicle path, and council waste policy.",
+      "appliesTo": [
+        "townhouse",
+        "apartment"
+      ],
+      "required": false,
+      "references": [],
+      "grokbotId": "bot-design-development"
+    },
+    {
+      "id": "dd-client-lodge",
+      "stageId": "design-development",
+      "title": "Client approval to lodge planning",
+      "detail": "Confirm the scheme, cost update, and authority to lodge with council (or to proceed to building permit if no planning permit is required).",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-design-development"
+    },
+    {
+      "id": "tp-need",
+      "stageId": "town-planning",
+      "title": "Confirm whether a planning permit is required",
+      "detail": "Single dwellings on lots without overlays often proceed on a building permit only. Dual occupancy, townhouses, apartments, overlays and demolition commonly need a planning permit.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Planning and Environment Act 1987"
+      ],
+      "grokbotId": "bot-town-planning"
+    },
+    {
+      "id": "tp-cl54",
+      "stageId": "town-planning",
+      "title": "Clause 54 assessment (house)",
+      "detail": "If a permit is required for one dwelling or a small second dwelling, assess against Clause 54 including neighbourhood character, tree canopy and amenity (VC282 from 8 September 2025).",
+      "appliesTo": [
+        "house"
+      ],
+      "required": true,
+      "references": [
+        "Clause 54",
+        "Amendment VC282"
+      ],
+      "grokbotId": "bot-town-planning"
+    },
+    {
+      "id": "tp-cl55",
+      "stageId": "town-planning",
+      "title": "Clause 55 assessment (townhouse / low-rise)",
+      "detail": "Meet Clause 55 objectives. Where using deemed-to-comply standards, document each standard met. Otherwise provide an alternative design response against neighbourhood character policy.",
+      "appliesTo": [
+        "townhouse"
+      ],
+      "required": true,
+      "references": [
+        "Clause 55",
+        "Designing Better Medium Density Housing"
+      ],
+      "grokbotId": "bot-town-planning"
+    },
+    {
+      "id": "tp-cl58",
+      "stageId": "town-planning",
+      "title": "Clause 58 assessment (apartments 5+ storeys)",
+      "detail": "Lodge a Clause 58 assessment with urban context, building layout, amenity, internal space, and landscaping standards.",
+      "appliesTo": [
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Clause 58",
+        "Better Apartments Design Standards"
+      ],
+      "grokbotId": "bot-town-planning"
+    },
+    {
+      "id": "tp-nsd",
+      "stageId": "town-planning",
+      "title": "Neighbourhood and site description + design response",
+      "detail": "Prepare the Clause 54.01 / 55.01 package: existing conditions, neighbourhood character and a design response that explains the scheme.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-town-planning"
+    },
+    {
+      "id": "tp-set",
+      "stageId": "town-planning",
+      "title": "Planning drawing set",
+      "detail": "Site plan, floor plans, elevations, sections, shadow diagrams, materials, landscape, and development summary (site coverage, permeability, garden area, canopy, parking).",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-town-planning"
+    },
+    {
+      "id": "tp-reports",
+      "stageId": "town-planning",
+      "title": "Supporting reports",
+      "detail": "As required: traffic, waste, ESD/BESS, arborist, heritage, flood, bushfire, urban context, acoustic, wind, affordable housing.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": false,
+      "references": [],
+      "grokbotId": "bot-town-planning"
+    },
+    {
+      "id": "tp-lodge",
+      "stageId": "town-planning",
+      "title": "Lodge application and pay fees",
+      "detail": "Lodge with the responsible authority, keep the application number, and diary statutory clocks.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-town-planning"
+    },
+    {
+      "id": "tp-rfi",
+      "stageId": "town-planning",
+      "title": "Further information and advertising",
+      "detail": "Respond to s54 further information. Track notice/advertising, objectors, and any consultation.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": false,
+      "references": [
+        "Planning and Environment Act ss 52, 54"
+      ],
+      "grokbotId": "bot-town-planning"
+    },
+    {
+      "id": "tp-permit",
+      "stageId": "town-planning",
+      "title": "Planning permit and endorsed plans",
+      "detail": "Receive the permit, read every condition, and obtain endorsed plans. Diary secondary consents, expiry, and plans-to-be-endorsed conditions.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-town-planning"
+    },
+    {
+      "id": "tp-subdivision",
+      "stageId": "town-planning",
+      "title": "Subdivision and statement of compliance",
+      "detail": "For townhouses (and apartment lots), run the plan of subdivision, OC schedule, and statement of compliance in parallel with construction as required.",
+      "appliesTo": [
+        "townhouse",
+        "apartment"
+      ],
+      "required": false,
+      "references": [
+        "Subdivision Act 1988"
+      ],
+      "grokbotId": "bot-town-planning"
+    },
+    {
+      "id": "doc-tp-match",
+      "stageId": "documentation",
+      "title": "Match endorsed town planning drawings",
+      "detail": "Check every planning condition and endorsed dimension before issuing a building-permit set. Record any secondary consent needed.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-documentation"
+    },
+    {
+      "id": "doc-working",
+      "stageId": "documentation",
+      "title": "Working drawings and specification",
+      "detail": "Issue a coordinated architectural set and specification suitable for tender and for the building surveyor.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-documentation"
+    },
+    {
+      "id": "doc-ncc",
+      "stageId": "documentation",
+      "title": "NCC 2022 compliance notes",
+      "detail": "Classify the building (Class 1a / 1b / 2 / 7a carpark etc.), document performance solutions, fire, moisture, energy and accessibility.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2022",
+        "Building Act 1993"
+      ],
+      "grokbotId": "bot-documentation"
+    },
+    {
+      "id": "doc-energy",
+      "stageId": "documentation",
+      "title": "Final NatHERS 7-star and whole-of-home",
+      "detail": "Final energy report for the building permit application lodged after 1 May 2024.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2022",
+        "NatHERS"
+      ],
+      "grokbotId": "bot-documentation"
+    },
+    {
+      "id": "doc-livable",
+      "stageId": "documentation",
+      "title": "Livable housing details",
+      "detail": "Dimension step-free paths, 850 mm clear entries, sanitary facilities and adaptable bathrooms. Apartments: identify the 50% of dwellings that meet Design A or B.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2022 Livable Housing Design"
+      ],
+      "grokbotId": "bot-documentation"
+    },
+    {
+      "id": "doc-condensation",
+      "stageId": "documentation",
+      "title": "Condensation management",
+      "detail": "Detail vapour control, roof and wall ventilation, and wet-area ventilation per NCC 2022 condensation provisions.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2022 condensation"
+      ],
+      "grokbotId": "bot-documentation"
+    },
+    {
+      "id": "doc-structure",
+      "stageId": "documentation",
+      "title": "Structural, civil and services drawings",
+      "detail": "Coordinated structure, stormwater, sewer, electrical, mechanical and fire drawings issued as part of the permit set.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-documentation"
+    },
+    {
+      "id": "doc-waterproofing",
+      "stageId": "documentation",
+      "title": "Waterproofing and wet areas",
+      "detail": "Specify AS 3740 wet-area systems, balcony membranes, and inspection hold points.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "AS 3740"
+      ],
+      "grokbotId": "bot-documentation"
+    },
+    {
+      "id": "doc-part5",
+      "stageId": "documentation",
+      "title": "Part 5 siting vs planning permit",
+      "detail": "Where no planning permit exists, check Part 5 of the Building Regulations (siting). Where a planning permit exists, apply regulation 68 so the building permit is not inconsistent with the planning permit.",
+      "appliesTo": [
+        "house"
+      ],
+      "required": true,
+      "references": [
+        "Building Regulations 2018 Part 5",
+        "reg 68"
+      ],
+      "grokbotId": "bot-documentation"
+    },
+    {
+      "id": "doc-manual",
+      "stageId": "documentation",
+      "title": "Building manual inputs",
+      "detail": "Collect information needed for the building manual / operations information that the 2025 inspection and manual reforms expect at occupancy.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": false,
+      "references": [
+        "Building Amendment (Building Manuals and Mandatory Inspections) Regulations 2025"
+      ],
+      "grokbotId": "bot-documentation"
+    },
+    {
+      "id": "tn-set",
+      "stageId": "tender",
+      "title": "Tender set issued",
+      "detail": "Issue drawings, specification, planning permit, and known site constraints. Record tender closing date.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-tender"
+    },
+    {
+      "id": "tn-rfi",
+      "stageId": "tender",
+      "title": "Tender RFIs",
+      "detail": "Answer builder queries in writing and issue addenda to all tenderers.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-tender"
+    },
+    {
+      "id": "tn-compare",
+      "stageId": "tender",
+      "title": "Tender comparison",
+      "detail": "Compare price, program, qualifications, PC sums, and exclusions on the same basis.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-tender"
+    },
+    {
+      "id": "tn-builder",
+      "stageId": "tender",
+      "title": "Builder registration and insurance",
+      "detail": "Confirm VBA/BPC registration, domestic building insurance where required, and public liability.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Domestic Building Contracts Act 1995",
+        "Building and Plumbing Commission"
+      ],
+      "grokbotId": "bot-tender"
+    },
+    {
+      "id": "tn-contract",
+      "stageId": "tender",
+      "title": "Building contract executed",
+      "detail": "Execute a written contract (ABIC, HIA or other) with the drawings and spec listed. Architect as contract administrator if engaged for that stage.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-tender"
+    },
+    {
+      "id": "tn-rbs",
+      "stageId": "tender",
+      "title": "Appoint relevant building surveyor",
+      "detail": "Client appoints a registered building surveyor. Do not let the builder appoint the RBS for the client.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Building Act 1993"
+      ],
+      "grokbotId": "bot-tender"
+    },
+    {
+      "id": "ca-permit",
+      "stageId": "contract-admin",
+      "title": "Building permit issued",
+      "detail": "Building permit received before work starts. Check it lists the correct drawings, stages, and mandatory notification stages.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Building Act 1993"
+      ],
+      "grokbotId": "bot-contract-admin"
+    },
+    {
+      "id": "ca-inspections",
+      "stageId": "contract-admin",
+      "title": "Mandatory inspections program",
+      "detail": "Diary foundation, framing, waterproofing, occupancy and any additional 2025 notification stages. Builders must notify the RBS before covering work.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Building Regulations 2018 mandatory notifications"
+      ],
+      "grokbotId": "bot-contract-admin"
+    },
+    {
+      "id": "ca-meetings",
+      "stageId": "contract-admin",
+      "title": "Site meetings and minutes",
+      "detail": "Minute directions, RFIs, and quality issues. Architect remains impartial if administering the contract.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "ARBV Code — administer building contracts impartially"
+      ],
+      "grokbotId": "bot-contract-admin"
+    },
+    {
+      "id": "ca-variations",
+      "stageId": "contract-admin",
+      "title": "Variations",
+      "detail": "Price and approve variations in writing before the work proceeds. Keep a running cost report.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-contract-admin"
+    },
+    {
+      "id": "ca-claims",
+      "stageId": "contract-admin",
+      "title": "Progress claims and certificates",
+      "detail": "Assess claims, issue certificates, and track retention or security under the contract.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-contract-admin"
+    },
+    {
+      "id": "ca-oc",
+      "stageId": "contract-admin",
+      "title": "Occupancy permit or final inspection",
+      "detail": "RBS issues an occupancy permit (or certificate of final inspection). Apartments: occupancy before residents move in, typically for the building / each part as applicable.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Building Act 1993 occupancy permit"
+      ],
+      "grokbotId": "bot-contract-admin"
+    },
+    {
+      "id": "ca-bond",
+      "stageId": "contract-admin",
+      "title": "Apartment developer bond (if captured)",
+      "detail": "For residential apartment buildings over three storeys with a building permit issued from 1 July 2027, lodge a 2% bond with the BPC before applying for occupancy. Notice to BPC as required. Transitional: regulations from 1 July 2026.",
+      "appliesTo": [
+        "apartment"
+      ],
+      "required": false,
+      "references": [
+        "Building Legislation Amendment (Buyer Protections) Act 2025"
+      ],
+      "grokbotId": "bot-contract-admin"
+    },
+    {
+      "id": "ca-oc-setup",
+      "stageId": "contract-admin",
+      "title": "Owners corporation set-up",
+      "detail": "OC registered, insurance, first meeting, common property schedule, and building manual handed over.",
+      "appliesTo": [
+        "townhouse",
+        "apartment"
+      ],
+      "required": false,
+      "references": [],
+      "grokbotId": "bot-contract-admin"
+    },
+    {
+      "id": "pc-inspect",
+      "stageId": "practical-completion",
+      "title": "Practical completion inspection",
+      "detail": "Architect inspects against the contract documents. Major defects delay PC; minor defects go on the list.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-practical-completion"
+    },
+    {
+      "id": "pc-list",
+      "stageId": "practical-completion",
+      "title": "Defects and incomplete works list",
+      "detail": "Issue a dated list. Builder must close items. Occupancy permit does not waive contractual defects.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-practical-completion"
+    },
+    {
+      "id": "pc-handover",
+      "stageId": "practical-completion",
+      "title": "Keys, warranties, as-builts and manuals",
+      "detail": "Collect keys, appliance warranties, cleaning, as-built services drawings, operation manuals, and the building manual.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-practical-completion"
+    },
+    {
+      "id": "pc-certificate",
+      "stageId": "practical-completion",
+      "title": "Certificate of practical completion",
+      "detail": "Issue PC. This starts the defects liability period. Record the date in the project JSON.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-practical-completion"
+    },
+    {
+      "id": "dlp-period",
+      "stageId": "defects-liability",
+      "title": "Defects liability period diary",
+      "detail": "Record DLP start (PC date) and end. Typical residential contracts use 12 months; check the executed contract.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-defects-liability"
+    },
+    {
+      "id": "dlp-track",
+      "stageId": "defects-liability",
+      "title": "Defects register",
+      "detail": "Log each defect with date, location, photo, item id, and close-out date. Empty notes are allowed; do not delete closed items.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-defects-liability"
+    },
+    {
+      "id": "dlp-bond-prelim",
+      "stageId": "defects-liability",
+      "title": "Apartment bond preliminary inspection (15–18 months)",
+      "detail": "If the developer bond scheme applies, arrange the qualified building assessor inspection 15–18 months after occupancy and give the developer an opportunity to rectify.",
+      "appliesTo": [
+        "apartment"
+      ],
+      "required": false,
+      "references": [
+        "Developer bond scheme — BPC"
+      ],
+      "grokbotId": "bot-defects-liability"
+    },
+    {
+      "id": "dlp-bond-final",
+      "stageId": "defects-liability",
+      "title": "Apartment bond final inspection (21–24 months)",
+      "detail": "If the preliminary report still has reportable defects, complete the 21–24 month inspection. OC may then claim on the bond.",
+      "appliesTo": [
+        "apartment"
+      ],
+      "required": false,
+      "references": [
+        "Developer bond scheme — BPC"
+      ],
+      "grokbotId": "bot-defects-liability"
+    },
+    {
+      "id": "dlp-close",
+      "stageId": "defects-liability",
+      "title": "DLP close-out",
+      "detail": "Confirm all listed defects are fixed or accepted. Extend DLP if the contract requires it when items remain open.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-defects-liability"
+    },
+    {
+      "id": "fc-inspect",
+      "stageId": "final-certificate",
+      "title": "Final inspection after DLP",
+      "detail": "Inspect remaining items. Do not issue a final certificate while contractual defects remain that the builder is obliged to fix.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-final-certificate"
+    },
+    {
+      "id": "fc-issue",
+      "stageId": "final-certificate",
+      "title": "Final certificate",
+      "detail": "Issue the final certificate. Domestic building warranty typically covers six years for structural defects and two years for non-structural defects.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Domestic Building Contracts Act 1995"
+      ],
+      "grokbotId": "bot-final-certificate"
+    },
+    {
+      "id": "fc-security",
+      "stageId": "final-certificate",
+      "title": "Release retention / security",
+      "detail": "Release remaining security in accordance with the contract after final certificate.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-final-certificate"
+    },
+    {
+      "id": "fc-archive",
+      "stageId": "final-certificate",
+      "title": "Archive project records",
+      "detail": "Keep the agreement, permits, endorsed drawings, certificates, and this JSON package. Architects must document and maintain records.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "ARBV Code — document and maintain records"
+      ],
+      "grokbotId": "bot-final-certificate"
+    },
+    {
+      "id": "poe-survey",
+      "stageId": "post-occupancy",
+      "title": "Occupant feedback",
+      "detail": "Collect structured feedback after at least one winter and one summer where possible: comfort, storage, daylight, acoustics, operation of systems.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-post-occupancy"
+    },
+    {
+      "id": "poe-energy",
+      "stageId": "post-occupancy",
+      "title": "Energy and condensation check",
+      "detail": "Compare bills or monitoring to the NatHERS intent. Look for condensation in bathrooms, robes and south-facing rooms.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-post-occupancy"
+    },
+    {
+      "id": "poe-landscape",
+      "stageId": "post-occupancy",
+      "title": "Landscape establishment",
+      "detail": "Confirm canopy trees and deep-soil planting have established, irrigation works, and any planning landscape condition is still met.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [],
+      "grokbotId": "bot-post-occupancy"
+    },
+    {
+      "id": "poe-lessons",
+      "stageId": "post-occupancy",
+      "title": "Lessons learned",
+      "detail": "Note what to change on the next Victorian house, townhouse or apartment project. Store against this project, not only in someone’s inbox.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": false,
+      "references": [],
+      "grokbotId": "bot-post-occupancy"
+    }
+  ],
+  "grokbots": [
+    {
+      "id": "bot-pre-design",
+      "name": "Brief",
+      "title": "Pre-design researcher",
+      "stageId": "pre-design",
+      "description": "Turns a Victorian site into a briefing pack: title risks, zone/overlays, and which of Clauses 54, 55 or 58 will apply.",
+      "firstTask": "Using only the attached project JSON and any title or planning-scheme files, produce a pre-design briefing note for this Victoria site. State typology (house, townhouse or apartment), likely planning permit trigger, applicable VPP clause, overlays, and missing surveys. Flag unknowns. Do not contact council. Stop after the note.",
+      "plugins": [
+        "web",
+        "files"
+      ],
+      "approvalRules": [
+        "Do not lodge permits, pay fees, or send emails to councils, surveyors or neighbours.",
+        "Do not modify the project JSON except as a proposed patch presented for approval.",
+        "Stop for approval before any external account sign-in, payment, or legal acceptance."
+      ]
+    },
+    {
+      "id": "bot-concept",
+      "name": "Sketch",
+      "title": "Concept tester",
+      "stageId": "concept",
+      "description": "Stress-tests a sketch against 7-star orientation, livable housing, parking and the relevant ResCode / BADS envelope.",
+      "firstTask": "Read the project JSON and any concept PDFs. List envelope risks (height, setbacks, canopy, garden area, overlooking) and 7-star / livable-housing moves to make now. Return a punch-list mapped to checklist item ids. Do not redraw the scheme unless asked.",
+      "plugins": [
+        "web",
+        "files"
+      ],
+      "approvalRules": [
+        "Do not lodge permits, pay fees, or send emails to councils, surveyors or neighbours.",
+        "Do not modify the project JSON except as a proposed patch presented for approval.",
+        "Stop for approval before any external account sign-in, payment, or legal acceptance."
+      ]
+    },
+    {
+      "id": "bot-design-development",
+      "name": "Resolve",
+      "title": "Design-development coordinator",
+      "stageId": "design-development",
+      "description": "Tracks consultants, NatHERS, stormwater and amenity diagrams before a planning freeze.",
+      "firstTask": "From the project JSON, list which design-development checklist items still lack notes. Propose consultant RFPs and a lodging-readiness score. Do not email consultants.",
+      "plugins": [
+        "web",
+        "files"
+      ],
+      "approvalRules": [
+        "Do not lodge permits, pay fees, or send emails to councils, surveyors or neighbours.",
+        "Do not modify the project JSON except as a proposed patch presented for approval.",
+        "Stop for approval before any external account sign-in, payment, or legal acceptance."
+      ]
+    },
+    {
+      "id": "bot-town-planning",
+      "name": "Permit",
+      "title": "Planning permit packer",
+      "stageId": "town-planning",
+      "description": "Assembles a Clause 54 / 55 / 58 lodgement checklist and tracks RFI and permit conditions.",
+      "firstTask": "Using the attached project JSON and template, draft a lodgement completeness list for this typology and storey count. Quote the relevant VPP clause. If a permit is already noted, extract condition types to watch (endorsed plans, landscape, ESD). Do not lodge.",
+      "plugins": [
+        "web",
+        "files"
+      ],
+      "approvalRules": [
+        "Do not lodge permits, pay fees, or send emails to councils, surveyors or neighbours.",
+        "Do not modify the project JSON except as a proposed patch presented for approval.",
+        "Stop for approval before any external account sign-in, payment, or legal acceptance."
+      ]
+    },
+    {
+      "id": "bot-documentation",
+      "name": "Working",
+      "title": "Documentation checker",
+      "stageId": "documentation",
+      "description": "Diffs the building-permit set against endorsed planning drawings and NCC 2022 energy, livable housing and condensation.",
+      "firstTask": "Compare notes in the project JSON against NCC 2022 items (7-star, livable housing, condensation, waterproofing). List gaps that would stall a Victorian building permit. Do not issue drawings.",
+      "plugins": [
+        "web",
+        "files"
+      ],
+      "approvalRules": [
+        "Do not lodge permits, pay fees, or send emails to councils, surveyors or neighbours.",
+        "Do not modify the project JSON except as a proposed patch presented for approval.",
+        "Stop for approval before any external account sign-in, payment, or legal acceptance."
+      ]
+    },
+    {
+      "id": "bot-tender",
+      "name": "Tender",
+      "title": "Tender comparitor",
+      "stageId": "tender",
+      "description": "Helps compare builder tenders on a like-for-like basis and checks registration and insurance.",
+      "firstTask": "If tender notes or attachments exist, build a comparison table (price, program, exclusions, PC sums). Confirm the file notes whether the builder is registered and DBI is addressed. Do not appoint a builder.",
+      "plugins": [
+        "web",
+        "files"
+      ],
+      "approvalRules": [
+        "Do not lodge permits, pay fees, or send emails to councils, surveyors or neighbours.",
+        "Do not modify the project JSON except as a proposed patch presented for approval.",
+        "Stop for approval before any external account sign-in, payment, or legal acceptance."
+      ]
+    },
+    {
+      "id": "bot-contract-admin",
+      "name": "CA",
+      "title": "Contract administrator",
+      "stageId": "contract-admin",
+      "description": "Tracks building permit, inspections, variations and occupancy. Remains impartial.",
+      "firstTask": "Summarise open contract-administration items, including building permit, inspections and variations. For apartments, note whether the 2% developer bond scheme might apply given storeys and permit timing. Do not instruct the builder.",
+      "plugins": [
+        "web",
+        "files"
+      ],
+      "approvalRules": [
+        "Do not lodge permits, pay fees, or send emails to councils, surveyors or neighbours.",
+        "Do not modify the project JSON except as a proposed patch presented for approval.",
+        "Stop for approval before any external account sign-in, payment, or legal acceptance."
+      ]
+    },
+    {
+      "id": "bot-practical-completion",
+      "name": "PC",
+      "title": "Practical completion inspector",
+      "stageId": "practical-completion",
+      "description": "Turns site notes and photos into a dated defects and incomplete-works list.",
+      "firstTask": "From notes and any attached photos or PDFs, draft a practical completion defects list grouped by location. Mark items that should delay PC versus DLP. Do not certify PC.",
+      "plugins": [
+        "web",
+        "files"
+      ],
+      "approvalRules": [
+        "Do not lodge permits, pay fees, or send emails to councils, surveyors or neighbours.",
+        "Do not modify the project JSON except as a proposed patch presented for approval.",
+        "Stop for approval before any external account sign-in, payment, or legal acceptance."
+      ]
+    },
+    {
+      "id": "bot-defects-liability",
+      "name": "Defects",
+      "title": "Defects register",
+      "stageId": "defects-liability",
+      "description": "Keeps the DLP register and, for captured apartment buildings, the bond inspection window.",
+      "firstTask": "Rebuild the defects register from answers and notes. Diary DLP end. If typology is apartment and storeys > 3, outline the 15–18 and 21–24 month bond inspections as optional future items. Do not contact the builder.",
+      "plugins": [
+        "web",
+        "files"
+      ],
+      "approvalRules": [
+        "Do not lodge permits, pay fees, or send emails to councils, surveyors or neighbours.",
+        "Do not modify the project JSON except as a proposed patch presented for approval.",
+        "Stop for approval before any external account sign-in, payment, or legal acceptance."
+      ]
+    },
+    {
+      "id": "bot-final-certificate",
+      "name": "Final",
+      "title": "Final certificate clerk",
+      "stageId": "final-certificate",
+      "description": "Checks DLP close-out, warranty start, and archive completeness.",
+      "firstTask": "Confirm whether DLP close-out notes exist and list the archive (permits, certificates, this JSON package). Draft a final-certificate readiness paragraph. Do not issue the certificate.",
+      "plugins": [
+        "web",
+        "files"
+      ],
+      "approvalRules": [
+        "Do not lodge permits, pay fees, or send emails to councils, surveyors or neighbours.",
+        "Do not modify the project JSON except as a proposed patch presented for approval.",
+        "Stop for approval before any external account sign-in, payment, or legal acceptance."
+      ]
+    },
+    {
+      "id": "bot-post-occupancy",
+      "name": "POE",
+      "title": "Post-occupancy interviewer",
+      "stageId": "post-occupancy",
+      "description": "Structures seasonal POE questions and records lessons for the next Victorian residential project.",
+      "firstTask": "Draft a short POE questionnaire tailored to this typology (house, townhouse or apartment) covering winter/summer comfort, energy, condensation, landscape and waste. Do not contact occupants.",
+      "plugins": [
+        "web",
+        "files"
+      ],
+      "approvalRules": [
+        "Do not lodge permits, pay fees, or send emails to councils, surveyors or neighbours.",
+        "Do not modify the project JSON except as a proposed patch presented for approval.",
+        "Stop for approval before any external account sign-in, payment, or legal acceptance."
+      ]
+    }
+  ],
+  "checksum": "4f3ca300b302aae615fd161c909c4cad8a060848a92d564a7445db8d3fe79d37"
+}
