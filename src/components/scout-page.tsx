@@ -67,7 +67,17 @@ export function ScoutPage({ id }: { id: string }) {
         <ScoutInbox
           projectId={id}
           template={data.template}
+          municipality={data.project.site.municipality}
           report={report}
+          onMunicipality={(municipality) =>
+            setData({
+              ...data,
+              project: {
+                ...data.project,
+                site: { ...data.project.site, municipality },
+              },
+            })
+          }
           onReport={setReport}
         />
       </main>

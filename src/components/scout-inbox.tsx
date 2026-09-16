@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,13 +12,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
   applyProposedWording,
   patchScoutFinding,
   runProjectScout,
+  updateMunicipality,
 } from "@/lib/client-store";
+import { MUNICIPALITIES, resolveMunicipality } from "@/lib/scout/municipalities";
 import {
   actionLabel,
   findingStatusLabel,
@@ -30,15 +33,26 @@ import type { TemplateDocument } from "@/lib/types";
 export function ScoutInbox({
   projectId,
   template,
+  municipality,
   report,
+  onMunicipality,
   onReport,
 }: {
   projectId: string;
   template: TemplateDocument;
+  municipality: string;
   report: ScoutReport | null;
+  onMunicipality: (municipality: string) => void;
   onReport: (report: ScoutReport) => void;
 }) {
   const [running, setRunning] = useState(false);
+  const [municipalityDraft, setMunicipalityDraft] = useState(municipality);
+  const [savingMunicipality, setSavingMunicipality] = useState(false);
+  const resolved = resolveMunicipality(municipality);
+
+  useEffect(() => {
+    setMunicipalityDraft(municipality);
+  }, [municipality]);
 
   async function run() {
     setRunning(true);
@@ -56,8 +70,56 @@ export function ScoutInbox({
   const statewide = report?.findings.filter((finding) => finding.scope === "statewide") ?? [];
   const local = report?.findings.filter((finding) => finding.scope !== "statewide") ?? [];
 
+  async function saveMunicipality() {
+    setSavingMunicipality(true);
+    try {
+      const project = await updateMunicipality(projectId, municipalityDraft);
+      onMunicipality(project.site.municipality);
+      toast.success(
+        resolveMunicipality(project.site.municipality)
+          ? "Municipality saved. Run scout to watch this council."
+          : "Saved. Scout needs a known Victorian municipality name to watch C-amendments.",
+      );
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not save");
+    } finally {
+      setSavingMunicipality(false);
+    }
+  }
+
   return (
     <div className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="scout-municipality">Municipality</Label>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <Input
+            id="scout-municipality"
+            list="scout-municipalities"
+            className="min-h-11"
+            placeholder="e.g. Yarra"
+            value={municipalityDraft}
+            onChange={(event) => setMunicipalityDraft(event.target.value)}
+          />
+          <datalist id="scout-municipalities">
+            {MUNICIPALITIES.map((row) => (
+              <option key={row.schemeCode} value={row.name} />
+            ))}
+          </datalist>
+          <Button
+            variant="outline"
+            className="min-h-11"
+            disabled={savingMunicipality || municipalityDraft.trim() === municipality}
+            onClick={() => void saveMunicipality()}
+          >
+            {savingMunicipality ? "Saving…" : "Save"}
+          </Button>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          {resolved
+            ? `Local watch: ${resolved.name} planning scheme amendments.`
+            : "Statewide sources still run. Set a Victorian municipality to watch that council’s C-amendments."}
+        </p>
+      </div>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-muted-foreground">
           {report

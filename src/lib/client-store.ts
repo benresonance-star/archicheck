@@ -15,6 +15,7 @@ import {
   progressForProject,
 } from "@/lib/types";
 import { validateProjectDocument, validateTemplateDocument } from "@/lib/validate";
+import { applyProposedToTemplate } from "@/lib/scout/apply-wording";
 import type { ScoutFinding, ScoutProposed, ScoutReport } from "@/lib/scout/types";
 import type { PreviousSnapshot } from "@/lib/scout/watch-list";
 
@@ -439,34 +440,22 @@ function bumpDraftVersion(version: string): string {
   return `${version}-draft.1`;
 }
 
+export async function updateMunicipality(
+  projectId: string,
+  municipality: string,
+): Promise<ProjectDocument> {
+  return mutateProject(projectId, (project) => {
+    project.site.municipality = municipality.trim();
+  });
+}
+
 export async function applyProposedWording(input: {
   projectId: string;
   finding: ScoutFinding;
   proposed: ScoutProposed;
 }): Promise<{ template: TemplateDocument; report: ScoutReport }> {
   const { project, template } = await loadProject(input.projectId);
-  const next: TemplateDocument = structuredClone(template);
-  if (input.finding.action === "add" && input.proposed.newItem) {
-    next.items.push(input.proposed.newItem);
-  } else {
-    const targetId = input.finding.itemIds[0];
-    const item = next.items.find((entry) => entry.id === targetId);
-    if (!item) {
-      throw new Error("Checklist item is not in this template");
-    }
-    if (input.proposed.title) {
-      item.title = input.proposed.title;
-    }
-    if (input.proposed.detail) {
-      item.detail = input.proposed.detail;
-    }
-    if (input.proposed.references) {
-      item.references = input.proposed.references;
-    }
-    if (input.proposed.appliesTo) {
-      item.appliesTo = input.proposed.appliesTo;
-    }
-  }
+  const next = applyProposedToTemplate(template, input.finding, input.proposed);
   next.version = bumpDraftVersion(next.version);
   next.checksum = await sha256Json(
     templateChecksumPayload(next as unknown as Record<string, unknown>),

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { createProject } from "@/lib/client-store";
+import { MUNICIPALITIES } from "@/lib/scout/municipalities";
 import type { Site, Typology } from "@/lib/types";
 
 export function NewProjectForm({ typology }: { typology: Typology }) {
@@ -61,6 +62,7 @@ export function NewProjectForm({ typology }: { typology: Typology }) {
       <Field label="Municipality" htmlFor="municipality">
         <Input
           id="municipality"
+          list="new-municipalities"
           className="min-h-11"
           placeholder="e.g. Yarra"
           value={site.municipality}
@@ -68,6 +70,11 @@ export function NewProjectForm({ typology }: { typology: Typology }) {
             setSite({ ...site, municipality: event.target.value })
           }
         />
+        <datalist id="new-municipalities">
+          {MUNICIPALITIES.map((row) => (
+            <option key={row.schemeCode} value={row.name} />
+          ))}
+        </datalist>
       </Field>
       <Field label="Zone" htmlFor="zone">
         <Input

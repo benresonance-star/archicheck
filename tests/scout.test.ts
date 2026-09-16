@@ -7,8 +7,10 @@ import {
 } from "../src/lib/scout/interpret";
 import { resolveMunicipality } from "../src/lib/scout/municipalities";
 import { scoutIsDue } from "../src/lib/scout/types";
+import { applyProposedToTemplate } from "../src/lib/scout/apply-wording";
 import { STATEWIDE_SOURCES } from "../src/lib/scout/watch-list";
-import type { ScoutSnapshot } from "../src/lib/scout/types";
+import type { ScoutFinding, ScoutSnapshot } from "../src/lib/scout/types";
+import type { TemplateDocument } from "../src/lib/types";
 
 function snapshot(partial: Partial<ScoutSnapshot> & Pick<ScoutSnapshot, "sourceId">): ScoutSnapshot {
   return {
@@ -118,4 +120,63 @@ test("scout is due after a week", () => {
     scoutIsDue(new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString()),
     true,
   );
+});
+
+test("accepting proposed wording updates every flagged item, not answers", () => {
+  const template: TemplateDocument = {
+    format: "vic-arch-checklist-template",
+    formatVersion: "1.0.0",
+    id: "tpl",
+    version: "1.0.0",
+    title: "t",
+    jurisdiction: "Victoria",
+    description: "",
+    checksum: "x",
+    stages: [],
+    grokbots: [],
+    items: [
+      {
+        id: "pd-planning-context",
+        stageId: "pre-design",
+        title: "Planning context",
+        detail: "old one",
+        appliesTo: ["house"],
+        required: true,
+        references: [],
+        grokbotId: "bot",
+      },
+      {
+        id: "tp-need",
+        stageId: "town-planning",
+        title: "Permit need",
+        detail: "old two",
+        appliesTo: ["house"],
+        required: true,
+        references: [],
+        grokbotId: "bot",
+      },
+    ],
+  };
+  const finding: ScoutFinding = {
+    id: "f1",
+    sourceId: "local-amendments",
+    sourceTitle: "Yarra amendments",
+    url: "https://example.test",
+    scope: "local",
+    action: "replace",
+    itemIds: ["pd-planning-context", "tp-need"],
+    flag: "flag",
+    proposed: { detail: "new wording" },
+    confidence: "low",
+    status: "open",
+    hashChanged: true,
+    baseline: false,
+  };
+  const next = applyProposedToTemplate(template, finding, {
+    detail: "new wording",
+    references: ["https://example.test"],
+  });
+  assert.equal(next.items[0].detail, "new wording");
+  assert.equal(next.items[1].detail, "new wording");
+  assert.equal(template.items[0].detail, "old one");
 });
