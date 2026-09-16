@@ -54,6 +54,7 @@ export function typologyMeta(typology: Typology): TypologyMeta {
           "Better Apartments Design Standards, occupancy before move-in, and the 2% developer bond for buildings over three storeys when the building permit is issued from 1 July 2027.",
         nccClass: "Class 2",
         notes: [
+          "BADS: Clause 55.07 under 5 storeys, Clause 58 at 5+ storeys",
           "Livable housing on at least 50% of dwellings",
           "Wind, waste, acoustic and communal open space as storeys increase",
           "Occupancy permit before residents move in",

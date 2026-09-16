@@ -25,7 +25,7 @@ test("every bundled checklist item cites a source and helper resources", () => {
       item.id,
     );
   }
-  assert.equal(BUNDLED_TEMPLATE.version, "1.0.2");
+  assert.equal(BUNDLED_TEMPLATE.version, "1.0.3");
 });
 
 test("generic templates expose checkable items for every typology and stage", () => {
@@ -49,6 +49,40 @@ test("apartment template includes developer-bond items that houses omit", () => 
     .map((item) => item.id);
   assert.equal(houseIds.includes("ca-bond"), false);
   assert.equal(apartmentIds.includes("ca-bond"), true);
+});
+
+test("apartment checklist lists BADS requirements that houses omit", () => {
+  const houseIds = groupedTemplateStages(BUNDLED_TEMPLATE, "house")
+    .flatMap((group) => group.items)
+    .map((item) => item.id);
+  const apartmentItems = groupedTemplateStages(
+    BUNDLED_TEMPLATE,
+    "apartment",
+  ).flatMap((group) => group.items);
+  const apartmentIds = apartmentItems.map((item) => item.id);
+  const badsIds = [
+    "pd-bads",
+    "cd-apartments",
+    "cd-bads-communal",
+    "cd-bads-pos",
+    "cd-bads-layout",
+    "cd-bads-depth",
+    "cd-bads-setback",
+    "cd-bads-storage",
+    "dd-bads-deep-soil",
+    "dd-bads-entry",
+    "dd-bads-vent",
+    "dd-bads-materials",
+    "dd-bads-access",
+    "tp-cl58",
+    "tp-cl5507",
+  ];
+  for (const id of badsIds) {
+    assert.equal(houseIds.includes(id), false, id);
+    assert.equal(apartmentIds.includes(id), true, id);
+  }
+  const titles = apartmentItems.map((item) => item.title);
+  assert.ok(titles.filter((title) => title.includes("BADS")).length >= 12);
 });
 
 test("template tick parse keeps only true flags per typology", () => {

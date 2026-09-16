@@ -20,8 +20,10 @@ export default async function TemplatesPage({
           </h1>
           <p className="text-muted-foreground leading-relaxed">
             House, townhouse and apartment lists from the bundled Victoria
-            residential template. Each item cites a Source and helper
-            Resource(s) on a sage-green panel. Tick items as a quick reference on
+            residential template. Open <strong>Apartment</strong> to see BADS
+            (Better Apartments Design Standards) as separate ticks — communal
+            open space, balcony sizes, room depth, functional layout and the
+            Clause 55.07 / 58 assessment. Tick items as a quick reference on
             this device, then start a project when you need notes, attachments
             and a ZIP.
           </p>
