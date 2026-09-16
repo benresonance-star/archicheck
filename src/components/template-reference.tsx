@@ -10,11 +10,8 @@ import {
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ArbvStageHeader } from "@/components/arbv-stage-header";
-import { ItemResources } from "@/components/item-resources";
-import { SourceCitations } from "@/components/source-citations";
-import { ItemAssessmentNote } from "@/components/item-assessment-note";
+import { TemplateCheckDepths } from "@/components/check-depths";
 import { DeliverableHeading } from "@/components/deliverable-heading";
 import { BUNDLED_TEMPLATE } from "@/lib/template/vic-residential";
 import {
@@ -30,12 +27,7 @@ import {
   groupedOutputDocuments,
   type StagedOutputLensGroup,
 } from "@/lib/template/output-lens";
-import {
-  typologyLabel,
-  type ChecklistItem,
-  type Stage,
-  type Typology,
-} from "@/lib/types";
+import { typologyLabel, type Stage, type Typology } from "@/lib/types";
 import { TYPOLOGY_ORDER, typologyMeta } from "@/lib/typology";
 
 export function TemplateReference({
@@ -414,15 +406,12 @@ function DocumentLensLists({
                         <ul className="space-y-2">
                           {document.items.map((item) => (
                             <li key={item.id}>
-                              <ReferenceItem
-                                title={item.title}
-                                detail={item.detail}
-                                required={item.required}
-                                references={item.references}
-                                resources={item.resources}
-                                assessment={item.assessment}
+                              <TemplateCheckDepths
+                                item={item}
                                 ticked={Boolean(ticks[item.id])}
                                 onTicked={(value) => onTicked(item.id, value)}
+                                templateVersion={BUNDLED_TEMPLATE.version}
+                                templateChecksum={BUNDLED_TEMPLATE.checksum}
                               />
                             </li>
                           ))}
@@ -470,15 +459,12 @@ function StageReferenceLists({
             <ul className="space-y-2">
               {entry.items.map((item) => (
                 <li key={item.id}>
-                  <ReferenceItem
-                    title={item.title}
-                    detail={item.detail}
-                    required={item.required}
-                    references={item.references}
-                    resources={item.resources}
-                    assessment={item.assessment}
+                  <TemplateCheckDepths
+                    item={item}
                     ticked={Boolean(ticks[item.id])}
                     onTicked={(value) => onTicked(item.id, value)}
+                    templateVersion={BUNDLED_TEMPLATE.version}
+                    templateChecksum={BUNDLED_TEMPLATE.checksum}
                   />
                 </li>
               ))}
@@ -499,80 +485,18 @@ function StageReferenceLists({
           <ul className="space-y-2">
             {group.processItems.map((item) => (
               <li key={item.id}>
-                <ReferenceItem
-                  title={item.title}
-                  detail={item.detail}
-                  required={item.required}
-                  references={item.references}
-                  resources={item.resources}
-                  assessment={item.assessment}
+                <TemplateCheckDepths
+                  item={item}
                   ticked={Boolean(ticks[item.id])}
                   onTicked={(value) => onTicked(item.id, value)}
+                  templateVersion={BUNDLED_TEMPLATE.version}
+                  templateChecksum={BUNDLED_TEMPLATE.checksum}
                 />
               </li>
             ))}
           </ul>
         </CollapseSection>
       ) : null}
-    </div>
-  );
-}
-
-function ReferenceItem({
-  title,
-  detail,
-  required,
-  references,
-  resources,
-  assessment,
-  stageLabel,
-  ticked,
-  onTicked,
-}: {
-  title: string;
-  detail: string;
-  required: boolean;
-  references: string[];
-  resources: ChecklistItem["resources"];
-  assessment: ChecklistItem["assessment"];
-  stageLabel?: string;
-  ticked: boolean;
-  onTicked: (ticked: boolean) => void;
-}) {
-  return (
-    <div className="rounded-xl border border-border bg-background px-3 py-3">
-      <label className="flex min-h-11 cursor-pointer items-start gap-3">
-        <Checkbox
-          className="mt-0.5 size-5"
-          checked={ticked}
-          onCheckedChange={(value) => onTicked(value === true)}
-        />
-        <span className="min-w-0 flex-1">
-          <span className="flex items-start justify-between gap-2">
-            <span className="font-medium leading-snug break-words">
-              {title}
-            </span>
-            {required ? null : (
-              <Badge variant="outline" className="shrink-0">
-                Optional
-              </Badge>
-            )}
-          </span>
-          {stageLabel ? (
-            <span className="mt-1 block text-xs text-muted-foreground">
-              {stageLabel}
-            </span>
-          ) : null}
-          <span className="mt-1 block text-sm leading-relaxed text-muted-foreground break-words">
-            {detail}
-          </span>
-        </span>
-      </label>
-      <div className="mt-2 space-y-2 pl-8">
-        <SourceCitations references={references} />
-        <ItemAssessmentNote assessment={assessment} />
-        <ItemResources resources={resources} />
-      </div>
     </div>
   );
 }

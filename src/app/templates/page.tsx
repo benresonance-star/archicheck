@@ -27,7 +27,10 @@ export default async function TemplatesPage({
             Use <strong>By stage</strong> for the full stage checklist. Open{" "}
             <strong>Apartment</strong> for BADS as separate ticks. Tick items
             as a quick reference on this device, then start a project when you
-            need notes, attachments and a ZIP.
+            need notes, attachments and a ZIP. Each check starts as a signal
+            row — title, restriction and status. Open it for what must be
+            established, why, evidence and the assessment.{" "}
+            <strong>Audit</strong> keeps sources and template version.
           </p>
         </section>
         <TemplateReference initialTypology={typology} />

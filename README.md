@@ -32,7 +32,9 @@ In the UI: **Export ZIP** on a project, then **Import ZIP** on a fresh install (
 
 ## Generic templates
 
-The **Templates** header link (`/templates`) shows the bundled house, townhouse and apartment lists as checkable references. **By document** uses the same ARBV stages (01–11), then lists Plans, Elevations, RCP and the other outputs under each stage. Town planning drawings stay separate from construction documentation. **By stage** keeps the full stage checklist. Construction documentation sheet checks were taken from a typical CD QA list, rewritten for Victoria and NCC 2025. Open **Apartment** for BADS as separate ticks. Each item cites a **Source** and **Resource(s)**. Ticks stay on the device; they are not a project ZIP.
+The **Templates** header link (`/templates`) shows the bundled house, townhouse and apartment lists as checkable references. **By document** uses the same ARBV stages (01–11), then lists Plans, Elevations, RCP and the other outputs under each stage. Town planning drawings stay separate from construction documentation. **By stage** keeps the full stage checklist. Construction documentation sheet checks were taken from a typical CD QA list, rewritten for Victoria and NCC 2025. Open **Apartment** for BADS as separate ticks.
+
+Each check has three depths: a **signal** row (title, restriction, To do / Done / Evidence missing / Needs recheck), an **understanding** panel (what must be established, why, evidence, assessment), and **Audit** (sources, template version, previous status, findings). Ticks stay on the device; they are not a project ZIP.
 
 ## Code scout
 

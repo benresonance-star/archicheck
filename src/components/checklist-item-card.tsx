@@ -3,19 +3,9 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { addAttachment, downloadBytes, readAttachment, setAnswer } from "@/lib/client-store";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { ProjectCheckDepths } from "@/components/check-depths";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ItemResources } from "@/components/item-resources";
-import { SourceCitations } from "@/components/source-citations";
-import { ItemAssessmentNote } from "@/components/item-assessment-note";
 import type {
   AttachmentMeta,
   ChecklistItem,
@@ -105,89 +95,75 @@ export function ChecklistItemCard({
   }
 
   return (
-    <Card className="overflow-visible">
-      <CardHeader>
-        <div className="flex items-start justify-between gap-2">
-          <CardTitle className="text-lg leading-snug break-words">
-            {item.title}
-          </CardTitle>
-          <div className="flex shrink-0 flex-wrap justify-end gap-1">
-            {status === "needs_recheck" ? (
-              <Badge variant="destructive">Needs recheck</Badge>
-            ) : null}
-            {item.required ? <Badge>Required</Badge> : <Badge variant="outline">Optional</Badge>}
+    <ProjectCheckDepths
+      item={item}
+      status={status}
+      notes={notes}
+      files={files}
+      findings={project.findings}
+      previousStatus={answer?.previousStatus}
+      templateVersion={project.template.version}
+      templateChecksum={project.template.checksum}
+      pending={pending}
+      actions={
+        <div className="space-y-3">
+          <div className="space-y-1">
+            <Label htmlFor={`${item.id}-status`}>Status</Label>
+            <select
+              id={`${item.id}-status`}
+              className="min-h-11 w-full rounded-lg border border-input bg-background px-3 text-base dark:bg-input/30"
+              value={status}
+              disabled={pending}
+              onChange={(event) => {
+                void save({ status: event.target.value as ItemStatus });
+              }}
+            >
+              {ITEM_STATUSES.map((value) => (
+                <option key={value} value={value}>
+                  {statusLabel(value)}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor={`${item.id}-notes`}>Notes</Label>
+            <Textarea
+              id={`${item.id}-notes`}
+              className="min-h-24 text-base"
+              defaultValue={notes}
+              disabled={pending}
+              onBlur={(event) => {
+                if (event.target.value !== notes) {
+                  void save({ notes: event.target.value });
+                }
+              }}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor={`${item.id}-file`}>Attachments</Label>
+            <input
+              id={`${item.id}-file`}
+              type="file"
+              className="block w-full text-sm file:mr-3 file:min-h-11 file:rounded-lg file:border file:border-border file:bg-secondary file:px-3"
+              disabled={pending}
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                if (file) {
+                  void upload(file);
+                }
+                event.target.value = "";
+              }}
+            />
+            {files.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                No files on this item.
+              </p>
+            ) : (
+              <AttachmentFileList projectId={project.id} files={files} />
+            )}
           </div>
         </div>
-        <CardDescription className="leading-relaxed break-words">
-          {item.detail}
-        </CardDescription>
-        {answer?.previousStatus ? (
-          <p className="text-xs text-muted-foreground">
-            Previous status kept on file: {statusLabel(answer.previousStatus)}.
-            Notes and attachments were not cleared.
-          </p>
-        ) : null}
-        <div className="space-y-2">
-          <SourceCitations references={item.references} />
-          <ItemAssessmentNote assessment={item.assessment} />
-          <ItemResources resources={item.resources} />
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="space-y-1">
-          <Label htmlFor={`${item.id}-status`}>Status</Label>
-          <select
-            id={`${item.id}-status`}
-            className="min-h-11 w-full rounded-lg border border-input bg-background px-3 text-base dark:bg-input/30"
-            value={status}
-            disabled={pending}
-            onChange={(event) => {
-              void save({ status: event.target.value as ItemStatus });
-            }}
-          >
-            {ITEM_STATUSES.map((value) => (
-              <option key={value} value={value}>
-                {statusLabel(value)}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="space-y-1">
-          <Label htmlFor={`${item.id}-notes`}>Notes</Label>
-          <Textarea
-            id={`${item.id}-notes`}
-            className="min-h-24 text-base"
-            defaultValue={notes}
-            disabled={pending}
-            onBlur={(event) => {
-              if (event.target.value !== notes) {
-                void save({ notes: event.target.value });
-              }
-            }}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor={`${item.id}-file`}>Attachments</Label>
-          <input
-            id={`${item.id}-file`}
-            type="file"
-            className="block w-full text-sm file:mr-3 file:min-h-11 file:rounded-lg file:border file:border-border file:bg-secondary file:px-3"
-            disabled={pending}
-            onChange={(event) => {
-              const file = event.target.files?.[0];
-              if (file) {
-                void upload(file);
-              }
-              event.target.value = "";
-            }}
-          />
-          {files.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No files on this item.</p>
-          ) : (
-            <AttachmentFileList projectId={project.id} files={files} />
-          )}
-        </div>
-      </CardContent>
-    </Card>
+      }
+    />
   );
 }
