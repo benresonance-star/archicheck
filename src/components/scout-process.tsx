@@ -174,8 +174,8 @@ export function ScoutProcessForm() {
         ) : null}
         {settings.runner === "grokbot" ? (
           <p className="text-sm text-muted-foreground">
-            Use Copy Grok Bot brief on the noticeboard. The bot must not change
-            answers; you still accept wording on a project.
+            Use Copy Grok Bot brief on the noticeboard. The bot must flag URL
+            changes and item ids only — not replacement wording.
           </p>
         ) : null}
       </section>
