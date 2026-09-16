@@ -39,6 +39,13 @@ export function DragHandle({
   );
 }
 
+function sameIds(left: string[], right: string[]): boolean {
+  return (
+    left.length === right.length &&
+    left.every((id, index) => id === right[index])
+  );
+}
+
 export function usePointerReorder(input: {
   ids: string[];
   enabled: boolean;
@@ -55,10 +62,11 @@ export function usePointerReorder(input: {
   draftRef.current = draftIds;
 
   useEffect(() => {
-    if (!activeId) {
-      setDraftIds(input.ids);
-      originIds.current = input.ids;
+    if (activeId) {
+      return;
     }
+    setDraftIds((current) => (sameIds(current, input.ids) ? current : input.ids));
+    originIds.current = input.ids;
   }, [input.ids, activeId]);
 
   function start(id: string, event: React.PointerEvent<HTMLButtonElement>) {
