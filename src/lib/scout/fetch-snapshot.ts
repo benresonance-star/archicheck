@@ -19,7 +19,8 @@ export async function fetchSnapshot(input: {
       headers: {
         Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "User-Agent":
-          "VicArchChecklistScout/1.0 (weekly practice aid; +https://vercel.com)",
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        "Accept-Language": "en-AU,en;q=0.9",
       },
     });
     const raw = await response.text();

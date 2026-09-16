@@ -124,7 +124,6 @@ export function mergeScoutSettings(saved: ScoutSettings | null): ScoutSettings {
     return {
       ...source,
       enabled: existing.enabled,
-      url: existing.url || source.url,
       flag: existing.flag || source.flag,
       proposedDetail: existing.proposedDetail || source.proposedDetail,
     };

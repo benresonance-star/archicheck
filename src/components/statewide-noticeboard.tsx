@@ -173,8 +173,17 @@ function CompactFinding({ finding }: { finding: ScoutFinding }) {
           <Badge variant="outline">{findingStatusLabel(finding.status)}</Badge>
         </div>
         <CardTitle className="text-lg">{finding.sourceTitle}</CardTitle>
-        <CardDescription className="line-clamp-3">{finding.flag}</CardDescription>
+        <CardDescription>{finding.flag}</CardDescription>
       </CardHeader>
+      {finding.url ? (
+        <CardContent>
+          <Button className="min-h-11 w-full" asChild>
+            <a href={finding.url} target="_blank" rel="noreferrer">
+              Open source
+            </a>
+          </Button>
+        </CardContent>
+      ) : null}
     </Card>
   );
 }
@@ -207,14 +216,15 @@ function BoardFinding({
       </CardHeader>
       <CardContent className="space-y-3">
         {finding.url ? (
-          <a
-            className="text-sm underline underline-offset-2"
-            href={finding.url}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Open source
-          </a>
+          <Button className="min-h-11 w-full sm:w-auto" asChild>
+            <a
+              href={finding.url}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Open source
+            </a>
+          </Button>
         ) : null}
         {finding.proposed?.detail ? (
           <p className="text-sm">{finding.proposed.detail}</p>

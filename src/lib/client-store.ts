@@ -404,7 +404,7 @@ export async function saveScoutReport(report: ScoutReport): Promise<void> {
   const tx = db.transaction(["scoutReports", "scoutSnapshots"], "readwrite");
   tx.objectStore("scoutReports").put(report);
   for (const snapshot of report.snapshots) {
-    if (!snapshot.sha256) {
+    if (!snapshot.ok || !snapshot.sha256) {
       continue;
     }
     tx.objectStore("scoutSnapshots").put({

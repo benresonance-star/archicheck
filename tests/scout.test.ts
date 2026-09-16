@@ -94,7 +94,7 @@ test("failed fetch needs a human and still carries a flag", () => {
     typology: "house",
   });
   assert.equal(finding.action, "needs_human");
-  assert.ok(finding.flag.includes("could not be fetched"));
+  assert.ok(finding.flag.includes("blocked"));
 });
 
 test("blank municipality yields local_unconfigured", () => {
@@ -138,6 +138,8 @@ test("bundled watch list includes NCC, ARBV, AIA and builders associations", () 
   const ids = settings.sources.map((source) => source.id);
   assert.ok(ids.includes("ncc-vic"));
   assert.ok(ids.includes("ncc-abcb"));
+  assert.ok(ids.includes("ncc-abcb-2025"));
+  assert.ok(ids.includes("vic-building-regs"));
   assert.ok(ids.includes("arbv-process"));
   assert.ok(ids.includes("aia-vic"));
   assert.ok(ids.includes("mbav"));
@@ -147,6 +149,10 @@ test("bundled watch list includes NCC, ARBV, AIA and builders associations", () 
 test("mergeScoutSettings adds new bundled sites without dropping custom ones", () => {
   const saved = defaultScoutSettings();
   saved.sources = saved.sources.filter((source) => source.id !== "hia");
+  const abcb = saved.sources.find((source) => source.id === "ncc-abcb");
+  if (abcb) {
+    abcb.url = "https://www.abcb.gov.au/ncc";
+  }
   saved.sources.push({
     id: "custom-practice",
     title: "Practice wiki",
@@ -163,6 +169,10 @@ test("mergeScoutSettings adds new bundled sites without dropping custom ones", (
   const merged = mergeScoutSettings(saved);
   assert.ok(merged.sources.some((source) => source.id === "hia"));
   assert.ok(merged.sources.some((source) => source.id === "custom-practice"));
+  assert.equal(
+    merged.sources.find((source) => source.id === "ncc-abcb")?.url,
+    "https://ncc.abcb.gov.au/",
+  );
 });
 
 test("Grok Bot brief lists enabled sites and what they look for", () => {

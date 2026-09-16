@@ -63,12 +63,34 @@ export const DEFAULT_WATCH_SOURCES: WatchSource[] = [
   builtin({
     id: "ncc-abcb",
     title: "National Construction Code (ABCB)",
-    url: "https://www.abcb.gov.au/ncc",
+    url: "https://ncc.abcb.gov.au/",
     category: "ncc",
     itemIds: ["cd-energy", "doc-ncc", "doc-energy"],
     flag: "National NCC editions, adoption dates and ABCB notices that Victoria may pick up.",
     proposedDetail:
       "ABCB has updated NCC guidance. Confirm which edition and Victorian variations apply to this permit set before freezing documentation.",
+    appliesTo: ALL,
+  }),
+  builtin({
+    id: "ncc-abcb-2025",
+    title: "NCC 2025 hub (ABCB)",
+    url: "https://ncc.abcb.gov.au/ncc-2025",
+    category: "ncc",
+    itemIds: ["cd-energy", "doc-ncc", "doc-energy"],
+    flag: "NCC 2025 release, notices and state/territory adoption dates that Victoria may follow.",
+    proposedDetail:
+      "The NCC 2025 hub has changed. Confirm Victorian adoption timing before treating NCC 2022 as the last word on this permit set.",
+    appliesTo: ALL,
+  }),
+  builtin({
+    id: "vic-building-regs",
+    title: "Victorian Building Regulations 2018",
+    url: "https://www.legislation.vic.gov.au/in-force/statutory-rules/building-regulations-2018/007",
+    category: "ncc",
+    itemIds: ["ca-permit", "doc-ncc"],
+    flag: "Gazetted Building Regulations (the legal hook for NCC in Victoria). Hash-check works on this legislation page even when BPC pages block bots.",
+    proposedDetail:
+      "The Victorian Building Regulations page has changed. Recheck building-permit and NCC-adoption items.",
     appliesTo: ALL,
   }),
   builtin({
