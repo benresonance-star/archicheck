@@ -27,19 +27,6 @@ export function HomeBody() {
     <div className="pb-[env(safe-area-inset-bottom)]">
       <AppHeader />
       <main className="mx-auto max-w-3xl space-y-8 px-4 py-6">
-        <section className="space-y-3">
-          <p className="text-xs font-medium uppercase tracking-[0.18em] text-primary">
-            Victoria · Australia
-          </p>
-          <h1 className="font-heading text-4xl leading-tight">
-            Design-stage checklist for houses, townhouses and apartments
-          </h1>
-          <p className="text-muted-foreground leading-relaxed">
-            Pre-design through post-occupancy. Projects stay on this device as
-            JSON (IndexedDB). Export a ZIP to move them — that archive is the
-            lossless copy. Light and dark modes are in the header.
-          </p>
-        </section>
         <StatewideNoticeboard compact collapsible />
         <TypologyGrid counts={counts} />
         <section className="space-y-3">

@@ -45,8 +45,8 @@ export function AppHeader({
           </Button>
         ) : (
           <div className="flex min-w-0 items-center gap-3">
-            <Link href="/" className="text-sm font-medium tracking-wide">
-              Vic checklist
+            <Link href="/" className="font-heading text-sm font-semibold tracking-wide">
+              ARCHI-CHECK
             </Link>
             <Link href="/templates" className="text-sm text-muted-foreground">
               Templates

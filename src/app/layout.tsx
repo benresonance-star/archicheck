@@ -15,12 +15,12 @@ const mono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Victoria architectural checklist",
+  title: "ARCHI-CHECK",
   description:
     "Design-stage checklist for houses, townhouses and apartments in Victoria, from pre-design through post-occupancy. JSON storage, ZIP restore, Grok Bot briefs.",
   appleWebApp: {
     capable: true,
-    title: "Vic checklist",
+    title: "ARCHI-CHECK",
   },
 };
 
