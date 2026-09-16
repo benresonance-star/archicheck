@@ -12,26 +12,28 @@ export default async function TemplatesPage({
 
   return (
     <div className="pb-[env(safe-area-inset-bottom)]">
-      <AppHeader title="Generic templates" backHref="/" />
+      <AppHeader title="Templates" backHref="/" />
       <main className="mx-auto max-w-3xl space-y-6 px-4 py-6">
-        <section className="space-y-2">
-          <h1 className="font-heading text-4xl leading-tight">
-            Generic checklist templates
-          </h1>
-          <p className="text-muted-foreground leading-relaxed">
-            House, townhouse and apartment lists from the live Victoria
-            residential template. Turn on <strong>Edit checks</strong> to draft
-            checks that populate new projects. Publishing writes a new template
-            version; existing jobs get an impact notice and keep their answers
-            until they adopt. Use <strong>By document</strong> for the same
-            ARBV stages (01 Pre-design through 11 Post-occupancy), with Plans,
-            Elevations and the other outputs listed under each stage. Town
-            planning drawings stay separate from construction documentation.
-            Use <strong>By stage</strong> for the full stage checklist. Open{" "}
-            <strong>Apartment</strong> for BADS as separate ticks. Tick items
-            as a quick reference on this device, then start a project when you
-            need notes, attachments and a ZIP.
-          </p>
+        <section className="space-y-4">
+          <h1 className="font-heading text-4xl leading-tight">Templates</h1>
+          <div className="space-y-3 text-muted-foreground leading-relaxed">
+            <p>
+              House, townhouse and apartment lists from the live Victoria
+              template. Tick them here as a phone reference. Start a project
+              when you need notes, attachments and a ZIP.
+            </p>
+            <p>
+              <strong>Edit checks</strong> drafts items for new projects.
+              Publishing a version sends existing jobs an impact notice. They
+              keep their answers until they adopt.
+            </p>
+            <p>
+              <strong>By document</strong> groups Plans, Elevations and the
+              other outputs under each ARBV stage. Town planning stays separate
+              from construction documents. <strong>By stage</strong> shows the
+              full checklist. Open <strong>Apartment</strong> for BADS ticks.
+            </p>
+          </div>
         </section>
         <TemplatesPageBody initialTypology={typology} />
       </main>
