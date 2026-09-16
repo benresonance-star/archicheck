@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { addAttachment } from "@/lib/client-store";
+import { editListClass } from "@/components/checklist-edit-toggle";
+import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { projectListRollup } from "@/lib/check-depths";
@@ -94,7 +96,10 @@ export function StageChecklist({
               return (
                 <div
                   key="stage-checks"
-                  className="space-y-3 rounded-2xl border border-border bg-muted/30 p-3"
+                  className={cn(
+                    "space-y-3 rounded-2xl border p-3",
+                    editListClass(editing),
+                  )}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <StageChecksHeading />
@@ -183,7 +188,12 @@ function DeliverableProjectBlock({
   }
 
   return (
-    <div className="space-y-3 rounded-2xl border border-border bg-muted/30 p-3">
+    <div
+      className={cn(
+        "space-y-3 rounded-2xl border p-3",
+        editListClass(editing),
+      )}
+    >
       <div className="flex items-start justify-between gap-3">
         <DeliverableHeading deliverable={deliverable} />
         <Badge variant="outline" className="shrink-0">

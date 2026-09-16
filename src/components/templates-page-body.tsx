@@ -2,7 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { ChecklistEditToggle } from "@/components/checklist-edit-toggle";
+import {
+  ChecklistEditToggle,
+  editPageClass,
+} from "@/components/checklist-edit-toggle";
+import { cn } from "@/lib/utils";
 import { FindingComparison } from "@/components/finding-comparison";
 import { TemplateReference } from "@/components/template-reference";
 import { Button } from "@/components/ui/button";
@@ -73,7 +77,7 @@ export function TemplatesPageBody({
   }
 
   return (
-    <div className="space-y-4">
+    <div className={cn("space-y-4", editPageClass(editing))}>
       <ChecklistEditToggle editing={editing} onChange={setEditing} />
       {changes.length > 0 ? (
         <div className="space-y-2 rounded-xl border border-border bg-muted/40 p-3">

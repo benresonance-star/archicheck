@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { AppHeader } from "@/components/app-header";
-import { ChecklistEditToggle } from "@/components/checklist-edit-toggle";
+import {
+  ChecklistEditToggle,
+  editPageClass,
+} from "@/components/checklist-edit-toggle";
+import { cn } from "@/lib/utils";
 import { StageChecklist } from "@/components/stage-checklist";
 import { loadProject, syncProjectImpacts } from "@/lib/client-store";
 import { grokbotForStage } from "@/lib/template/vic-residential";
@@ -80,7 +84,8 @@ export function ProjectStageView({
       />
       <main className="mx-auto max-w-3xl space-y-4 px-4 py-6">
         <p className="text-sm text-muted-foreground">{stage.summary}</p>
-        <ChecklistEditToggle editing={editing} onChange={setEditing} />
+        <div className={cn("space-y-4", editPageClass(editing))}>
+          <ChecklistEditToggle editing={editing} onChange={setEditing} />
         {openImpactCount(project) > 0 ? (
           <p className="text-sm">
             This job has a template impact notice.{" "}
@@ -100,6 +105,7 @@ export function ProjectStageView({
           editing={editing}
           onWorkspace={setData}
         />
+        </div>
       </main>
     </div>
   );

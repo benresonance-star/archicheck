@@ -23,7 +23,7 @@ export function DragHandle({
     <button
       type="button"
       aria-label={`Drag to reorder ${label}`}
-      className="flex size-11 shrink-0 touch-none items-center justify-center text-muted-foreground"
+      className="flex size-11 shrink-0 touch-none items-center justify-center text-edit-accent"
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
