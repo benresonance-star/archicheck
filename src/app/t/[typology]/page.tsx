@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AppHeader } from "@/components/app-header";
-import { StageIndex } from "@/components/stage-index";
+import { TemplateReference } from "@/components/template-reference";
 import { TypologyProjectList } from "@/components/typology-project-list";
 import { Button } from "@/components/ui/button";
 import { BUNDLED_TEMPLATE } from "@/lib/template/vic-residential";
@@ -46,16 +46,16 @@ export default async function TypologyPage({
           </Button>
         </section>
         <section className="space-y-3">
-          <h2 className="font-heading text-2xl">Projects</h2>
-          <TypologyProjectList typology={typology} />
+          <h2 className="font-heading text-2xl">Generic {meta.title.toLowerCase()} template</h2>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Tick the bundled list as a quick reference. Start a project below
+            when you need notes, attachments and a ZIP.
+          </p>
+          <TemplateReference typology={typology} showStartProject={false} />
         </section>
         <section className="space-y-3">
-          <h2 className="font-heading text-2xl">Stages</h2>
-          <StageIndex
-            template={BUNDLED_TEMPLATE}
-            typology={typology}
-            hrefForStage={(stage) => `/t/${typology}/s/${stage.id}`}
-          />
+          <h2 className="font-heading text-2xl">Projects</h2>
+          <TypologyProjectList typology={typology} />
         </section>
       </main>
     </div>

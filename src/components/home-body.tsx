@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AppHeader } from "@/components/app-header";
 import { StatewideNoticeboard } from "@/components/statewide-noticeboard";
+import { TemplateReference } from "@/components/template-reference";
 import { TypologyGrid } from "@/components/typology-grid";
 import { listProjects } from "@/lib/client-store";
 import { TYPOLOGY_ORDER } from "@/lib/typology";
@@ -41,6 +42,22 @@ export function HomeBody() {
           </p>
         </section>
         <StatewideNoticeboard compact collapsible />
+        <section className="space-y-3">
+          <div className="flex items-end justify-between gap-3">
+            <h2 className="font-heading text-2xl">Generic templates</h2>
+            <Link
+              href="/templates"
+              className="text-sm text-muted-foreground underline underline-offset-2"
+            >
+              Open full page
+            </Link>
+          </div>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Checkable copies of the bundled house, townhouse and apartment
+            lists. Use them as a phone reference before you open a project.
+          </p>
+          <TemplateReference />
+        </section>
         <TypologyGrid counts={counts} />
         <section className="space-y-3">
           <h2 className="font-heading text-2xl">Recent projects</h2>

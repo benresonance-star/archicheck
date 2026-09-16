@@ -48,6 +48,9 @@ export function AppHeader({
             <Link href="/" className="text-sm font-medium tracking-wide">
               Vic checklist
             </Link>
+            <Link href="/templates" className="text-sm text-muted-foreground">
+              Templates
+            </Link>
             <Link href="/scout" className="text-sm text-muted-foreground">
               Scout
             </Link>

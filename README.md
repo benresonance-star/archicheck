@@ -30,6 +30,10 @@ iPhone cannot open localhost. Production is **https://archicheck-gules.vercel.ap
 
 In the UI: **Export ZIP** on a project, then **Import ZIP** on a fresh install (or another phone).
 
+## Generic templates
+
+The home page and **Templates** (`/templates`) show the bundled house, townhouse and apartment lists as checkable references. Ticks stay on the device; they are not a project ZIP. Start a project when you need notes, attachments and export.
+
 ## Code scout
 
 The **home page** has a statewide noticeboard. **Scout process** (`/scout`) is where you change sites, cadence (1 / 7 / 14 / 28 days) and scout type: Cursor in-app, Grok Bot, or another person/process.
