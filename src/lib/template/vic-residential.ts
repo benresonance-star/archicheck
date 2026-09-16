@@ -98,10 +98,13 @@ function item(
   stageId: string,
   title: string,
   detail: string,
-  appliesTo: Typology[] = ALL,
-  required = true,
-  references: string[] = [],
+  appliesTo: Typology[],
+  required: boolean,
+  references: string[],
 ): ChecklistItem {
+  if (references.length === 0 || references.some((value) => !value.trim())) {
+    throw new Error(`Checklist item ${id} must cite at least one source`);
+  }
   return {
     id,
     stageId,
@@ -138,6 +141,9 @@ const ITEMS: ChecklistItem[] = [
     "pre-design",
     "Project brief",
     "Record household or dwelling mix, accessibility, working from home, storage, parking, landscape, budget range, and must-not-change constraints.",
+    ALL,
+    true,
+    ["Architects Act 1991 (Vic)", "ARBV Guideline — Client–architect agreements"],
   ),
   item(
     "pd-title",
@@ -180,12 +186,18 @@ const ITEMS: ChecklistItem[] = [
     "pre-design",
     "Feature and level survey",
     "Commission a site survey with levels, trees, crossovers, services, adjoining windows and secluded private open space relevant to ResCode.",
+    ALL,
+    true,
+    ["VPP cl 54.01 / 55.01 neighbourhood and site description"],
   ),
   item(
     "pd-services",
     "pre-design",
     "Services and authority constraints",
     "Locate sewer, stormwater, water, power, gas, NBN, and any build-over or asset-protection requirements. Flag septic or unsewered lots.",
+    ALL,
+    true,
+    ["Building Act 1993 (Vic)", "Water Act 1989 (Vic) — build-over assets"],
   ),
   item(
     "pd-hazards",
@@ -201,6 +213,9 @@ const ITEMS: ChecklistItem[] = [
     "pre-design",
     "Budget, program and GST",
     "Set a working construction budget, consultant budget, authority fees, and a program that includes planning time. Note GST treatment.",
+    ALL,
+    true,
+    ["ARBV Guideline — Client–architect agreements", "A New Tax System (Goods and Services Tax) Act 1999 (Cth)"],
   ),
   item(
     "pd-neighbours",
@@ -209,6 +224,7 @@ const ITEMS: ChecklistItem[] = [
     "Photograph streetscape, adjoining dwellings, existing trees, and likely overlooking/overshadowing interfaces.",
     ALL,
     false,
+    ["VPP cl 54.01 / 55.01 neighbourhood and site description"],
   ),
 
   item(
@@ -225,6 +241,9 @@ const ITEMS: ChecklistItem[] = [
     "concept",
     "Concept options",
     "Issue at least one preferred sketch scheme (and alternatives if the agreement requires). Record client comments against each.",
+    ALL,
+    true,
+    ["ARBV Guideline — Client–architect agreements"],
   ),
   item(
     "cd-massing",
@@ -294,6 +313,9 @@ const ITEMS: ChecklistItem[] = [
     "concept",
     "Client sign-off of preferred concept",
     "Written approval of the preferred concept, with a cost check against the brief, before design development.",
+    ALL,
+    true,
+    ["ARBV Guideline — Client–architect agreements"],
   ),
 
   item(
@@ -301,12 +323,18 @@ const ITEMS: ChecklistItem[] = [
     "design-development",
     "Coordinated GA drawings",
     "Plans, sections and elevations at a scale suitable for planning, with levels, materials, and adjoining interfaces.",
+    ALL,
+    true,
+    ["Planning and Environment Act 1987 (Vic)", "VPP cl 54 / 55 / 58 application requirements"],
   ),
   item(
     "dd-consultants",
     "design-development",
     "Consultant team engaged",
     "Appoint as needed: land surveyor, structural, civil/hydraulic, energy assessor, landscape, ESD, fire, acoustic, traffic, waste, geotech, quantity surveyor.",
+    ALL,
+    true,
+    ["Architects Act 1991 (Vic)", "ARBV Code of Professional Conduct — competence and consultants"],
   ),
   item(
     "dd-nathers",
@@ -378,12 +406,16 @@ const ITEMS: ChecklistItem[] = [
     "Apartment (and larger townhouse) waste rooms, collection vehicle path, and council waste policy.",
     MULTI,
     false,
+    ["VPP cl 55.07 / 58 waste and recycling", "local waste management policy"],
   ),
   item(
     "dd-client-lodge",
     "design-development",
     "Client approval to lodge planning",
     "Confirm the scheme, cost update, and authority to lodge with council (or to proceed to building permit if no planning permit is required).",
+    ALL,
+    true,
+    ["Planning and Environment Act 1987 (Vic)", "ARBV Guideline — Client–architect agreements"],
   ),
 
   item(
@@ -427,12 +459,18 @@ const ITEMS: ChecklistItem[] = [
     "town-planning",
     "Neighbourhood and site description + design response",
     "Prepare the Clause 54.01 / 55.01 package: existing conditions, neighbourhood character and a design response that explains the scheme.",
+    ALL,
+    true,
+    ["VPP cl 54.01 / 55.01"],
   ),
   item(
     "tp-set",
     "town-planning",
     "Planning drawing set",
     "Site plan, floor plans, elevations, sections, shadow diagrams, materials, landscape, and development summary (site coverage, permeability, garden area, canopy, parking).",
+    ALL,
+    true,
+    ["Planning and Environment Act 1987 (Vic)", "VPP cl 54 / 55 / 58"],
   ),
   item(
     "tp-reports",
@@ -441,12 +479,16 @@ const ITEMS: ChecklistItem[] = [
     "As required: traffic, waste, ESD/BESS, arborist, heritage, flood, bushfire, urban context, acoustic, wind, affordable housing.",
     ALL,
     false,
+    ["Planning and Environment Act 1987 (Vic)", "VPP particular provisions"],
   ),
   item(
     "tp-lodge",
     "town-planning",
     "Lodge application and pay fees",
     "Lodge with the responsible authority, keep the application number, and diary statutory clocks.",
+    ALL,
+    true,
+    ["Planning and Environment Act 1987 (Vic) s 47"],
   ),
   item(
     "tp-rfi",
@@ -462,6 +504,9 @@ const ITEMS: ChecklistItem[] = [
     "town-planning",
     "Planning permit and endorsed plans",
     "Receive the permit, read every condition, and obtain endorsed plans. Diary secondary consents, expiry, and plans-to-be-endorsed conditions.",
+    ALL,
+    true,
+    ["Planning and Environment Act 1987 (Vic) ss 61, 68"],
   ),
   item(
     "tp-subdivision",
@@ -478,12 +523,18 @@ const ITEMS: ChecklistItem[] = [
     "documentation",
     "Match endorsed town planning drawings",
     "Check every planning condition and endorsed dimension before issuing a building-permit set. Record any secondary consent needed.",
+    ALL,
+    true,
+    ["Planning and Environment Act 1987 (Vic)", "Building Act 1993 (Vic) s 24"],
   ),
   item(
     "doc-working",
     "documentation",
     "Working drawings and specification",
     "Issue a coordinated architectural set and specification suitable for tender and for the building surveyor.",
+    ALL,
+    true,
+    ["Building Act 1993 (Vic)", "NCC 2022"],
   ),
   item(
     "doc-ncc",
@@ -526,6 +577,9 @@ const ITEMS: ChecklistItem[] = [
     "documentation",
     "Structural, civil and services drawings",
     "Coordinated structure, stormwater, sewer, electrical, mechanical and fire drawings issued as part of the permit set.",
+    ALL,
+    true,
+    ["Building Act 1993 (Vic)", "NCC 2022"],
   ),
   item(
     "doc-waterproofing",
@@ -560,18 +614,27 @@ const ITEMS: ChecklistItem[] = [
     "tender",
     "Tender set issued",
     "Issue drawings, specification, planning permit, and known site constraints. Record tender closing date.",
+    ALL,
+    true,
+    ["Domestic Building Contracts Act 1995 (Vic)", "ARBV Guideline — Client–architect agreements"],
   ),
   item(
     "tn-rfi",
     "tender",
     "Tender RFIs",
     "Answer builder queries in writing and issue addenda to all tenderers.",
+    ALL,
+    true,
+    ["Domestic Building Contracts Act 1995 (Vic)", "ARBV Code of Professional Conduct"],
   ),
   item(
     "tn-compare",
     "tender",
     "Tender comparison",
     "Compare price, program, qualifications, PC sums, and exclusions on the same basis.",
+    ALL,
+    true,
+    ["Domestic Building Contracts Act 1995 (Vic)", "ARBV Code of Professional Conduct"],
   ),
   item(
     "tn-builder",
@@ -587,6 +650,9 @@ const ITEMS: ChecklistItem[] = [
     "tender",
     "Building contract executed",
     "Execute a written contract (ABIC, HIA or other) with the drawings and spec listed. Architect as contract administrator if engaged for that stage.",
+    ALL,
+    true,
+    ["Domestic Building Contracts Act 1995 (Vic) s 31"],
   ),
   item(
     "tn-rbs",
@@ -630,12 +696,18 @@ const ITEMS: ChecklistItem[] = [
     "contract-admin",
     "Variations",
     "Price and approve variations in writing before the work proceeds. Keep a running cost report.",
+    ALL,
+    true,
+    ["Domestic Building Contracts Act 1995 (Vic)", "Building and Construction Industry Security of Payment Act 2002 (Vic)"],
   ),
   item(
     "ca-claims",
     "contract-admin",
     "Progress claims and certificates",
     "Assess claims, issue certificates, and track retention or security under the contract.",
+    ALL,
+    true,
+    ["Domestic Building Contracts Act 1995 (Vic)", "Building and Construction Industry Security of Payment Act 2002 (Vic)"],
   ),
   item(
     "ca-oc",
@@ -662,6 +734,7 @@ const ITEMS: ChecklistItem[] = [
     "OC registered, insurance, first meeting, common property schedule, and building manual handed over.",
     MULTI,
     false,
+    ["Owners Corporations Act 2006 (Vic)", "Subdivision Act 1988 (Vic)"],
   ),
 
   item(
@@ -669,24 +742,36 @@ const ITEMS: ChecklistItem[] = [
     "practical-completion",
     "Practical completion inspection",
     "Architect inspects against the contract documents. Major defects delay PC; minor defects go on the list.",
+    ALL,
+    true,
+    ["Domestic Building Contracts Act 1995 (Vic)", "ARBV Code of Professional Conduct — contract administration"],
   ),
   item(
     "pc-list",
     "practical-completion",
     "Defects and incomplete works list",
     "Issue a dated list. Builder must close items. Occupancy permit does not waive contractual defects.",
+    ALL,
+    true,
+    ["Domestic Building Contracts Act 1995 (Vic)", "Building Act 1993 (Vic) occupancy permit"],
   ),
   item(
     "pc-handover",
     "practical-completion",
     "Keys, warranties, as-builts and manuals",
     "Collect keys, appliance warranties, cleaning, as-built services drawings, operation manuals, and the building manual.",
+    ALL,
+    true,
+    ["Building Act 1993 (Vic)", "Building Amendment (Building Manuals and Mandatory Inspections) Regulations 2025 (Vic)"],
   ),
   item(
     "pc-certificate",
     "practical-completion",
     "Certificate of practical completion",
     "Issue PC. This starts the defects liability period. Record the date in the project JSON.",
+    ALL,
+    true,
+    ["Domestic Building Contracts Act 1995 (Vic)"],
   ),
 
   item(
@@ -694,12 +779,18 @@ const ITEMS: ChecklistItem[] = [
     "defects-liability",
     "Defects liability period diary",
     "Record DLP start (PC date) and end. Typical residential contracts use 12 months; check the executed contract.",
+    ALL,
+    true,
+    ["Domestic Building Contracts Act 1995 (Vic)"],
   ),
   item(
     "dlp-track",
     "defects-liability",
     "Defects register",
     "Log each defect with date, location, photo, item id, and close-out date. Empty notes are allowed; do not delete closed items.",
+    ALL,
+    true,
+    ["ARBV Code of Professional Conduct — document and maintain records"],
   ),
   item(
     "dlp-bond-prelim",
@@ -724,6 +815,9 @@ const ITEMS: ChecklistItem[] = [
     "defects-liability",
     "DLP close-out",
     "Confirm all listed defects are fixed or accepted. Extend DLP if the contract requires it when items remain open.",
+    ALL,
+    true,
+    ["Domestic Building Contracts Act 1995 (Vic)"],
   ),
 
   item(
@@ -731,6 +825,9 @@ const ITEMS: ChecklistItem[] = [
     "final-certificate",
     "Final inspection after DLP",
     "Inspect remaining items. Do not issue a final certificate while contractual defects remain that the builder is obliged to fix.",
+    ALL,
+    true,
+    ["Domestic Building Contracts Act 1995 (Vic)", "ARBV Code of Professional Conduct"],
   ),
   item(
     "fc-issue",
@@ -746,6 +843,9 @@ const ITEMS: ChecklistItem[] = [
     "final-certificate",
     "Release retention / security",
     "Release remaining security in accordance with the contract after final certificate.",
+    ALL,
+    true,
+    ["Domestic Building Contracts Act 1995 (Vic)", "Building and Construction Industry Security of Payment Act 2002 (Vic)"],
   ),
   item(
     "fc-archive",
@@ -762,18 +862,27 @@ const ITEMS: ChecklistItem[] = [
     "post-occupancy",
     "Occupant feedback",
     "Collect structured feedback after at least one winter and one summer where possible: comfort, storage, daylight, acoustics, operation of systems.",
+    ALL,
+    true,
+    ["ARBV Code of Professional Conduct", "NCC 2022 energy and condensation intent"],
   ),
   item(
     "poe-energy",
     "post-occupancy",
     "Energy and condensation check",
     "Compare bills or monitoring to the NatHERS intent. Look for condensation in bathrooms, robes and south-facing rooms.",
+    ALL,
+    true,
+    ["NCC 2022", "NatHERS 7-star (Vic from 1 May 2024)"],
   ),
   item(
     "poe-landscape",
     "post-occupancy",
     "Landscape establishment",
     "Confirm canopy trees and deep-soil planting have established, irrigation works, and any planning landscape condition is still met.",
+    ALL,
+    true,
+    ["VPP cl 55.07 / 58.03 landscaping", "Planning and Environment Act 1987 (Vic) permit conditions"],
   ),
   item(
     "poe-lessons",
@@ -782,6 +891,7 @@ const ITEMS: ChecklistItem[] = [
     "Note what to change on the next Victorian house, townhouse or apartment project. Store against this project, not only in someone’s inbox.",
     ALL,
     false,
+    ["ARBV Code of Professional Conduct — document and maintain records"],
   ),
 ];
 
@@ -894,7 +1004,7 @@ function withChecksum(
   return {
     ...template,
     checksum:
-      "4f3ca300b302aae615fd161c909c4cad8a060848a92d564a7445db8d3fe79d37",
+      "d8d0ef907b396fbe9ea21384097c3996578bb9d9b55dc669e1f1bcd61de1abdd",
   };
 }
 
@@ -902,7 +1012,7 @@ export const BUNDLED_TEMPLATE: TemplateDocument = withChecksum({
   format: TEMPLATE_FORMAT,
   formatVersion: FORMAT_VERSION,
   id: "vic-residential",
-  version: "1.0.0",
+  version: "1.0.1",
   title: "Victoria residential — houses, townhouses and apartments",
   jurisdiction: "Victoria, Australia",
   description:

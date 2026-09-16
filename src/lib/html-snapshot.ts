@@ -151,6 +151,9 @@ function itemRow(item: ChecklistItem, project: ProjectDocument): string {
     <div class="status">${escapeHtml(status)}${item.required ? " · required" : ""}</div>
     <h3>${escapeHtml(item.title)}</h3>
     <p>${escapeHtml(item.detail)}</p>
+    ${item.references.length
+      ? `<p class="meta">${escapeHtml(item.references.length === 1 ? "Source: " : "Sources: ")}${escapeHtml(item.references.join(" · "))}</p>`
+      : ""}
     ${notes ? `<p class="notes">${escapeHtml(notes)}</p>` : `<p class="empty">No notes.</p>`}
   </article>`;
 }

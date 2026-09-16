@@ -11,6 +11,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { SourceCitations } from "@/components/source-citations";
 import { BUNDLED_TEMPLATE } from "@/lib/template/vic-residential";
 import {
   emptyTemplateTicks,
@@ -150,6 +151,7 @@ export function TemplateReference({
                 title={item.title}
                 detail={item.detail}
                 required={item.required}
+                references={item.references}
                 ticked={Boolean(ticks[typology][item.id])}
                 onTicked={(value) => setTicked(item.id, value)}
               />
@@ -194,6 +196,7 @@ export function TemplateReference({
                           title={item.title}
                           detail={item.detail}
                           required={item.required}
+                          references={item.references}
                           ticked={Boolean(ticks[typology][item.id])}
                           onTicked={(value) => setTicked(item.id, value)}
                         />
@@ -232,35 +235,42 @@ function ReferenceItem({
   title,
   detail,
   required,
+  references,
   ticked,
   onTicked,
 }: {
   title: string;
   detail: string;
   required: boolean;
+  references: string[];
   ticked: boolean;
   onTicked: (ticked: boolean) => void;
 }) {
   return (
-    <label className="flex min-h-14 cursor-pointer items-start gap-3 rounded-xl border border-border bg-background px-3 py-3">
-      <Checkbox
-        className="mt-0.5 size-5"
-        checked={ticked}
-        onCheckedChange={(value) => onTicked(value === true)}
-      />
-      <span className="min-w-0 flex-1">
-        <span className="flex items-start justify-between gap-2">
-          <span className="font-medium leading-snug">{title}</span>
-          {required ? null : (
-            <Badge variant="outline" className="shrink-0">
-              Optional
-            </Badge>
-          )}
+    <div className="rounded-xl border border-border bg-background px-3 py-3">
+      <label className="flex min-h-11 cursor-pointer items-start gap-3">
+        <Checkbox
+          className="mt-0.5 size-5"
+          checked={ticked}
+          onCheckedChange={(value) => onTicked(value === true)}
+        />
+        <span className="min-w-0 flex-1">
+          <span className="flex items-start justify-between gap-2">
+            <span className="font-medium leading-snug">{title}</span>
+            {required ? null : (
+              <Badge variant="outline" className="shrink-0">
+                Optional
+              </Badge>
+            )}
+          </span>
+          <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
+            {detail}
+          </span>
         </span>
-        <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
-          {detail}
-        </span>
-      </span>
-    </label>
+      </label>
+      <div className="mt-2 pl-8">
+        <SourceCitations references={references} />
+      </div>
+    </div>
   );
 }

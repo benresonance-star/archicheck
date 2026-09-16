@@ -2,7 +2,7 @@
   "format": "vic-arch-checklist-template",
   "formatVersion": "1.0.0",
   "id": "vic-residential",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "title": "Victoria residential — houses, townhouses and apartments",
   "jurisdiction": "Victoria, Australia",
   "description": "ARBV-aligned stages from pre-design through post-occupancy, with Clause 54 / 55 / 58, NCC 2022 (7-star and livable housing from 1 May 2024), and apartment developer-bond notes.",
@@ -119,7 +119,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Architects Act 1991 (Vic)",
+        "ARBV Guideline — Client–architect agreements"
+      ],
       "grokbotId": "bot-pre-design"
     },
     {
@@ -200,7 +203,9 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "VPP cl 54.01 / 55.01 neighbourhood and site description"
+      ],
       "grokbotId": "bot-pre-design"
     },
     {
@@ -214,7 +219,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Building Act 1993 (Vic)",
+        "Water Act 1989 (Vic) — build-over assets"
+      ],
       "grokbotId": "bot-pre-design"
     },
     {
@@ -246,7 +254,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "ARBV Guideline — Client–architect agreements",
+        "A New Tax System (Goods and Services Tax) Act 1999 (Cth)"
+      ],
       "grokbotId": "bot-pre-design"
     },
     {
@@ -260,7 +271,9 @@
         "apartment"
       ],
       "required": false,
-      "references": [],
+      "references": [
+        "VPP cl 54.01 / 55.01 neighbourhood and site description"
+      ],
       "grokbotId": "bot-pre-design"
     },
     {
@@ -290,7 +303,9 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "ARBV Guideline — Client–architect agreements"
+      ],
       "grokbotId": "bot-concept"
     },
     {
@@ -413,7 +428,9 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "ARBV Guideline — Client–architect agreements"
+      ],
       "grokbotId": "bot-concept"
     },
     {
@@ -427,7 +444,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Planning and Environment Act 1987 (Vic)",
+        "VPP cl 54 / 55 / 58 application requirements"
+      ],
       "grokbotId": "bot-design-development"
     },
     {
@@ -441,7 +461,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Architects Act 1991 (Vic)",
+        "ARBV Code of Professional Conduct — competence and consultants"
+      ],
       "grokbotId": "bot-design-development"
     },
     {
@@ -565,7 +588,10 @@
         "apartment"
       ],
       "required": false,
-      "references": [],
+      "references": [
+        "VPP cl 55.07 / 58 waste and recycling",
+        "local waste management policy"
+      ],
       "grokbotId": "bot-design-development"
     },
     {
@@ -579,7 +605,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Planning and Environment Act 1987 (Vic)",
+        "ARBV Guideline — Client–architect agreements"
+      ],
       "grokbotId": "bot-design-development"
     },
     {
@@ -654,7 +683,9 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "VPP cl 54.01 / 55.01"
+      ],
       "grokbotId": "bot-town-planning"
     },
     {
@@ -668,7 +699,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Planning and Environment Act 1987 (Vic)",
+        "VPP cl 54 / 55 / 58"
+      ],
       "grokbotId": "bot-town-planning"
     },
     {
@@ -682,7 +716,10 @@
         "apartment"
       ],
       "required": false,
-      "references": [],
+      "references": [
+        "Planning and Environment Act 1987 (Vic)",
+        "VPP particular provisions"
+      ],
       "grokbotId": "bot-town-planning"
     },
     {
@@ -696,7 +733,9 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Planning and Environment Act 1987 (Vic) s 47"
+      ],
       "grokbotId": "bot-town-planning"
     },
     {
@@ -726,7 +765,9 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Planning and Environment Act 1987 (Vic) ss 61, 68"
+      ],
       "grokbotId": "bot-town-planning"
     },
     {
@@ -755,7 +796,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Planning and Environment Act 1987 (Vic)",
+        "Building Act 1993 (Vic) s 24"
+      ],
       "grokbotId": "bot-documentation"
     },
     {
@@ -769,7 +813,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Building Act 1993 (Vic)",
+        "NCC 2022"
+      ],
       "grokbotId": "bot-documentation"
     },
     {
@@ -849,7 +896,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Building Act 1993 (Vic)",
+        "NCC 2022"
+      ],
       "grokbotId": "bot-documentation"
     },
     {
@@ -910,7 +960,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)",
+        "ARBV Guideline — Client–architect agreements"
+      ],
       "grokbotId": "bot-tender"
     },
     {
@@ -924,7 +977,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)",
+        "ARBV Code of Professional Conduct"
+      ],
       "grokbotId": "bot-tender"
     },
     {
@@ -938,7 +994,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)",
+        "ARBV Code of Professional Conduct"
+      ],
       "grokbotId": "bot-tender"
     },
     {
@@ -969,7 +1028,9 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic) s 31"
+      ],
       "grokbotId": "bot-tender"
     },
     {
@@ -1047,7 +1108,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)",
+        "Building and Construction Industry Security of Payment Act 2002 (Vic)"
+      ],
       "grokbotId": "bot-contract-admin"
     },
     {
@@ -1061,7 +1125,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)",
+        "Building and Construction Industry Security of Payment Act 2002 (Vic)"
+      ],
       "grokbotId": "bot-contract-admin"
     },
     {
@@ -1104,7 +1171,10 @@
         "apartment"
       ],
       "required": false,
-      "references": [],
+      "references": [
+        "Owners Corporations Act 2006 (Vic)",
+        "Subdivision Act 1988 (Vic)"
+      ],
       "grokbotId": "bot-contract-admin"
     },
     {
@@ -1118,7 +1188,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)",
+        "ARBV Code of Professional Conduct — contract administration"
+      ],
       "grokbotId": "bot-practical-completion"
     },
     {
@@ -1132,7 +1205,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)",
+        "Building Act 1993 (Vic) occupancy permit"
+      ],
       "grokbotId": "bot-practical-completion"
     },
     {
@@ -1146,7 +1222,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Building Act 1993 (Vic)",
+        "Building Amendment (Building Manuals and Mandatory Inspections) Regulations 2025 (Vic)"
+      ],
       "grokbotId": "bot-practical-completion"
     },
     {
@@ -1160,7 +1239,9 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)"
+      ],
       "grokbotId": "bot-practical-completion"
     },
     {
@@ -1174,7 +1255,9 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)"
+      ],
       "grokbotId": "bot-defects-liability"
     },
     {
@@ -1188,7 +1271,9 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "ARBV Code of Professional Conduct — document and maintain records"
+      ],
       "grokbotId": "bot-defects-liability"
     },
     {
@@ -1230,7 +1315,9 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)"
+      ],
       "grokbotId": "bot-defects-liability"
     },
     {
@@ -1244,7 +1331,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)",
+        "ARBV Code of Professional Conduct"
+      ],
       "grokbotId": "bot-final-certificate"
     },
     {
@@ -1274,7 +1364,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)",
+        "Building and Construction Industry Security of Payment Act 2002 (Vic)"
+      ],
       "grokbotId": "bot-final-certificate"
     },
     {
@@ -1304,7 +1397,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "ARBV Code of Professional Conduct",
+        "NCC 2022 energy and condensation intent"
+      ],
       "grokbotId": "bot-post-occupancy"
     },
     {
@@ -1318,7 +1414,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "NCC 2022",
+        "NatHERS 7-star (Vic from 1 May 2024)"
+      ],
       "grokbotId": "bot-post-occupancy"
     },
     {
@@ -1332,7 +1431,10 @@
         "apartment"
       ],
       "required": true,
-      "references": [],
+      "references": [
+        "VPP cl 55.07 / 58.03 landscaping",
+        "Planning and Environment Act 1987 (Vic) permit conditions"
+      ],
       "grokbotId": "bot-post-occupancy"
     },
     {
@@ -1346,7 +1448,9 @@
         "apartment"
       ],
       "required": false,
-      "references": [],
+      "references": [
+        "ARBV Code of Professional Conduct — document and maintain records"
+      ],
       "grokbotId": "bot-post-occupancy"
     }
   ],
@@ -1539,5 +1643,5 @@
       ]
     }
   ],
-  "checksum": "4f3ca300b302aae615fd161c909c4cad8a060848a92d564a7445db8d3fe79d37"
+  "checksum": "d8d0ef907b396fbe9ea21384097c3996578bb9d9b55dc669e1f1bcd61de1abdd"
 }

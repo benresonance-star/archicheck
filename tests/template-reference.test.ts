@@ -8,6 +8,17 @@ import {
 } from "../src/lib/template-reference";
 import { BUNDLED_TEMPLATE } from "../src/lib/template/vic-residential";
 
+test("every bundled checklist item cites at least one source", () => {
+  for (const item of BUNDLED_TEMPLATE.items) {
+    assert.ok(item.references.length > 0, item.id);
+    assert.ok(
+      item.references.every((value) => value.trim().length > 0),
+      item.id,
+    );
+  }
+  assert.equal(BUNDLED_TEMPLATE.version, "1.0.1");
+});
+
 test("generic templates expose checkable items for every typology and stage", () => {
   for (const typology of ["house", "townhouse", "apartment"] as const) {
     const groups = groupedTemplateStages(BUNDLED_TEMPLATE, typology);
@@ -15,6 +26,7 @@ test("generic templates expose checkable items for every typology and stage", ()
     const items = groups.flatMap((group) => group.items);
     assert.ok(items.length >= 70, typology);
     assert.ok(items.every((item) => item.appliesTo.includes(typology)));
+    assert.ok(items.every((item) => item.references.length > 0));
   }
 });
 
