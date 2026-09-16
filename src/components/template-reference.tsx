@@ -192,6 +192,8 @@ export function TemplateReference({
           group={visibleGroups[0]}
           ticks={ticks[typology]}
           onTicked={setTicked}
+          rememberScroll={rememberScroll}
+          restoreScroll={restoreScroll}
         />
       ) : lens === "document" ? (
         <DocumentLensLists
@@ -225,6 +227,8 @@ export function TemplateReference({
                   group={group}
                   ticks={ticks[typology]}
                   onTicked={setTicked}
+                  rememberScroll={rememberScroll}
+                  restoreScroll={restoreScroll}
                 />
               </StagePanel>
             );
@@ -253,6 +257,66 @@ export function TemplateReference({
   );
 }
 
+function CollapseSection({
+  header,
+  rememberScroll,
+  restoreScroll,
+  children,
+  defaultOpen = false,
+  className,
+  triggerClassName,
+}: {
+  header: ReactNode;
+  rememberScroll?: () => void;
+  restoreScroll?: () => void;
+  children: ReactNode;
+  defaultOpen?: boolean;
+  className?: string;
+  triggerClassName?: string;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+
+  return (
+    <section
+      className={cn(
+        "overflow-visible rounded-xl border border-border bg-background [overflow-anchor:none]",
+        className,
+      )}
+    >
+      <button
+        type="button"
+        aria-expanded={open}
+        className={cn(
+          "flex min-h-11 w-full items-start gap-2 px-3 py-3 text-left hover:bg-muted/50",
+          open ? "rounded-t-xl border-b border-border" : "rounded-xl",
+          triggerClassName,
+        )}
+        onPointerDown={(event) => {
+          rememberScroll?.();
+          if (event.pointerType !== "mouse") {
+            event.currentTarget.focus({ preventScroll: true });
+          }
+        }}
+        onKeyDown={rememberScroll}
+        onClick={() => {
+          setOpen((current) => !current);
+          restoreScroll?.();
+        }}
+      >
+        <span className="min-w-0 flex-1">{header}</span>
+        {open ? (
+          <ChevronUpIcon className="mt-1 size-4 shrink-0 text-muted-foreground" />
+        ) : (
+          <ChevronDownIcon className="mt-1 size-4 shrink-0 text-muted-foreground" />
+        )}
+      </button>
+      {open ? (
+        <div className="overflow-visible px-3 pb-3 pt-3">{children}</div>
+      ) : null}
+    </section>
+  );
+}
+
 function StagePanel({
   stage,
   badge,
@@ -266,40 +330,16 @@ function StagePanel({
   restoreScroll: () => void;
   children: ReactNode;
 }) {
-  const [open, setOpen] = useState(false);
-
   return (
-    <section className="overflow-visible rounded-2xl border border-border bg-card [overflow-anchor:none]">
-      <button
-        type="button"
-        aria-expanded={open}
-        className={cn(
-          "flex min-h-14 w-full items-start gap-2 bg-muted/70 px-3 py-3 text-left text-base hover:bg-muted",
-          open ? "rounded-t-2xl border-b border-border" : "rounded-2xl",
-        )}
-        onPointerDown={(event) => {
-          rememberScroll();
-          if (event.pointerType !== "mouse") {
-            event.currentTarget.focus({ preventScroll: true });
-          }
-        }}
-        onKeyDown={rememberScroll}
-        onClick={() => {
-          setOpen((current) => !current);
-          restoreScroll();
-        }}
-      >
-        <ArbvStageHeader stage={stage} badge={badge} />
-        {open ? (
-          <ChevronUpIcon className="mt-1 size-4 shrink-0 text-muted-foreground" />
-        ) : (
-          <ChevronDownIcon className="mt-1 size-4 shrink-0 text-muted-foreground" />
-        )}
-      </button>
-      {open ? (
-        <div className="overflow-visible px-3 pb-4 pt-3">{children}</div>
-      ) : null}
-    </section>
+    <CollapseSection
+      className="rounded-2xl bg-card"
+      triggerClassName="min-h-14 bg-muted/70 text-base hover:bg-muted"
+      header={<ArbvStageHeader stage={stage} badge={badge} />}
+      rememberScroll={rememberScroll}
+      restoreScroll={restoreScroll}
+    >
+      {children}
+    </CollapseSection>
   );
 }
 
@@ -342,49 +382,54 @@ function DocumentLensLists({
               {group.documents.map((document) => {
                 const progress = referenceProgress(document.items, ticks);
                 return (
-                  <div
+                  <CollapseSection
                     key={`${group.stage.id}-${document.kind}`}
-                    className="space-y-3 overflow-visible rounded-xl border border-border bg-background p-3"
+                    rememberScroll={rememberScroll}
+                    restoreScroll={restoreScroll}
+                    header={
+                      <span className="flex items-start justify-between gap-3">
+                        <span className="min-w-0">
+                          <span className="block font-medium leading-tight break-words">
+                            {document.title}
+                          </span>
+                          <span className="mt-1 block text-sm leading-relaxed text-muted-foreground break-words">
+                            {document.summary}
+                          </span>
+                        </span>
+                        <Badge variant="outline" className="shrink-0">
+                          {progress.done}/{progress.total}
+                        </Badge>
+                      </span>
+                    }
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <p className="font-medium leading-tight break-words">
-                          {document.title}
-                        </p>
-                        <p className="text-sm leading-relaxed text-muted-foreground break-words">
-                          {document.summary}
-                        </p>
-                      </div>
-                      <Badge variant="outline" className="shrink-0">
-                        {progress.done}/{progress.total}
-                      </Badge>
-                    </div>
-                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      Associated checklist
-                    </p>
-                    {document.items.length === 0 ? (
-                      <p className="text-sm text-muted-foreground">
-                        No checks on this document.
+                    <div className="space-y-3">
+                      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                        Associated checklist
                       </p>
-                    ) : (
-                      <ul className="space-y-2">
-                        {document.items.map((item) => (
-                          <li key={item.id}>
-                            <ReferenceItem
-                              title={item.title}
-                              detail={item.detail}
-                              required={item.required}
-                              references={item.references}
-                              resources={item.resources}
-                              assessment={item.assessment}
-                              ticked={Boolean(ticks[item.id])}
-                              onTicked={(value) => onTicked(item.id, value)}
-                            />
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
+                      {document.items.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">
+                          No checks on this document.
+                        </p>
+                      ) : (
+                        <ul className="space-y-2">
+                          {document.items.map((item) => (
+                            <li key={item.id}>
+                              <ReferenceItem
+                                title={item.title}
+                                detail={item.detail}
+                                required={item.required}
+                                references={item.references}
+                                resources={item.resources}
+                                assessment={item.assessment}
+                                ticked={Boolean(ticks[item.id])}
+                                onTicked={(value) => onTicked(item.id, value)}
+                              />
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </CollapseSection>
                 );
               })}
             </div>
@@ -399,45 +444,58 @@ function StageReferenceLists({
   group,
   ticks,
   onTicked,
+  rememberScroll,
+  restoreScroll,
 }: {
   group: TemplateStageGroup;
   ticks: Record<string, boolean>;
   onTicked: (itemId: string, ticked: boolean) => void;
+  rememberScroll?: () => void;
+  restoreScroll?: () => void;
 }) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {group.deliverables.map((entry) => (
-        <div
+        <CollapseSection
           key={entry.deliverable.id}
-          className="space-y-2 rounded-xl border border-border bg-muted/40 p-3"
+          className="bg-muted/40"
+          rememberScroll={rememberScroll}
+          restoreScroll={restoreScroll}
+          header={<DeliverableHeading deliverable={entry.deliverable} />}
         >
-          <DeliverableHeading deliverable={entry.deliverable} />
-          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Associated checklist
-          </p>
-          <ul className="space-y-2">
-            {entry.items.map((item) => (
-              <li key={item.id}>
-                <ReferenceItem
-                  title={item.title}
-                  detail={item.detail}
-                  required={item.required}
-                  references={item.references}
-                  resources={item.resources}
-                  assessment={item.assessment}
-                  ticked={Boolean(ticks[item.id])}
-                  onTicked={(value) => onTicked(item.id, value)}
-                />
-              </li>
-            ))}
-          </ul>
-        </div>
+          <div className="space-y-2">
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Associated checklist
+            </p>
+            <ul className="space-y-2">
+              {entry.items.map((item) => (
+                <li key={item.id}>
+                  <ReferenceItem
+                    title={item.title}
+                    detail={item.detail}
+                    required={item.required}
+                    references={item.references}
+                    resources={item.resources}
+                    assessment={item.assessment}
+                    ticked={Boolean(ticks[item.id])}
+                    onTicked={(value) => onTicked(item.id, value)}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </CollapseSection>
       ))}
       {group.processItems.length > 0 ? (
-        <div className="space-y-2">
-          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Stage checks
-          </p>
+        <CollapseSection
+          rememberScroll={rememberScroll}
+          restoreScroll={restoreScroll}
+          header={
+            <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Stage checks
+            </span>
+          }
+        >
           <ul className="space-y-2">
             {group.processItems.map((item) => (
               <li key={item.id}>
@@ -454,7 +512,7 @@ function StageReferenceLists({
               </li>
             ))}
           </ul>
-        </div>
+        </CollapseSection>
       ) : null}
     </div>
   );

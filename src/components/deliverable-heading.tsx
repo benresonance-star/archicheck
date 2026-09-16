@@ -8,14 +8,16 @@ export function DeliverableHeading({
   deliverable: StageDeliverable;
 }) {
   return (
-    <div className="space-y-1">
-      <div className="flex flex-wrap items-center gap-2">
+    <span className="block space-y-1">
+      <span className="flex flex-wrap items-center gap-2">
         <Badge variant="outline">{deliverableKindLabel(deliverable.kind)}</Badge>
-        <p className="font-medium leading-snug">{deliverable.title}</p>
-      </div>
-      <p className="text-sm leading-relaxed text-muted-foreground">
+        <span className="font-medium leading-snug break-words">
+          {deliverable.title}
+        </span>
+      </span>
+      <span className="block text-sm leading-relaxed text-muted-foreground break-words">
         {deliverable.summary}
-      </p>
-    </div>
+      </span>
+    </span>
   );
 }
