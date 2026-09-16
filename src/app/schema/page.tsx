@@ -39,8 +39,9 @@ export default function SchemaPage() {
           lossless archive.
         </p>
         <p>
-          Code scout reports live on the device beside the project. Accepting
-          proposed wording writes a draft template version and checksum; it
+          Code scout reports live on the device beside the project. Scout
+          flags source changes for a person to re-read. A human-authored
+          wording change still writes a new template version and checksum; it
           does not rewrite answers.
         </p>
         <p>

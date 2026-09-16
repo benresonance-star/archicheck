@@ -1,9 +1,14 @@
 import type { Typology } from "@/lib/types";
 import type {
   ScoutFinding,
+  ScoutReport,
   ScoutSnapshot,
 } from "@/lib/scout/types";
-import type { PreviousSnapshot, WatchSource } from "@/lib/scout/watch-list";
+import {
+  DEFAULT_WATCH_SOURCES,
+  type PreviousSnapshot,
+  type WatchSource,
+} from "@/lib/scout/watch-list";
 
 export function interpretSource(input: {
   source: WatchSource;
@@ -32,12 +37,7 @@ export function interpretSource(input: {
       action: "needs_human",
       itemIds,
       flag: `${input.source.flag} Automated fetch was blocked (${input.snapshot.error ?? "network"}).`,
-      proposed: applies
-        ? {
-            detail: input.source.proposedDetail,
-            references: [input.source.url],
-          }
-        : null,
+      proposed: null,
       confidence: "low",
       status: "open",
       hashChanged: false,
@@ -87,15 +87,10 @@ export function interpretSource(input: {
     sourceTitle: input.source.title,
     url: input.source.url,
     scope: "statewide",
-    action: applies ? "replace" : "needs_human",
+    action: "needs_human",
     itemIds,
-    flag: input.source.flag,
-    proposed: applies
-      ? {
-          detail: input.source.proposedDetail,
-          references: [input.source.url],
-        }
-      : null,
+    flag: `${input.source.title} has changed. Open the source and re-read the linked checks before treating them as current. ${input.source.flag}`,
+    proposed: null,
     confidence: "low",
     status: "open",
     hashChanged: true,
@@ -145,10 +140,7 @@ export function interpretLocal(input: {
       action: "needs_human",
       itemIds,
       flag: `Open the ${input.municipalityName} amendments list and check for C-amendments that affect this site’s zone or overlays. Tick planning-context if a local amendment is on exhibition or recently gazetted.`,
-      proposed: {
-        detail: `Local (${input.municipalityName}) amendment pages could not be fetched automatically. Recheck the planning scheme amendments list before lodgement.`,
-        references: [input.url],
-      },
+      proposed: null,
       confidence: "low",
       status: "open",
       hashChanged: false,
@@ -198,16 +190,54 @@ export function interpretLocal(input: {
     sourceTitle: `${input.municipalityName} amendments`,
     url: input.url,
     scope: "local",
-    action: "replace",
+    action: "needs_human",
     itemIds,
-    flag: `The ${input.municipalityName} amendments list changed. Read it and tick planning-context / planning-permit items if a C-amendment affects this lot, overlay or zone.`,
-    proposed: {
-      detail: `The ${input.municipalityName} planning scheme amendments list has changed. Recheck local C-amendments, overlay schedules and any exhibition dates before lodgement.`,
-      references: [input.url],
-    },
+    flag: `The ${input.municipalityName} amendments list has changed. Open it and re-read planning-context and planning-permit checks if a C-amendment affects this lot, overlay or zone.`,
+    proposed: null,
     confidence: "low",
     status: "open",
     hashChanged: true,
     baseline: false,
+  };
+}
+
+export function isCannedProposedDetail(detail: string | undefined): boolean {
+  const text = detail?.trim() ?? "";
+  if (!text) {
+    return false;
+  }
+  if (DEFAULT_WATCH_SOURCES.some((source) => source.proposedDetail === text)) {
+    return true;
+  }
+  return /planning scheme amendments list has changed|amendment pages could not be fetched/i.test(
+    text,
+  );
+}
+
+export function normalizeScoutFinding(finding: ScoutFinding): ScoutFinding {
+  if (finding.status !== "open") {
+    return finding;
+  }
+  if (finding.action === "add" && finding.proposed?.newItem) {
+    return finding;
+  }
+  const autoScout =
+    finding.hashChanged ||
+    isCannedProposedDetail(finding.proposed?.detail) ||
+    (finding.action === "needs_human" && finding.proposed != null);
+  if (!autoScout) {
+    return finding;
+  }
+  return {
+    ...finding,
+    action: "needs_human",
+    proposed: null,
+  };
+}
+
+export function normalizeScoutReport(report: ScoutReport): ScoutReport {
+  return {
+    ...report,
+    findings: report.findings.map(normalizeScoutFinding),
   };
 }

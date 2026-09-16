@@ -143,6 +143,9 @@ export function findingActionBadge(finding: ScoutFinding): string {
   if (isBlockedFinding(finding)) {
     return "Blocked";
   }
+  if (finding.hashChanged) {
+    return "Source changed";
+  }
   return actionLabel(finding.action);
 }
 

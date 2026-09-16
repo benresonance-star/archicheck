@@ -4,6 +4,7 @@ import {
   interpretLocal,
   interpretSource,
   localUnconfiguredFinding,
+  normalizeScoutFinding,
 } from "../src/lib/scout/interpret";
 import { resolveMunicipality } from "../src/lib/scout/municipalities";
 import { findingActionBadge, findingDisplayFlag, isBlockedFinding, scoutIsDue } from "../src/lib/scout/types";
@@ -64,7 +65,7 @@ test("unchanged hash stays no_change", () => {
   assert.equal(finding.hashChanged, false);
 });
 
-test("changed hash proposes replace wording and a flag", () => {
+test("changed hash flags the source without replacement wording", () => {
   const source = STATEWIDE_SOURCES.find((row) => row.id === "townhouse-code");
   assert.ok(source);
   const finding = interpretSource({
@@ -73,10 +74,12 @@ test("changed hash proposes replace wording and a flag", () => {
     previous: { sourceId: source.id, sha256: "old" },
     typology: "townhouse",
   });
-  assert.equal(finding.action, "replace");
+  assert.equal(finding.action, "needs_human");
   assert.equal(finding.hashChanged, true);
+  assert.equal(finding.proposed, null);
+  assert.equal(findingActionBadge(finding), "Source changed");
+  assert.ok(finding.flag.includes("Open the source"));
   assert.ok(finding.flag.includes("Clause 55"));
-  assert.ok(finding.proposed?.detail);
   assert.ok(finding.itemIds.includes("cd-cl55"));
   assert.ok(source.url.includes("/All%20schemes/55"));
 });
@@ -123,6 +126,7 @@ test("failed fetch needs a human and still carries a flag", () => {
     typology: "house",
   });
   assert.equal(finding.action, "needs_human");
+  assert.equal(finding.proposed, null);
   assert.ok(finding.flag.includes("blocked"));
 });
 
@@ -132,7 +136,7 @@ test("blank municipality yields local_unconfigured", () => {
   assert.equal(finding.action, "needs_human");
 });
 
-test("local hash change proposes replace for that council", () => {
+test("local hash change flags the council list without replacement wording", () => {
   const finding = interpretLocal({
     municipalityName: "Yarra",
     url: "https://example.test/yarra",
@@ -143,9 +147,10 @@ test("local hash change proposes replace for that council", () => {
     }),
     previous: { sourceId: "local-amendments", sha256: "old" },
   });
-  assert.equal(finding.action, "replace");
+  assert.equal(finding.action, "needs_human");
+  assert.equal(finding.proposed, null);
   assert.ok(finding.flag.includes("Yarra"));
-  assert.ok(finding.proposed?.detail?.includes("Yarra"));
+  assert.ok(finding.flag.includes("Open it"));
 });
 
 test("scout is due after a week", () => {
@@ -219,12 +224,36 @@ test("mergeScoutSettings adds new bundled sites without dropping custom ones", (
   );
 });
 
-test("Grok Bot brief lists enabled sites and what they look for", () => {
+test("Grok Bot brief lists enabled sites and forbids wording rewrites", () => {
   const brief = grokBotScoutBrief(defaultScoutSettings());
   assert.ok(brief.includes("VicCodeScout"));
   assert.ok(brief.includes("Australian Institute of Architects"));
   assert.ok(brief.includes("Master Builders Victoria"));
   assert.ok(brief.includes("National Construction Code"));
+  assert.ok(brief.includes("Do not rewrite checklist wording"));
+  assert.ok(brief.includes("Propose flags only"));
+});
+
+test("stored canned replace findings become flags", () => {
+  const gazette = STATEWIDE_SOURCES.find((row) => row.id === "gazette");
+  assert.ok(gazette);
+  const finding = normalizeScoutFinding({
+    id: "f-gazette",
+    sourceId: gazette.id,
+    sourceTitle: gazette.title,
+    url: gazette.url,
+    scope: "statewide",
+    action: "replace",
+    itemIds: gazette.itemIds,
+    flag: gazette.flag,
+    proposed: { detail: gazette.proposedDetail },
+    confidence: "low",
+    status: "open",
+    hashChanged: true,
+    baseline: false,
+  });
+  assert.equal(finding.action, "needs_human");
+  assert.equal(finding.proposed, null);
 });
 
 test("accepting proposed wording updates every flagged item, not answers", () => {

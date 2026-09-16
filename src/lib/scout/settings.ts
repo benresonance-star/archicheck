@@ -47,9 +47,9 @@ export function runnerLabel(runner: ScoutRunner): string {
 export function runnerSummary(runner: ScoutRunner, otherLabel: string): string {
   switch (runner) {
     case "cursor":
-      return "This app fetches the listed pages, hashes them, and posts changes on the noticeboard. You still accept wording before any template draft.";
+      return "This app fetches the listed pages, hashes them, and posts flags on the noticeboard. A person still drafts any wording change.";
     case "grokbot":
-      return "A Grok Bot brief is copied for you. The bot reads the listed sites and proposes flags; this app can still hash-check the same URLs.";
+      return "A Grok Bot brief is copied for you. The bot should flag URL changes and item ids only. This app can still hash-check the same URLs.";
     case "other":
       return otherLabel.trim()
         ? `External scout: ${otherLabel.trim()}. This app can still hash-check the listed URLs on demand.`
@@ -174,7 +174,8 @@ export function grokBotScoutBrief(settings: ScoutSettings): string {
     "Sites and what to look for:",
     sites || "(no sites enabled)",
     "",
-    "Do not lodge permits. Do not change project answers. Propose flags and wording only.",
+    "Do not lodge permits. Do not change project answers. Do not rewrite checklist wording.",
+    "Propose flags only: which URL changed, and which checklist item ids a human should re-read.",
     "If a page is blocked, list the URL and the checklist item ids for a human to tick.",
   ].join("\n");
 }

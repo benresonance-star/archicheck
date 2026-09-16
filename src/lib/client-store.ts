@@ -50,6 +50,7 @@ import {
   type ScoutProposed,
   type ScoutReport,
 } from "@/lib/scout/types";
+import { normalizeScoutReport } from "@/lib/scout/interpret";
 import type { PreviousSnapshot } from "@/lib/scout/watch-list";
 import {
   adoptSelected,
@@ -433,7 +434,9 @@ export async function loadScoutReport(
     tx.objectStore("scoutReports").get(projectId),
   )) as ScoutReport | undefined;
   await txDone(tx);
-  return report ? { ...report, kind: report.kind ?? "project" } : null;
+  return report
+    ? normalizeScoutReport({ ...report, kind: report.kind ?? "project" })
+    : null;
 }
 
 export async function loadScoutSnapshots(
@@ -863,8 +866,9 @@ async function persistScoutResponse(response: Response): Promise<ScoutReport> {
   if (!response.ok || !data.report) {
     throw new Error(data.error ?? "Scout run failed");
   }
-  await saveScoutReport(data.report);
-  return data.report;
+  const report = normalizeScoutReport(data.report);
+  await saveScoutReport(report);
+  return report;
 }
 
 async function mutateWorkspace(

@@ -46,13 +46,13 @@ Default sites include NCC 2025 (BPC and ABCB), ARBV, AIA Victorian Chapter, Mast
 
 Each **project** still has **Code scout** for that job’s municipality.
 
-Alerts stay in the app. The first run stores a baseline; later runs compare hashes. A sourced proposal (scout, Grok Bot, or a person) is compared against the current item. **Approve and publish** writes a new live template version. Existing projects get an **impact notice**; the job reviewer selects which changes to adopt. Adopted checks become **Needs recheck** and keep their notes, previous status and attachments.
+Alerts stay in the app. The first run stores a baseline; later runs compare hashes. Scout flags a source change and the checks to re-read. It does not draft replacement wording. A person can still write a sourced proposal; **Approve and publish** then writes a new live template version. Existing projects get an **impact notice**; the job reviewer selects which changes to adopt. Adopted checks become **Needs recheck** and keep their notes, previous status and attachments.
 
 This is a practice aid, not legal advice. Some official sites block automated fetch; those findings still list the URL and item ids.
 
 ## Grok Bots
 
-Each stage has a named Grok Bot brief (copy the first task). Bots must not lodge permits or change the JSON except as a proposed patch.
+Each stage has a named Grok Bot brief (copy the first task). The VicCodeScout brief asks for flags only — URL changed, item ids to re-read — not replacement wording. Bots must not lodge permits or rewrite the approved template.
 
 A new project (and the project page) records **zones and overlays** as checkbox lists from the Victoria Planning Provisions. More than one of each can be ticked. The [planning property report](https://www.planning.vic.gov.au/planning-schemes/planning-property-report) is linked next to those lists.
 

@@ -137,9 +137,9 @@ export function ScoutInbox({
       </div>
       {!report ? (
         <p className="text-sm text-muted-foreground">
-          This is a practice aid, not legal advice. Statewide wording is
-          published as a new template version. Existing jobs get an impact
-          notice; they do not change until a reviewer adopts selected checks.
+          This is a practice aid, not legal advice. Scout flags source
+          changes. A person drafts any wording change; publishing still needs
+          human approval.
         </p>
       ) : (
         <>
@@ -278,7 +278,7 @@ function FindingCard({
   }
 
   const showAccept =
-    Boolean(detail.trim()) &&
+    Boolean(finding.proposed && detail.trim()) &&
     finding.action !== "no_change" &&
     finding.status === "open" &&
     !isBlockedFinding(finding);
@@ -315,21 +315,24 @@ function FindingCard({
           </Button>
         ) : null}
         {stageLinks.length > 0 ? (
-          <ul className="space-y-1 text-sm">
-            {stageLinks.map((link) => (
-              <li key={link.itemId}>
-                <Link className="underline underline-offset-2" href={link.href}>
-                  {link.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <div className="space-y-1">
+            <p className="text-sm font-medium">Re-read these checks</p>
+            <ul className="space-y-1 text-sm">
+              {stageLinks.map((link) => (
+                <li key={link.itemId}>
+                  <Link className="underline underline-offset-2" href={link.href}>
+                    {link.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         ) : (
           <p className="text-sm text-muted-foreground">
             No checklist items for this typology on this source.
           </p>
         )}
-        {blocked ? null : <FindingComparison rows={rows} />}
+        {blocked || !finding.proposed ? null : <FindingComparison rows={rows} />}
         {blocked || !finding.proposed?.detail ? null : (
           <div className="space-y-1">
             <Label htmlFor={`${finding.id}-proposed`}>Proposed wording</Label>

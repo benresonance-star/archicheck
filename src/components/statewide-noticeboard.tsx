@@ -301,7 +301,7 @@ function CompactFinding({ finding }: { finding: ScoutFinding }) {
         ) : null}
         {blocked || finding.status !== "open" ? null : (
           <Button className="min-h-11 w-full" variant="outline" asChild>
-            <Link href="/scout">Compare and publish</Link>
+            <Link href="/scout">Review flags</Link>
           </Button>
         )}
       </CardContent>
@@ -359,7 +359,7 @@ function BoardFinding({
   const proposed = { ...finding.proposed, detail };
   const rows = comparisonRows(template, finding, proposed);
   const canPublish =
-    Boolean(detail.trim()) &&
+    Boolean(finding.proposed && detail.trim()) &&
     finding.status === "open" &&
     !blocked &&
     finding.action !== "no_change";
@@ -387,10 +387,23 @@ function BoardFinding({
             </a>
           </Button>
         ) : null}
-        {blocked ? null : (
+        {finding.itemIds.length > 0 ? (
+          <div className="space-y-1">
+            <p className="text-sm font-medium">Re-read these checks</p>
+            <ul className="list-disc space-y-1 pl-4 text-sm">
+              {finding.itemIds.map((itemId) => {
+                const item = template.items.find((entry) => entry.id === itemId);
+                return (
+                  <li key={itemId}>{item?.title ?? itemId}</li>
+                );
+              })}
+            </ul>
+          </div>
+        ) : null}
+        {blocked || !finding.proposed ? null : (
           <>
             <FindingComparison rows={rows} />
-            {finding.proposed?.detail !== undefined || canPublish ? (
+            {canPublish ? (
               <div className="space-y-1">
                 <Label htmlFor={`${finding.id}-proposed`}>Proposed wording</Label>
                 <Textarea
