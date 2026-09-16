@@ -20,9 +20,10 @@ export default async function TemplatesPage({
           </h1>
           <p className="text-muted-foreground leading-relaxed">
             House, townhouse and apartment lists from the bundled Victoria
-            residential template. Tick items as a quick reference on this
-            device, then start a project when you need notes, attachments and a
-            ZIP.
+            residential template. Each item cites a Source and helper
+            Resource(s) on a sage-green panel. Tick items as a quick reference on
+            this device, then start a project when you need notes, attachments
+            and a ZIP.
           </p>
         </section>
         <TemplateReference initialTypology={typology} />

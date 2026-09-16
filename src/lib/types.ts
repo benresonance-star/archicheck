@@ -73,6 +73,11 @@ export type Stage = {
   summary: string;
 };
 
+export type ChecklistResource = {
+  label: string;
+  url: string;
+};
+
 export type ChecklistItem = {
   id: string;
   stageId: string;
@@ -81,6 +86,7 @@ export type ChecklistItem = {
   appliesTo: Typology[];
   required: boolean;
   references: string[];
+  resources: ChecklistResource[];
   grokbotId: string;
 };
 

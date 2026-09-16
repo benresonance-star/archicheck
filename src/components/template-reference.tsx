@@ -11,6 +11,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { ItemResources } from "@/components/item-resources";
 import { SourceCitations } from "@/components/source-citations";
 import { BUNDLED_TEMPLATE } from "@/lib/template/vic-residential";
 import {
@@ -21,7 +22,7 @@ import {
   saveTemplateTicks,
   type TemplateTicks,
 } from "@/lib/template-reference";
-import { typologyLabel, type Typology } from "@/lib/types";
+import { typologyLabel, type ChecklistItem, type Typology } from "@/lib/types";
 import { TYPOLOGY_ORDER, typologyMeta } from "@/lib/typology";
 
 export function TemplateReference({
@@ -152,6 +153,7 @@ export function TemplateReference({
                 detail={item.detail}
                 required={item.required}
                 references={item.references}
+                resources={item.resources}
                 ticked={Boolean(ticks[typology][item.id])}
                 onTicked={(value) => setTicked(item.id, value)}
               />
@@ -197,6 +199,7 @@ export function TemplateReference({
                           detail={item.detail}
                           required={item.required}
                           references={item.references}
+                          resources={item.resources}
                           ticked={Boolean(ticks[typology][item.id])}
                           onTicked={(value) => setTicked(item.id, value)}
                         />
@@ -236,6 +239,7 @@ function ReferenceItem({
   detail,
   required,
   references,
+  resources,
   ticked,
   onTicked,
 }: {
@@ -243,6 +247,7 @@ function ReferenceItem({
   detail: string;
   required: boolean;
   references: string[];
+  resources: ChecklistItem["resources"];
   ticked: boolean;
   onTicked: (ticked: boolean) => void;
 }) {
@@ -268,8 +273,9 @@ function ReferenceItem({
           </span>
         </span>
       </label>
-      <div className="mt-2 pl-8">
+      <div className="mt-2 space-y-2 pl-8">
         <SourceCitations references={references} />
+        <ItemResources resources={resources} />
       </div>
     </div>
   );

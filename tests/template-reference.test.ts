@@ -8,15 +8,24 @@ import {
 } from "../src/lib/template-reference";
 import { BUNDLED_TEMPLATE } from "../src/lib/template/vic-residential";
 
-test("every bundled checklist item cites at least one source", () => {
+test("every bundled checklist item cites a source and helper resources", () => {
   for (const item of BUNDLED_TEMPLATE.items) {
     assert.ok(item.references.length > 0, item.id);
     assert.ok(
       item.references.every((value) => value.trim().length > 0),
       item.id,
     );
+    assert.ok(item.resources.length > 0, item.id);
+    assert.ok(
+      item.resources.every(
+        (resource) =>
+          resource.label.trim().length > 0 &&
+          resource.url.startsWith("https://"),
+      ),
+      item.id,
+    );
   }
-  assert.equal(BUNDLED_TEMPLATE.version, "1.0.1");
+  assert.equal(BUNDLED_TEMPLATE.version, "1.0.2");
 });
 
 test("generic templates expose checkable items for every typology and stage", () => {
@@ -27,6 +36,7 @@ test("generic templates expose checkable items for every typology and stage", ()
     assert.ok(items.length >= 70, typology);
     assert.ok(items.every((item) => item.appliesTo.includes(typology)));
     assert.ok(items.every((item) => item.references.length > 0));
+    assert.ok(items.every((item) => item.resources.length > 0));
   }
 });
 

@@ -22,6 +22,10 @@
   --color-scout-border: var(--scout-border);
   --color-scout-foreground: var(--scout-foreground);
   --color-scout: var(--scout);
+  --color-resource-accent: var(--resource-accent);
+  --color-resource-border: var(--resource-border);
+  --color-resource-foreground: var(--resource-foreground);
+  --color-resource: var(--resource);
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
@@ -89,6 +93,10 @@
   --scout-foreground: oklch(0.24 0.05 215);
   --scout-border: oklch(0.62 0.08 205);
   --scout-accent: oklch(0.42 0.09 210);
+  --resource: oklch(0.93 0.05 145);
+  --resource-foreground: oklch(0.24 0.06 150);
+  --resource-border: oklch(0.62 0.09 148);
+  --resource-accent: oklch(0.38 0.09 150);
 }
 
 .dark {
@@ -127,6 +135,10 @@
   --scout-foreground: oklch(0.94 0.02 200);
   --scout-border: oklch(0.5 0.07 205);
   --scout-accent: oklch(0.78 0.07 200);
+  --resource: oklch(0.22 0.05 150);
+  --resource-foreground: oklch(0.93 0.03 145);
+  --resource-border: oklch(0.5 0.08 148);
+  --resource-accent: oklch(0.8 0.08 145);
 }
 
 @layer base {

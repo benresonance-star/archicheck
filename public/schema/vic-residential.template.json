@@ -2,7 +2,7 @@
   "format": "vic-arch-checklist-template",
   "formatVersion": "1.0.0",
   "id": "vic-residential",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "title": "Victoria residential — houses, townhouses and apartments",
   "jurisdiction": "Victoria, Australia",
   "description": "ARBV-aligned stages from pre-design through post-occupancy, with Clause 54 / 55 / 58, NCC 2022 (7-star and livable housing from 1 May 2024), and apartment developer-bond notes.",
@@ -90,6 +90,16 @@
         "ARBV — Find an architect",
         "Victorian Architects Code of Professional Conduct"
       ],
+      "resources": [
+        {
+          "label": "ARBV",
+          "url": "https://www.arbv.vic.gov.au/"
+        },
+        {
+          "label": "Architects Act 1991 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/architects-act-1991"
+        }
+      ],
       "grokbotId": "bot-pre-design"
     },
     {
@@ -105,6 +115,16 @@
       "required": true,
       "references": [
         "ARBV Guideline — Client-architect agreements"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        },
+        {
+          "label": "Architects Act 1991 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/architects-act-1991"
+        }
       ],
       "grokbotId": "bot-pre-design"
     },
@@ -123,6 +143,12 @@
         "Architects Act 1991 (Vic)",
         "ARBV Guideline — Client–architect agreements"
       ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
       "grokbotId": "bot-pre-design"
     },
     {
@@ -138,6 +164,12 @@
       "required": true,
       "references": [
         "Land Use Victoria title search"
+      ],
+      "resources": [
+        {
+          "label": "LANDATA / Land Use Victoria",
+          "url": "https://www.land.vic.gov.au/land-registration"
+        }
       ],
       "grokbotId": "bot-pre-design"
     },
@@ -155,6 +187,16 @@
         "Subdivision Act 1988",
         "Owners Corporations Act 2006"
       ],
+      "resources": [
+        {
+          "label": "Owners Corporations Act 2006 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/owners-corporations-act-2006"
+        },
+        {
+          "label": "Subdivision Act 1988 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/subdivision-act-1988"
+        }
+      ],
       "grokbotId": "bot-pre-design"
     },
     {
@@ -171,6 +213,16 @@
       "references": [
         "Victoria Planning Provisions",
         "Planning scheme maps"
+      ],
+      "resources": [
+        {
+          "label": "VicPlan maps",
+          "url": "https://mapshare.vic.gov.au/vicplan/"
+        },
+        {
+          "label": "Victorian planning schemes",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/"
+        }
       ],
       "grokbotId": "bot-pre-design"
     },
@@ -190,6 +242,20 @@
         "VPP Clause 55",
         "VPP Clause 58"
       ],
+      "resources": [
+        {
+          "label": "VPP Clause 54",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/54"
+        },
+        {
+          "label": "VPP Clause 55",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/55"
+        },
+        {
+          "label": "VPP Clause 58",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/58"
+        }
+      ],
       "grokbotId": "bot-pre-design"
     },
     {
@@ -205,6 +271,16 @@
       "required": true,
       "references": [
         "VPP cl 54.01 / 55.01 neighbourhood and site description"
+      ],
+      "resources": [
+        {
+          "label": "VPP Clause 54",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/54"
+        },
+        {
+          "label": "VPP Clause 55",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/55"
+        }
       ],
       "grokbotId": "bot-pre-design"
     },
@@ -222,6 +298,16 @@
       "references": [
         "Building Act 1993 (Vic)",
         "Water Act 1989 (Vic) — build-over assets"
+      ],
+      "resources": [
+        {
+          "label": "Melbourne Water",
+          "url": "https://www.melbournewater.com.au/"
+        },
+        {
+          "label": "Building Act 1993 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-act-1993"
+        }
       ],
       "grokbotId": "bot-pre-design"
     },
@@ -241,6 +327,16 @@
         "Building Regulations 2018",
         "Heritage Overlay"
       ],
+      "resources": [
+        {
+          "label": "CFA — building in a bushfire area",
+          "url": "https://www.cfa.vic.gov.au/plan-prepare/building-in-a-bushfire-prone-area"
+        },
+        {
+          "label": "Building Regulations 2018 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/statutory-rules/building-regulations-2018/007"
+        }
+      ],
       "grokbotId": "bot-pre-design"
     },
     {
@@ -258,6 +354,16 @@
         "ARBV Guideline — Client–architect agreements",
         "A New Tax System (Goods and Services Tax) Act 1999 (Cth)"
       ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        },
+        {
+          "label": "ATO — GST",
+          "url": "https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst"
+        }
+      ],
       "grokbotId": "bot-pre-design"
     },
     {
@@ -273,6 +379,16 @@
       "required": false,
       "references": [
         "VPP cl 54.01 / 55.01 neighbourhood and site description"
+      ],
+      "resources": [
+        {
+          "label": "VPP Clause 54",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/54"
+        },
+        {
+          "label": "VPP Clause 55",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/55"
+        }
       ],
       "grokbotId": "bot-pre-design"
     },
@@ -290,6 +406,16 @@
       "references": [
         "Clause 54.01 / 55.01 neighbourhood and site description"
       ],
+      "resources": [
+        {
+          "label": "VPP Clause 54",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/54"
+        },
+        {
+          "label": "VPP Clause 55",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/55"
+        }
+      ],
       "grokbotId": "bot-concept"
     },
     {
@@ -306,6 +432,12 @@
       "references": [
         "ARBV Guideline — Client–architect agreements"
       ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
       "grokbotId": "bot-concept"
     },
     {
@@ -321,6 +453,16 @@
         "GRZ/NRZ garden area",
         "Clause 54 neighbourhood character standards"
       ],
+      "resources": [
+        {
+          "label": "VPP Clause 54",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/54"
+        },
+        {
+          "label": "Victorian planning schemes",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/"
+        }
+      ],
       "grokbotId": "bot-concept"
     },
     {
@@ -335,6 +477,12 @@
       "references": [
         "Clause 55 Townhouse and Low-Rise Code (from 31 March 2025)"
       ],
+      "resources": [
+        {
+          "label": "VPP Clause 55",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/55"
+        }
+      ],
       "grokbotId": "bot-concept"
     },
     {
@@ -348,6 +496,12 @@
       "required": true,
       "references": [
         "Clause 55 tree canopy"
+      ],
+      "resources": [
+        {
+          "label": "VPP Clause 55",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/55"
+        }
       ],
       "grokbotId": "bot-concept"
     },
@@ -364,6 +518,16 @@
         "Better Apartments Design Standards",
         "Clause 55.07",
         "Clause 58"
+      ],
+      "resources": [
+        {
+          "label": "VPP Clause 58",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/58"
+        },
+        {
+          "label": "VPP Clause 55",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/55"
+        }
       ],
       "grokbotId": "bot-concept"
     },
@@ -382,6 +546,16 @@
         "NCC 2022",
         "NatHERS 7-star (Vic from 1 May 2024)"
       ],
+      "resources": [
+        {
+          "label": "NCC (ABCB)",
+          "url": "https://ncc.abcb.gov.au/"
+        },
+        {
+          "label": "NatHERS",
+          "url": "https://www.nathers.gov.au/"
+        }
+      ],
       "grokbotId": "bot-concept"
     },
     {
@@ -399,6 +573,16 @@
         "NCC 2022 Livable Housing Design",
         "VBA accessibility and energy fact sheet"
       ],
+      "resources": [
+        {
+          "label": "NCC (ABCB)",
+          "url": "https://ncc.abcb.gov.au/"
+        },
+        {
+          "label": "NCC 2022 in Victoria (BPC)",
+          "url": "https://www.vba.vic.gov.au/building/regulatory-framework/ncc-2022"
+        }
+      ],
       "grokbotId": "bot-concept"
     },
     {
@@ -415,6 +599,12 @@
       "references": [
         "Clause 52.06"
       ],
+      "resources": [
+        {
+          "label": "VPP Clause 52.06 (parking)",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/52.06"
+        }
+      ],
       "grokbotId": "bot-concept"
     },
     {
@@ -430,6 +620,12 @@
       "required": true,
       "references": [
         "ARBV Guideline — Client–architect agreements"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
       ],
       "grokbotId": "bot-concept"
     },
@@ -448,6 +644,16 @@
         "Planning and Environment Act 1987 (Vic)",
         "VPP cl 54 / 55 / 58 application requirements"
       ],
+      "resources": [
+        {
+          "label": "planning.vic.gov.au",
+          "url": "https://www.planning.vic.gov.au/"
+        },
+        {
+          "label": "Victorian planning schemes",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/"
+        }
+      ],
       "grokbotId": "bot-design-development"
     },
     {
@@ -465,6 +671,16 @@
         "Architects Act 1991 (Vic)",
         "ARBV Code of Professional Conduct — competence and consultants"
       ],
+      "resources": [
+        {
+          "label": "ARBV",
+          "url": "https://www.arbv.vic.gov.au/"
+        },
+        {
+          "label": "Architects Act 1991 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/architects-act-1991"
+        }
+      ],
       "grokbotId": "bot-design-development"
     },
     {
@@ -481,6 +697,16 @@
       "references": [
         "NatHERS",
         "NCC 2022 energy"
+      ],
+      "resources": [
+        {
+          "label": "NatHERS",
+          "url": "https://www.nathers.gov.au/"
+        },
+        {
+          "label": "NCC (ABCB)",
+          "url": "https://ncc.abcb.gov.au/"
+        }
       ],
       "grokbotId": "bot-design-development"
     },
@@ -500,6 +726,16 @@
         "Melbourne Water",
         "local WSUD policy"
       ],
+      "resources": [
+        {
+          "label": "VPP Clause 53.18 (stormwater)",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/53.18"
+        },
+        {
+          "label": "Melbourne Water",
+          "url": "https://www.melbournewater.com.au/"
+        }
+      ],
       "grokbotId": "bot-design-development"
     },
     {
@@ -515,6 +751,16 @@
       "required": true,
       "references": [
         "Clause 54/55 amenity standards"
+      ],
+      "resources": [
+        {
+          "label": "VPP Clause 54",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/54"
+        },
+        {
+          "label": "VPP Clause 55",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/55"
+        }
       ],
       "grokbotId": "bot-design-development"
     },
@@ -532,6 +778,16 @@
       "references": [
         "Clause 55.07 / 58.03 landscaping"
       ],
+      "resources": [
+        {
+          "label": "VPP Clause 55",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/55"
+        },
+        {
+          "label": "VPP Clause 58",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/58"
+        }
+      ],
       "grokbotId": "bot-design-development"
     },
     {
@@ -548,6 +804,12 @@
         "local ESD policy",
         "BESS"
       ],
+      "resources": [
+        {
+          "label": "BESS",
+          "url": "https://bess.net.au/"
+        }
+      ],
       "grokbotId": "bot-design-development"
     },
     {
@@ -562,6 +824,12 @@
       "references": [
         "Clause 58 wind impacts"
       ],
+      "resources": [
+        {
+          "label": "VPP Clause 58",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/58"
+        }
+      ],
       "grokbotId": "bot-design-development"
     },
     {
@@ -575,6 +843,12 @@
       "required": false,
       "references": [
         "Clause 58.04 / Better Apartments noise"
+      ],
+      "resources": [
+        {
+          "label": "VPP Clause 58",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/58"
+        }
       ],
       "grokbotId": "bot-design-development"
     },
@@ -591,6 +865,16 @@
       "references": [
         "VPP cl 55.07 / 58 waste and recycling",
         "local waste management policy"
+      ],
+      "resources": [
+        {
+          "label": "VPP Clause 55",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/55"
+        },
+        {
+          "label": "VPP Clause 58",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/58"
+        }
       ],
       "grokbotId": "bot-design-development"
     },
@@ -609,6 +893,16 @@
         "Planning and Environment Act 1987 (Vic)",
         "ARBV Guideline — Client–architect agreements"
       ],
+      "resources": [
+        {
+          "label": "Planning and Environment Act 1987 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/planning-and-environment-act-1987"
+        },
+        {
+          "label": "planning.vic.gov.au",
+          "url": "https://www.planning.vic.gov.au/"
+        }
+      ],
       "grokbotId": "bot-design-development"
     },
     {
@@ -625,6 +919,16 @@
       "references": [
         "Planning and Environment Act 1987"
       ],
+      "resources": [
+        {
+          "label": "Planning and Environment Act 1987 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/planning-and-environment-act-1987"
+        },
+        {
+          "label": "planning.vic.gov.au",
+          "url": "https://www.planning.vic.gov.au/"
+        }
+      ],
       "grokbotId": "bot-town-planning"
     },
     {
@@ -639,6 +943,12 @@
       "references": [
         "Clause 54",
         "Amendment VC282"
+      ],
+      "resources": [
+        {
+          "label": "VPP Clause 54",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/54"
+        }
       ],
       "grokbotId": "bot-town-planning"
     },
@@ -655,6 +965,12 @@
         "Clause 55",
         "Designing Better Medium Density Housing"
       ],
+      "resources": [
+        {
+          "label": "VPP Clause 55",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/55"
+        }
+      ],
       "grokbotId": "bot-town-planning"
     },
     {
@@ -669,6 +985,12 @@
       "references": [
         "Clause 58",
         "Better Apartments Design Standards"
+      ],
+      "resources": [
+        {
+          "label": "VPP Clause 58",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/58"
+        }
       ],
       "grokbotId": "bot-town-planning"
     },
@@ -685,6 +1007,16 @@
       "required": true,
       "references": [
         "VPP cl 54.01 / 55.01"
+      ],
+      "resources": [
+        {
+          "label": "VPP Clause 54",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/54"
+        },
+        {
+          "label": "VPP Clause 55",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/55"
+        }
       ],
       "grokbotId": "bot-town-planning"
     },
@@ -703,6 +1035,16 @@
         "Planning and Environment Act 1987 (Vic)",
         "VPP cl 54 / 55 / 58"
       ],
+      "resources": [
+        {
+          "label": "Planning and Environment Act 1987 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/planning-and-environment-act-1987"
+        },
+        {
+          "label": "Victorian planning schemes",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/"
+        }
+      ],
       "grokbotId": "bot-town-planning"
     },
     {
@@ -720,6 +1062,16 @@
         "Planning and Environment Act 1987 (Vic)",
         "VPP particular provisions"
       ],
+      "resources": [
+        {
+          "label": "Planning and Environment Act 1987 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/planning-and-environment-act-1987"
+        },
+        {
+          "label": "planning.vic.gov.au",
+          "url": "https://www.planning.vic.gov.au/"
+        }
+      ],
       "grokbotId": "bot-town-planning"
     },
     {
@@ -735,6 +1087,12 @@
       "required": true,
       "references": [
         "Planning and Environment Act 1987 (Vic) s 47"
+      ],
+      "resources": [
+        {
+          "label": "Planning and Environment Act 1987 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/planning-and-environment-act-1987"
+        }
       ],
       "grokbotId": "bot-town-planning"
     },
@@ -752,6 +1110,12 @@
       "references": [
         "Planning and Environment Act ss 52, 54"
       ],
+      "resources": [
+        {
+          "label": "Planning and Environment Act 1987 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/planning-and-environment-act-1987"
+        }
+      ],
       "grokbotId": "bot-town-planning"
     },
     {
@@ -768,6 +1132,12 @@
       "references": [
         "Planning and Environment Act 1987 (Vic) ss 61, 68"
       ],
+      "resources": [
+        {
+          "label": "Planning and Environment Act 1987 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/planning-and-environment-act-1987"
+        }
+      ],
       "grokbotId": "bot-town-planning"
     },
     {
@@ -782,6 +1152,12 @@
       "required": false,
       "references": [
         "Subdivision Act 1988"
+      ],
+      "resources": [
+        {
+          "label": "Subdivision Act 1988 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/subdivision-act-1988"
+        }
       ],
       "grokbotId": "bot-town-planning"
     },
@@ -800,6 +1176,16 @@
         "Planning and Environment Act 1987 (Vic)",
         "Building Act 1993 (Vic) s 24"
       ],
+      "resources": [
+        {
+          "label": "Planning and Environment Act 1987 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/planning-and-environment-act-1987"
+        },
+        {
+          "label": "Building Act 1993 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-act-1993"
+        }
+      ],
       "grokbotId": "bot-documentation"
     },
     {
@@ -816,6 +1202,16 @@
       "references": [
         "Building Act 1993 (Vic)",
         "NCC 2022"
+      ],
+      "resources": [
+        {
+          "label": "NCC (ABCB)",
+          "url": "https://ncc.abcb.gov.au/"
+        },
+        {
+          "label": "Building Act 1993 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-act-1993"
+        }
       ],
       "grokbotId": "bot-documentation"
     },
@@ -834,6 +1230,16 @@
         "NCC 2022",
         "Building Act 1993"
       ],
+      "resources": [
+        {
+          "label": "NCC (ABCB)",
+          "url": "https://ncc.abcb.gov.au/"
+        },
+        {
+          "label": "NCC 2022 in Victoria (BPC)",
+          "url": "https://www.vba.vic.gov.au/building/regulatory-framework/ncc-2022"
+        }
+      ],
       "grokbotId": "bot-documentation"
     },
     {
@@ -851,6 +1257,16 @@
         "NCC 2022",
         "NatHERS"
       ],
+      "resources": [
+        {
+          "label": "NatHERS",
+          "url": "https://www.nathers.gov.au/"
+        },
+        {
+          "label": "NCC (ABCB)",
+          "url": "https://ncc.abcb.gov.au/"
+        }
+      ],
       "grokbotId": "bot-documentation"
     },
     {
@@ -867,6 +1283,12 @@
       "references": [
         "NCC 2022 Livable Housing Design"
       ],
+      "resources": [
+        {
+          "label": "NCC (ABCB)",
+          "url": "https://ncc.abcb.gov.au/"
+        }
+      ],
       "grokbotId": "bot-documentation"
     },
     {
@@ -882,6 +1304,12 @@
       "required": true,
       "references": [
         "NCC 2022 condensation"
+      ],
+      "resources": [
+        {
+          "label": "NCC (ABCB)",
+          "url": "https://ncc.abcb.gov.au/"
+        }
       ],
       "grokbotId": "bot-documentation"
     },
@@ -900,6 +1328,16 @@
         "Building Act 1993 (Vic)",
         "NCC 2022"
       ],
+      "resources": [
+        {
+          "label": "NCC (ABCB)",
+          "url": "https://ncc.abcb.gov.au/"
+        },
+        {
+          "label": "Building Act 1993 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-act-1993"
+        }
+      ],
       "grokbotId": "bot-documentation"
     },
     {
@@ -916,6 +1354,12 @@
       "references": [
         "AS 3740"
       ],
+      "resources": [
+        {
+          "label": "Standards Australia",
+          "url": "https://www.standards.org.au/"
+        }
+      ],
       "grokbotId": "bot-documentation"
     },
     {
@@ -930,6 +1374,12 @@
       "references": [
         "Building Regulations 2018 Part 5",
         "reg 68"
+      ],
+      "resources": [
+        {
+          "label": "Building Regulations 2018 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/statutory-rules/building-regulations-2018/007"
+        }
       ],
       "grokbotId": "bot-documentation"
     },
@@ -946,6 +1396,16 @@
       "required": false,
       "references": [
         "Building Amendment (Building Manuals and Mandatory Inspections) Regulations 2025"
+      ],
+      "resources": [
+        {
+          "label": "Building Regulations 2018 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/statutory-rules/building-regulations-2018/007"
+        },
+        {
+          "label": "Building Act 1993 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-act-1993"
+        }
       ],
       "grokbotId": "bot-documentation"
     },
@@ -964,6 +1424,16 @@
         "Domestic Building Contracts Act 1995 (Vic)",
         "ARBV Guideline — Client–architect agreements"
       ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        },
+        {
+          "label": "Consumer Affairs Victoria — building",
+          "url": "https://www.consumer.vic.gov.au/housing/building-and-renovating"
+        }
+      ],
       "grokbotId": "bot-tender"
     },
     {
@@ -980,6 +1450,16 @@
       "references": [
         "Domestic Building Contracts Act 1995 (Vic)",
         "ARBV Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        },
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
       ],
       "grokbotId": "bot-tender"
     },
@@ -998,6 +1478,16 @@
         "Domestic Building Contracts Act 1995 (Vic)",
         "ARBV Code of Professional Conduct"
       ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        },
+        {
+          "label": "Consumer Affairs Victoria — building",
+          "url": "https://www.consumer.vic.gov.au/housing/building-and-renovating"
+        }
+      ],
       "grokbotId": "bot-tender"
     },
     {
@@ -1015,6 +1505,16 @@
         "Domestic Building Contracts Act 1995",
         "Building and Plumbing Commission"
       ],
+      "resources": [
+        {
+          "label": "Building and Plumbing Commission",
+          "url": "https://www.vba.vic.gov.au/"
+        },
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        }
+      ],
       "grokbotId": "bot-tender"
     },
     {
@@ -1030,6 +1530,16 @@
       "required": true,
       "references": [
         "Domestic Building Contracts Act 1995 (Vic) s 31"
+      ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        },
+        {
+          "label": "Consumer Affairs Victoria — building",
+          "url": "https://www.consumer.vic.gov.au/housing/building-and-renovating"
+        }
       ],
       "grokbotId": "bot-tender"
     },
@@ -1047,6 +1557,16 @@
       "references": [
         "Building Act 1993"
       ],
+      "resources": [
+        {
+          "label": "Building Act 1993 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-act-1993"
+        },
+        {
+          "label": "Building and Plumbing Commission",
+          "url": "https://www.vba.vic.gov.au/"
+        }
+      ],
       "grokbotId": "bot-tender"
     },
     {
@@ -1062,6 +1582,16 @@
       "required": true,
       "references": [
         "Building Act 1993"
+      ],
+      "resources": [
+        {
+          "label": "Building Act 1993 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-act-1993"
+        },
+        {
+          "label": "Building and Plumbing Commission",
+          "url": "https://www.vba.vic.gov.au/"
+        }
       ],
       "grokbotId": "bot-contract-admin"
     },
@@ -1079,6 +1609,16 @@
       "references": [
         "Building Regulations 2018 mandatory notifications"
       ],
+      "resources": [
+        {
+          "label": "Building Regulations 2018 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/statutory-rules/building-regulations-2018/007"
+        },
+        {
+          "label": "Building and Plumbing Commission",
+          "url": "https://www.vba.vic.gov.au/"
+        }
+      ],
       "grokbotId": "bot-contract-admin"
     },
     {
@@ -1094,6 +1634,12 @@
       "required": true,
       "references": [
         "ARBV Code — administer building contracts impartially"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
       ],
       "grokbotId": "bot-contract-admin"
     },
@@ -1112,6 +1658,16 @@
         "Domestic Building Contracts Act 1995 (Vic)",
         "Building and Construction Industry Security of Payment Act 2002 (Vic)"
       ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        },
+        {
+          "label": "Security of Payment Act 2002 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-and-construction-industry-security-payment-act-2002"
+        }
+      ],
       "grokbotId": "bot-contract-admin"
     },
     {
@@ -1129,6 +1685,16 @@
         "Domestic Building Contracts Act 1995 (Vic)",
         "Building and Construction Industry Security of Payment Act 2002 (Vic)"
       ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        },
+        {
+          "label": "Security of Payment Act 2002 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-and-construction-industry-security-payment-act-2002"
+        }
+      ],
       "grokbotId": "bot-contract-admin"
     },
     {
@@ -1145,6 +1711,16 @@
       "references": [
         "Building Act 1993 occupancy permit"
       ],
+      "resources": [
+        {
+          "label": "Building Act 1993 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-act-1993"
+        },
+        {
+          "label": "Building and Plumbing Commission",
+          "url": "https://www.vba.vic.gov.au/"
+        }
+      ],
       "grokbotId": "bot-contract-admin"
     },
     {
@@ -1158,6 +1734,16 @@
       "required": false,
       "references": [
         "Building Legislation Amendment (Buyer Protections) Act 2025"
+      ],
+      "resources": [
+        {
+          "label": "Apartment developer bond",
+          "url": "https://www.vic.gov.au/new-bond-system-apartment-builders"
+        },
+        {
+          "label": "Building and Plumbing Commission",
+          "url": "https://www.vba.vic.gov.au/"
+        }
       ],
       "grokbotId": "bot-contract-admin"
     },
@@ -1174,6 +1760,16 @@
       "references": [
         "Owners Corporations Act 2006 (Vic)",
         "Subdivision Act 1988 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "Owners Corporations Act 2006 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/owners-corporations-act-2006"
+        },
+        {
+          "label": "Subdivision Act 1988 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/subdivision-act-1988"
+        }
       ],
       "grokbotId": "bot-contract-admin"
     },
@@ -1192,6 +1788,16 @@
         "Domestic Building Contracts Act 1995 (Vic)",
         "ARBV Code of Professional Conduct — contract administration"
       ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        },
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
       "grokbotId": "bot-practical-completion"
     },
     {
@@ -1208,6 +1814,16 @@
       "references": [
         "Domestic Building Contracts Act 1995 (Vic)",
         "Building Act 1993 (Vic) occupancy permit"
+      ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        },
+        {
+          "label": "Building Act 1993 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-act-1993"
+        }
       ],
       "grokbotId": "bot-practical-completion"
     },
@@ -1226,6 +1842,16 @@
         "Building Act 1993 (Vic)",
         "Building Amendment (Building Manuals and Mandatory Inspections) Regulations 2025 (Vic)"
       ],
+      "resources": [
+        {
+          "label": "Building Act 1993 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-act-1993"
+        },
+        {
+          "label": "Building Regulations 2018 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/statutory-rules/building-regulations-2018/007"
+        }
+      ],
       "grokbotId": "bot-practical-completion"
     },
     {
@@ -1241,6 +1867,12 @@
       "required": true,
       "references": [
         "Domestic Building Contracts Act 1995 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        }
       ],
       "grokbotId": "bot-practical-completion"
     },
@@ -1258,6 +1890,16 @@
       "references": [
         "Domestic Building Contracts Act 1995 (Vic)"
       ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        },
+        {
+          "label": "Consumer Affairs Victoria — building",
+          "url": "https://www.consumer.vic.gov.au/housing/building-and-renovating"
+        }
+      ],
       "grokbotId": "bot-defects-liability"
     },
     {
@@ -1274,6 +1916,12 @@
       "references": [
         "ARBV Code of Professional Conduct — document and maintain records"
       ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
       "grokbotId": "bot-defects-liability"
     },
     {
@@ -1288,6 +1936,12 @@
       "references": [
         "Developer bond scheme — BPC"
       ],
+      "resources": [
+        {
+          "label": "Apartment developer bond",
+          "url": "https://www.vic.gov.au/new-bond-system-apartment-builders"
+        }
+      ],
       "grokbotId": "bot-defects-liability"
     },
     {
@@ -1301,6 +1955,12 @@
       "required": false,
       "references": [
         "Developer bond scheme — BPC"
+      ],
+      "resources": [
+        {
+          "label": "Apartment developer bond",
+          "url": "https://www.vic.gov.au/new-bond-system-apartment-builders"
+        }
       ],
       "grokbotId": "bot-defects-liability"
     },
@@ -1317,6 +1977,12 @@
       "required": true,
       "references": [
         "Domestic Building Contracts Act 1995 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        }
       ],
       "grokbotId": "bot-defects-liability"
     },
@@ -1335,6 +2001,16 @@
         "Domestic Building Contracts Act 1995 (Vic)",
         "ARBV Code of Professional Conduct"
       ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        },
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
       "grokbotId": "bot-final-certificate"
     },
     {
@@ -1350,6 +2026,16 @@
       "required": true,
       "references": [
         "Domestic Building Contracts Act 1995"
+      ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        },
+        {
+          "label": "Consumer Affairs Victoria — building",
+          "url": "https://www.consumer.vic.gov.au/housing/building-and-renovating"
+        }
       ],
       "grokbotId": "bot-final-certificate"
     },
@@ -1368,6 +2054,16 @@
         "Domestic Building Contracts Act 1995 (Vic)",
         "Building and Construction Industry Security of Payment Act 2002 (Vic)"
       ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        },
+        {
+          "label": "Security of Payment Act 2002 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-and-construction-industry-security-payment-act-2002"
+        }
+      ],
       "grokbotId": "bot-final-certificate"
     },
     {
@@ -1383,6 +2079,16 @@
       "required": true,
       "references": [
         "ARBV Code — document and maintain records"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        },
+        {
+          "label": "Architects Act 1991 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/architects-act-1991"
+        }
       ],
       "grokbotId": "bot-final-certificate"
     },
@@ -1401,6 +2107,16 @@
         "ARBV Code of Professional Conduct",
         "NCC 2022 energy and condensation intent"
       ],
+      "resources": [
+        {
+          "label": "ARBV",
+          "url": "https://www.arbv.vic.gov.au/"
+        },
+        {
+          "label": "NCC (ABCB)",
+          "url": "https://ncc.abcb.gov.au/"
+        }
+      ],
       "grokbotId": "bot-post-occupancy"
     },
     {
@@ -1417,6 +2133,16 @@
       "references": [
         "NCC 2022",
         "NatHERS 7-star (Vic from 1 May 2024)"
+      ],
+      "resources": [
+        {
+          "label": "NatHERS",
+          "url": "https://www.nathers.gov.au/"
+        },
+        {
+          "label": "NCC (ABCB)",
+          "url": "https://ncc.abcb.gov.au/"
+        }
       ],
       "grokbotId": "bot-post-occupancy"
     },
@@ -1435,6 +2161,16 @@
         "VPP cl 55.07 / 58.03 landscaping",
         "Planning and Environment Act 1987 (Vic) permit conditions"
       ],
+      "resources": [
+        {
+          "label": "VPP Clause 55",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/55"
+        },
+        {
+          "label": "VPP Clause 58",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/58"
+        }
+      ],
       "grokbotId": "bot-post-occupancy"
     },
     {
@@ -1450,6 +2186,12 @@
       "required": false,
       "references": [
         "ARBV Code of Professional Conduct — document and maintain records"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
       ],
       "grokbotId": "bot-post-occupancy"
     }
@@ -1643,5 +2385,5 @@
       ]
     }
   ],
-  "checksum": "d8d0ef907b396fbe9ea21384097c3996578bb9d9b55dc669e1f1bcd61de1abdd"
+  "checksum": "0aae9470eac87e07df0d48ab095bf71bb94fc4331f741740c85967b7ff08ab94"
 }

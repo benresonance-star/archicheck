@@ -54,7 +54,9 @@ export function HomeBody() {
           </div>
           <p className="text-sm text-muted-foreground leading-relaxed">
             Checkable copies of the bundled house, townhouse and apartment
-            lists. Use them as a phone reference before you open a project.
+            lists. Each item cites a Source and helper Resource(s) on a
+            sage-green panel. Use them as a phone reference before you open a
+            project.
           </p>
           <TemplateReference />
         </section>

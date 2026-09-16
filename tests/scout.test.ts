@@ -243,6 +243,7 @@ test("accepting proposed wording updates every flagged item, not answers", () =>
         appliesTo: ["house"],
         required: true,
         references: [],
+        resources: [],
         grokbotId: "bot",
       },
       {
@@ -253,6 +254,7 @@ test("accepting proposed wording updates every flagged item, not answers", () =>
         appliesTo: ["house"],
         required: true,
         references: [],
+        resources: [],
         grokbotId: "bot",
       },
     ],

@@ -6,6 +6,7 @@ import type {
   Typology,
 } from "@/lib/types";
 import { TEMPLATE_FORMAT, FORMAT_VERSION } from "@/lib/types";
+import { resourcesForItem } from "@/lib/template/item-resources";
 
 const ALL: Typology[] = ["house", "townhouse", "apartment"];
 const HOUSE: Typology[] = ["house"];
@@ -105,6 +106,13 @@ function item(
   if (references.length === 0 || references.some((value) => !value.trim())) {
     throw new Error(`Checklist item ${id} must cite at least one source`);
   }
+  const resources = resourcesForItem(id);
+  if (
+    resources.length === 0 ||
+    resources.some((entry) => !entry.label.trim() || !entry.url.startsWith("https://"))
+  ) {
+    throw new Error(`Checklist item ${id} must list at least one helper resource`);
+  }
   return {
     id,
     stageId,
@@ -113,6 +121,7 @@ function item(
     appliesTo,
     required,
     references,
+    resources,
     grokbotId: `bot-${stageId}`,
   };
 }
@@ -1004,7 +1013,7 @@ function withChecksum(
   return {
     ...template,
     checksum:
-      "d8d0ef907b396fbe9ea21384097c3996578bb9d9b55dc669e1f1bcd61de1abdd",
+      "0aae9470eac87e07df0d48ab095bf71bb94fc4331f741740c85967b7ff08ab94",
   };
 }
 
@@ -1012,7 +1021,7 @@ export const BUNDLED_TEMPLATE: TemplateDocument = withChecksum({
   format: TEMPLATE_FORMAT,
   formatVersion: FORMAT_VERSION,
   id: "vic-residential",
-  version: "1.0.1",
+  version: "1.0.2",
   title: "Victoria residential — houses, townhouses and apartments",
   jurisdiction: "Victoria, Australia",
   description:

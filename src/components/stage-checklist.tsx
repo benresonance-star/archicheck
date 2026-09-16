@@ -16,6 +16,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { GrokbotPanel } from "@/components/grokbot-panel";
+import { ItemResources } from "@/components/item-resources";
 import { SourceCitations } from "@/components/source-citations";
 import type {
   ChecklistItem,
@@ -145,7 +146,10 @@ function ItemCard({
           {item.required ? <Badge>Required</Badge> : <Badge variant="outline">Optional</Badge>}
         </div>
         <CardDescription>{item.detail}</CardDescription>
-        <SourceCitations references={item.references} />
+        <div className="space-y-2">
+          <SourceCitations references={item.references} />
+          <ItemResources resources={item.resources} />
+        </div>
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="space-y-1">

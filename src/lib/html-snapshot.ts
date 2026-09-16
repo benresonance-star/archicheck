@@ -80,6 +80,9 @@ export function renderSnapshotHtml(input: {
       --line: #d8ccb8;
       --card: #fffaf3;
       --accent: #8a4b21;
+      --resource-bg: #dcecd8;
+      --resource-ink: #1f4d28;
+      --resource-line: #7aa074;
     }
     @media (prefers-color-scheme: dark) {
       :root {
@@ -89,6 +92,9 @@ export function renderSnapshotHtml(input: {
         --line: #3a3229;
         --card: #221e1a;
         --accent: #e0a36c;
+        --resource-bg: #1c2e22;
+        --resource-ink: #c8e6c4;
+        --resource-line: #4d7a58;
       }
     }
     body {
@@ -107,6 +113,17 @@ export function renderSnapshotHtml(input: {
     .status { font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
     .notes { white-space: pre-wrap; margin: 0.4rem 0 0; }
     .empty { color: var(--muted); font-style: italic; }
+    .resources {
+      background: var(--resource-bg);
+      color: var(--resource-ink);
+      border: 1px solid var(--resource-line);
+      border-radius: 8px;
+      padding: 0.5rem 0.7rem;
+      margin: 0.5rem 0 0;
+    }
+    .resources p { margin: 0 0 0.25rem; font-size: 0.85rem; }
+    .resources ul { margin: 0; padding-left: 1.1rem; }
+    .resources a { color: var(--resource-ink); }
     footer { max-width: 42rem; margin: 0 auto; padding: 1.25rem; color: var(--muted); font-size: 0.9rem; }
   </style>
 </head>
@@ -153,6 +170,14 @@ function itemRow(item: ChecklistItem, project: ProjectDocument): string {
     <p>${escapeHtml(item.detail)}</p>
     ${item.references.length
       ? `<p class="meta">${escapeHtml(item.references.length === 1 ? "Source: " : "Sources: ")}${escapeHtml(item.references.join(" · "))}</p>`
+      : ""}
+    ${item.resources?.length
+      ? `<div class="resources"><p><strong>${escapeHtml(item.resources.length === 1 ? "Resource" : "Resources")}</strong></p><ul>${item.resources
+          .map(
+            (resource) =>
+              `<li><a href="${escapeHtml(resource.url)}">${escapeHtml(resource.label)}</a></li>`,
+          )
+          .join("")}</ul></div>`
       : ""}
     ${notes ? `<p class="notes">${escapeHtml(notes)}</p>` : `<p class="empty">No notes.</p>`}
   </article>`;

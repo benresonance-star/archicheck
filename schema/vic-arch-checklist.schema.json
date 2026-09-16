@@ -113,6 +113,18 @@
         "summary": { "type": "string" }
       }
     },
+    "checklistResource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "url"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "url": {
+          "type": "string",
+          "pattern": "^https://"
+        }
+      }
+    },
     "checklistItem": {
       "type": "object",
       "additionalProperties": false,
@@ -140,6 +152,10 @@
         "references": {
           "type": "array",
           "items": { "type": "string" }
+        },
+        "resources": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/checklistResource" }
         },
         "grokbotId": { "type": "string", "minLength": 1 }
       }
