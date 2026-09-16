@@ -10,6 +10,11 @@ import {
   statusLabel,
   typologyLabel,
 } from "@/lib/types";
+import {
+  formatPlanningCodes,
+  siteOverlayCodes,
+  siteZoneCodes,
+} from "@/lib/planning-controls";
 import { typologyMeta } from "@/lib/typology";
 import { groupStageContent } from "@/lib/template/group-stage";
 
@@ -180,7 +185,9 @@ export function renderSnapshotHtml(input: {
     </p>
     <p class="meta">
       ${escapeHtml(typologyLabel(project.site.typology))} · ${escapeHtml(meta.clause)}<br />
-      ${escapeHtml(project.site.address || "Address not recorded")} · ${escapeHtml(project.site.municipality || "Municipality not recorded")}
+      ${escapeHtml(project.site.address || "Address not recorded")} · ${escapeHtml(project.site.municipality || "Municipality not recorded")}<br />
+      Zones ${escapeHtml(formatPlanningCodes(siteZoneCodes(project.site)))} ·
+      Overlays ${escapeHtml(formatPlanningCodes(siteOverlayCodes(project.site)))}
     </p>
     <p class="meta">
       Template ${escapeHtml(template.title)} ${escapeHtml(template.version)}

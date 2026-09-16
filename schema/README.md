@@ -15,7 +15,7 @@ This folder is the documented contract for lossless storage.
 | File | Schema `$defs` | Role |
 | --- | --- | --- |
 | `manifest.json` | `packageManifest` | Index: project id, revision, template association, attachment paths and SHA-256 |
-| `project.json` | `projectDocument` | Site data, every answer/note, attachment metadata, template ref |
+| `project.json` | `projectDocument` | Site data (including optional `zones` plus `zone` / `overlays`), every answer/note, attachment metadata, template ref |
 | `template.json` | `templateDocument` | The exact template version this project was filled against |
 | `attachments/...` | (bytes) | Original files; hash and size must match `project.json` and `manifest.json` |
 
@@ -30,6 +30,7 @@ A standalone `project.json` import restores answers, notes, and the template *as
 - Checklist items cite `references` (instrument names). Optional `resources` are `{label, url}` helper links (`https://` only). Bundled items always include at least one. Older ZIPs without `resources` still validate.
 - Optional `deliverables` on the template name the drawing or document for each stage. Checklist items may set `deliverableId` to join that associated checklist. Attachments may set `deliverableId` for the file stored on that drawing or document. Older ZIPs without these fields still validate.
 - Optional `assessment` on a checklist item is the versioned agent contract (`schemaVersion` `1.0.0`). It keeps the **requirement** (regulatory / guidance / office practice, source refs, requirement version) separate from the **checking method** and acceptance criteria, and lists applicability (element types), required inputs, evidence, and whether a human must review. Item `id` values stay stable across template versions. Older ZIPs without `assessment` still validate.
+- Optional `site.zones` is the multi-select VPP zone list. `site.zone` stays a string (joined codes) so older ZIPs that only stored `GRZ2` still validate. `site.overlays` is already an array; the UI writes VPP overlay codes and still reads schedule strings such as `HO327`. Older ZIPs without `zones` still validate.
 - Optional `findings` on `project.json` are a separate `findingDocument` (`format` `vic-arch-checklist-finding`, `formatVersion` `1.0.0`). Results are Pass, Fail, Not applicable, Insufficient information, Needs judgement, or Check error. A finding cites the checklist id/version/checksum, an external design revision, affected elements, evidence and assumptions. Findings must not rewrite answers, attachments, or the approved template. Suggested checklist changes on `checklistIssue` enter the existing sourced-proposal human-review path. Older ZIPs without `findings` still validate.
 - Attachment bytes are hashed with SHA-256 (lowercase hex). Import fails if any hash or size disagrees.
 

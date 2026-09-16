@@ -3,11 +3,17 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { PlanningControlsFields } from "@/components/planning-controls-fields";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { createProject } from "@/lib/client-store";
+import {
+  applyPlanningControls,
+  siteOverlayCodes,
+  siteZoneCodes,
+} from "@/lib/planning-controls";
 import { MUNICIPALITIES } from "@/lib/scout/municipalities";
 import type { Site, Typology } from "@/lib/types";
 
@@ -21,6 +27,7 @@ export function NewProjectForm({ typology }: { typology: Typology }) {
     municipality: "",
     planningScheme: "",
     zone: "",
+    zones: [],
     overlays: [],
     storeys: typology === "apartment" ? 5 : 2,
     dwellingCount: typology === "house" ? 1 : 2,
@@ -32,7 +39,12 @@ export function NewProjectForm({ typology }: { typology: Typology }) {
     event.preventDefault();
     setPending(true);
     try {
-      const created = await createProject(site);
+      const created = await createProject(
+        applyPlanningControls(site, {
+          zones: siteZoneCodes(site),
+          overlays: siteOverlayCodes(site),
+        }),
+      );
       router.push(`/p/${created.project.id}`);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Could not create");
@@ -76,32 +88,26 @@ export function NewProjectForm({ typology }: { typology: Typology }) {
           ))}
         </datalist>
       </Field>
-      <Field label="Zone" htmlFor="zone">
-        <Input
-          id="zone"
-          className="min-h-11"
-          placeholder="e.g. GRZ1"
-          value={site.zone}
-          onChange={(event) => setSite({ ...site, zone: event.target.value })}
-        />
-      </Field>
-      <Field label="Overlays (comma separated)" htmlFor="overlays">
-        <Input
-          id="overlays"
-          className="min-h-11"
-          placeholder="HO, DDO, SBO"
-          value={site.overlays.join(", ")}
-          onChange={(event) =>
-            setSite({
-              ...site,
-              overlays: event.target.value
-                .split(",")
-                .map((part) => part.trim())
-                .filter(Boolean),
-            })
-          }
-        />
-      </Field>
+      <PlanningControlsFields
+        zones={siteZoneCodes(site)}
+        overlays={siteOverlayCodes(site)}
+        onZonesChange={(zones) =>
+          setSite(
+            applyPlanningControls(site, {
+              zones,
+              overlays: siteOverlayCodes(site),
+            }),
+          )
+        }
+        onOverlaysChange={(overlays) =>
+          setSite(
+            applyPlanningControls(site, {
+              zones: siteZoneCodes(site),
+              overlays,
+            }),
+          )
+        }
+      />
       <div className="grid grid-cols-2 gap-3">
         <Field label="Storeys" htmlFor="storeys">
           <Input

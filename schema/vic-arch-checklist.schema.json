@@ -198,6 +198,10 @@
         "municipality": { "type": "string" },
         "planningScheme": { "type": "string" },
         "zone": { "type": "string" },
+        "zones": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
         "overlays": {
           "type": "array",
           "items": { "type": "string" }

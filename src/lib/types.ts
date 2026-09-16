@@ -143,6 +143,7 @@ export type Site = {
   municipality: string;
   planningScheme: string;
   zone: string;
+  zones?: string[];
   overlays: string[];
   storeys: number;
   dwellingCount: number;

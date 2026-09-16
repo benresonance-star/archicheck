@@ -490,6 +490,15 @@ export async function updateMunicipality(
   });
 }
 
+export async function updateSite(
+  projectId: string,
+  site: Site,
+): Promise<ProjectDocument> {
+  return mutateProject(projectId, (project) => {
+    project.site = site;
+  });
+}
+
 type LiveTemplateRecord = {
   id: string;
   template: TemplateDocument;

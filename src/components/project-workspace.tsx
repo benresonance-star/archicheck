@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { AppHeader } from "@/components/app-header";
 import { ImpactNoticeCard } from "@/components/impact-notice";
 import { ProjectActions } from "@/components/project-actions";
+import { ProjectPlanningControls } from "@/components/project-planning-controls";
 import { ScoutBanner } from "@/components/scout-banner";
 import { StageIndex } from "@/components/stage-index";
 import { loadProject, syncProjectImpacts } from "@/lib/client-store";
@@ -88,6 +89,10 @@ export function ProjectWorkspace({ id }: { id: string }) {
           <ProjectActions project={project} />
           <ScoutBanner projectId={project.id} />
         </section>
+        <ProjectPlanningControls
+          project={project}
+          onProject={(next) => setData({ project: next, template })}
+        />
         {openImpactCount(project) > 0 ? (
           <section className="space-y-3">
             <h2 className="font-heading text-2xl">Template impact</h2>
