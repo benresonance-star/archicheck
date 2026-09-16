@@ -30,8 +30,10 @@ export default async function TemplatesPage({
             <p>
               <strong>By document</strong> groups Plans, Elevations and the
               other outputs under each ARBV stage. Town planning stays separate
-              from construction documents. <strong>By stage</strong> shows the
-              full checklist. Open <strong>Apartment</strong> for BADS ticks.
+              from construction documents.
+            </p>
+            <p>
+              <strong>By stage</strong> shows the full checklist.
             </p>
           </div>
         </section>
