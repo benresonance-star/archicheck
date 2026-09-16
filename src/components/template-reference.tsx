@@ -178,9 +178,7 @@ export function TemplateReference({
       ) : (
         <Accordion
           type="multiple"
-          defaultValue={
-            visibleGroups[0]?.stage.id ? [visibleGroups[0].stage.id] : []
-          }
+          defaultValue={[]}
           onValueChange={restoreScroll}
           className="rounded-2xl border border-border bg-card px-3 [overflow-anchor:none]"
         >
