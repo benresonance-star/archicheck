@@ -1,4 +1,9 @@
-import type { ChecklistItem, TemplateDocument, Typology } from "@/lib/types";
+import type {
+  ChecklistItem,
+  Stage,
+  TemplateDocument,
+  Typology,
+} from "@/lib/types";
 import { assertNever, itemsForTypology } from "@/lib/types";
 
 export const OUTPUT_KINDS = [
@@ -289,4 +294,21 @@ export function groupedOutputDocuments(
       items: buckets.get(kind) ?? [],
     }),
   );
+}
+
+export type StageItemGroup = {
+  stage: Stage;
+  items: ChecklistItem[];
+};
+
+export function itemsGroupedByStage(
+  template: TemplateDocument,
+  items: ChecklistItem[],
+): StageItemGroup[] {
+  return template.stages
+    .map((stage) => ({
+      stage,
+      items: items.filter((item) => item.stageId === stage.id),
+    }))
+    .filter((group) => group.items.length > 0);
 }

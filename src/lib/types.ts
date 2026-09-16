@@ -547,15 +547,23 @@ export function itemsForTypology(
   return items.filter((item) => item.appliesTo.includes(typology));
 }
 
+export function progressForItems(
+  items: ChecklistItem[],
+  answers: ProjectDocument["answers"],
+): { done: number; total: number } {
+  const done = items.filter((item) => {
+    const answer = answers[item.id];
+    return answer?.status === "done" || answer?.status === "not_applicable";
+  }).length;
+  return { done, total: items.length };
+}
+
 export function progressForProject(
   template: TemplateDocument,
   project: ProjectDocument,
 ): { done: number; total: number } {
-  const applicable = itemsForTypology(template.items, project.site.typology);
-  const total = applicable.length;
-  const done = applicable.filter((item) => {
-    const answer = project.answers[item.id];
-    return answer?.status === "done" || answer?.status === "not_applicable";
-  }).length;
-  return { done, total };
+  return progressForItems(
+    itemsForTypology(template.items, project.site.typology),
+    project.answers,
+  );
 }

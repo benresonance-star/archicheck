@@ -52,6 +52,8 @@ Each stage has a named Grok Bot brief (copy the first task). Bots must not lodge
 
 A new project (and the project page) records **zones and overlays** as checkbox lists from the Victoria Planning Provisions. More than one of each can be ticked. The [planning property report](https://www.planning.vic.gov.au/planning-schemes/planning-property-report) is linked next to those lists.
 
+On a project, **By document** and **By stage** switch the checklist index. Document view opens Plans, RCP, Elevations and the other outputs with the same answers, notes and attachments as the stage pages.
+
 Projects live **on the device** (IndexedDB JSON). The ZIP is the portable archive (manifest, project, template, attachments). Server files under `data/projects` are only used by the Node test harness.
 
 Agents can query the bundled checklist at `/api/checklist/query` (filters: typology, stage, deliverable, element type, requirement kind, item id, available inputs). Items may carry an optional `assessment` (requirement vs checking method, required inputs, evidence, human-review). Assessment results are a separate finding document (`/schema/finding.example.json`) and must not rewrite ticks or the approved template. Suggested checklist changes still go through sourced-proposal review.

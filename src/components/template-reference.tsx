@@ -2,6 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  ChecklistLensToggle,
+  type ChecklistLens,
+} from "@/components/checklist-lens-toggle";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -47,7 +51,7 @@ export function TemplateReference({
     lockedTypology ?? initialTypology,
   );
   const [ticks, setTicks] = useState<TemplateTicks>(emptyTemplateTicks);
-  const [lens, setLens] = useState<"document" | "stage">("document");
+  const [lens, setLens] = useState<ChecklistLens>("document");
 
   useEffect(() => {
     setTicks(loadTemplateTicks());
@@ -175,26 +179,7 @@ export function TemplateReference({
         </p>
       </div>
       {stageId ? null : (
-        <div className="grid grid-cols-2 gap-2">
-          <Button
-            type="button"
-            variant={lens === "document" ? "default" : "outline"}
-            className="min-h-11"
-            aria-pressed={lens === "document"}
-            onClick={() => setLens("document")}
-          >
-            By document
-          </Button>
-          <Button
-            type="button"
-            variant={lens === "stage" ? "default" : "outline"}
-            className="min-h-11"
-            aria-pressed={lens === "stage"}
-            onClick={() => setLens("stage")}
-          >
-            By stage
-          </Button>
-        </div>
+        <ChecklistLensToggle lens={lens} onChange={setLens} />
       )}
       {visibleGroups.length === 0 ? (
         <p className="text-sm text-muted-foreground">

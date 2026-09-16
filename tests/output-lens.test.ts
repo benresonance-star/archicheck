@@ -3,6 +3,7 @@ import test from "node:test";
 import { queryChecklistItems } from "../src/lib/agent/query";
 import {
   groupedOutputDocuments,
+  itemsGroupedByStage,
   outputKindForItem,
 } from "../src/lib/template/output-lens";
 import { BUNDLED_TEMPLATE } from "../src/lib/template/vic-residential";
@@ -52,6 +53,20 @@ test("apartment document lens includes BADS plan checks that houses omit", () =>
     apartmentPlans?.items.some((item) => item.id === "cd-bads-pos"),
     true,
   );
+});
+
+test("document items stay grouped under their ARBV stage", () => {
+  const plans = groupedOutputDocuments(BUNDLED_TEMPLATE, "house").find(
+    (group) => group.kind === "plans",
+  );
+  assert.ok(plans);
+  const byStage = itemsGroupedByStage(BUNDLED_TEMPLATE, plans.items);
+  assert.ok(byStage.length >= 2);
+  assert.equal(
+    byStage.reduce((sum, group) => sum + group.items.length, 0),
+    plans.items.length,
+  );
+  assert.ok(byStage.every((group) => group.stage.id.length > 0));
 });
 
 test("query can filter by output document kind", () => {
