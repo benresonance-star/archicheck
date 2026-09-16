@@ -1,7 +1,7 @@
 "use client";
 
-import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { useState, type ReactNode } from "react";
+import { DragHandle, reorderRowClass, usePointerReorder } from "@/components/check-reorder";
 import { ItemResources } from "@/components/item-resources";
 import { SourceCitations } from "@/components/source-citations";
 import { Badge } from "@/components/ui/badge";
@@ -66,6 +66,8 @@ export function CheckBrowseRow({
   leading,
   trailing,
   badge,
+  rowId,
+  active = false,
   onInspect,
 }: {
   title: string;
@@ -73,10 +75,15 @@ export function CheckBrowseRow({
   leading?: ReactNode;
   trailing?: ReactNode;
   badge?: ReactNode;
+  rowId?: string;
+  active?: boolean;
   onInspect: () => void;
 }) {
   return (
-    <div className="flex items-center gap-2 py-1.5">
+    <div
+      data-reorder-id={rowId}
+      className={`flex items-center gap-2 py-1.5 ${reorderRowClass(active)}`}
+    >
       {leading}
       <button
         type="button"
@@ -371,7 +378,7 @@ export function TemplateCheckList({
   templateVersion,
   templateChecksum,
   reorder,
-  onMove,
+  onReorder,
   onEditItem,
   trailing,
 }: {
@@ -381,13 +388,23 @@ export function TemplateCheckList({
   templateVersion: string;
   templateChecksum: string;
   reorder?: boolean;
-  onMove?: (itemId: string, direction: "up" | "down") => void;
+  onReorder?: (nextIds: string[]) => void;
   onEditItem?: (itemId: string) => void;
   trailing?: ReactNode;
 }) {
   const [openId, setOpenId] = useState<string | null>(null);
-  const openIndex = items.findIndex((item) => item.id === openId);
-  const openItem = openIndex >= 0 ? items[openIndex] : undefined;
+  const itemIds = items.map((item) => item.id);
+  const byId = new Map(items.map((item) => [item.id, item]));
+  const drag = usePointerReorder({
+    ids: itemIds,
+    enabled: Boolean(reorder && onReorder),
+    onCommit: (nextIds) => onReorder?.(nextIds),
+  });
+  const visible = (reorder ? drag.ids : itemIds)
+    .map((id) => byId.get(id))
+    .filter((item): item is ChecklistItem => item != null);
+  const openIndex = visible.findIndex((item) => item.id === openId);
+  const openItem = openIndex >= 0 ? visible[openIndex] : undefined;
 
   if (items.length === 0 && !trailing) {
     return (
@@ -401,60 +418,49 @@ export function TemplateCheckList({
         <p className="text-sm text-muted-foreground">No checks on this document.</p>
       ) : (
         <ul className="divide-y divide-border">
-          {items.map((item, index) => (
+          {visible.map((item) => (
             <li key={item.id}>
               <CheckBrowseRow
                 title={item.title}
                 signal={templateCheckSignal(Boolean(ticks[item.id]))}
-                onInspect={() => setOpenId(item.id)}
+                rowId={item.id}
+                active={drag.activeId === item.id}
+                onInspect={() => {
+                  if (drag.consumeClick()) {
+                    return;
+                  }
+                  setOpenId(item.id);
+                }}
                 leading={
-                  <Checkbox
-                    className="size-5 shrink-0"
-                    checked={Boolean(ticks[item.id])}
-                    aria-label={`Tick ${item.title}`}
-                    onCheckedChange={(value) => onTicked(item.id, value === true)}
-                  />
+                  <>
+                    {reorder && onReorder ? (
+                      <DragHandle
+                        label={item.title}
+                        onPointerDown={(event) => drag.start(item.id, event)}
+                        onPointerMove={drag.move}
+                        onPointerUp={drag.end}
+                        onPointerCancel={drag.end}
+                        onKeyDown={(event) => drag.handleKey(item.id, event)}
+                      />
+                    ) : null}
+                    <Checkbox
+                      className="size-5 shrink-0"
+                      checked={Boolean(ticks[item.id])}
+                      aria-label={`Tick ${item.title}`}
+                      onCheckedChange={(value) => onTicked(item.id, value === true)}
+                    />
+                  </>
                 }
                 trailing={
-                  reorder ? (
-                    <span className="flex shrink-0 gap-1">
-                      {onMove ? (
-                        <>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="icon"
-                            className="size-11"
-                            disabled={index === 0}
-                            aria-label={`Move ${item.title} up`}
-                            onClick={() => onMove(item.id, "up")}
-                          >
-                            <ChevronUpIcon />
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="icon"
-                            className="size-11"
-                            disabled={index === items.length - 1}
-                            aria-label={`Move ${item.title} down`}
-                            onClick={() => onMove(item.id, "down")}
-                          >
-                            <ChevronDownIcon />
-                          </Button>
-                        </>
-                      ) : null}
-                      {onEditItem ? (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="min-h-11 px-3"
-                          onClick={() => onEditItem(item.id)}
-                        >
-                          Edit
-                        </Button>
-                      ) : null}
-                    </span>
+                  reorder && onEditItem ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="min-h-11 px-3"
+                      onClick={() => onEditItem(item.id)}
+                    >
+                      Edit
+                    </Button>
                   ) : null
                 }
               />
@@ -468,15 +474,15 @@ export function TemplateCheckList({
         open={openItem != null}
         onClose={() => setOpenId(null)}
         hasPrev={openIndex > 0}
-        hasNext={openIndex >= 0 && openIndex < items.length - 1}
+        hasNext={openIndex >= 0 && openIndex < visible.length - 1}
         onPrev={() => {
           if (openIndex > 0) {
-            setOpenId(items[openIndex - 1]?.id ?? null);
+            setOpenId(visible[openIndex - 1]?.id ?? null);
           }
         }}
         onNext={() => {
-          if (openIndex >= 0 && openIndex < items.length - 1) {
-            setOpenId(items[openIndex + 1]?.id ?? null);
+          if (openIndex >= 0 && openIndex < visible.length - 1) {
+            setOpenId(visible[openIndex + 1]?.id ?? null);
           }
         }}
       >

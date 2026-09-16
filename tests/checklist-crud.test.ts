@@ -3,6 +3,7 @@ import test from "node:test";
 import {
   addItemToTemplate,
   applyItemChangeToTemplate,
+  arrayMove,
   buildChecklistItem,
   bumpJobVersion,
   changeFromAddedItem,
@@ -11,6 +12,7 @@ import {
   diffTemplateItems,
   moveItemAmongSiblings,
   removeItemFromTemplate,
+  reorderItemsAmongSiblings,
   updateItemInTemplate,
 } from "../src/lib/template/checklist-crud";
 import { noticeFromRelease } from "../src/lib/template/publish";
@@ -146,6 +148,13 @@ test("add, edit, move and remove change only the snapshot", () => {
     "down",
   );
   assert.equal(moved.items.map((row) => row.id).join(","), "first,second,job-new");
+  assert.deepEqual(arrayMove(["a", "b", "c"], 0, 2), ["b", "c", "a"]);
+  const dragged = reorderItemsAmongSiblings(edited, [
+    "second",
+    "first",
+    "job-new",
+  ]);
+  assert.equal(dragged.items.map((row) => row.id).join(","), "second,first,job-new");
 
   const answers = { ...projectDoc().answers };
   const removed = removeItemFromTemplate(moved, "first");

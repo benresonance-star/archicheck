@@ -25,6 +25,8 @@ import {
   bumpJobVersion,
   diffTemplateItems,
   moveItemAmongSiblings,
+  reorderItemsAmongSiblings,
+  siblingOrder,
   newJobItemId,
   promoteItemCopy,
   removeItemFromTemplate,
@@ -935,6 +937,24 @@ export async function moveProjectItem(input: {
       input.itemId,
       input.direction,
     );
+    template.items = next.items;
+    template.version = bumpJobVersion(template.version);
+  });
+}
+
+export async function reorderProjectItems(input: {
+  projectId: string;
+  siblingIds: string[];
+}): Promise<{ project: ProjectDocument; template: TemplateDocument }> {
+  const loaded = await loadProject(input.projectId);
+  if (
+    siblingOrder(loaded.template, input.siblingIds).join("\n") ===
+    input.siblingIds.join("\n")
+  ) {
+    return loaded;
+  }
+  return mutateWorkspace(input.projectId, (_project, template) => {
+    const next = reorderItemsAmongSiblings(template, input.siblingIds);
     template.items = next.items;
     template.version = bumpJobVersion(template.version);
   });

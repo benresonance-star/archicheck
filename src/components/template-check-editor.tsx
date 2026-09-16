@@ -19,7 +19,7 @@ import {
   addItemToTemplate,
   buildChecklistItem,
   draftFromItem,
-  moveItemAmongSiblings,
+  reorderItemsAmongSiblings,
   newTemplateItemId,
   removeItemFromTemplate,
   updateItemInTemplate,
@@ -114,14 +114,12 @@ export function ReferenceCheckList({
         templateVersion={template.version}
         templateChecksum={template.checksum}
         reorder={editable && reorder}
-        onMove={(itemId, direction) => {
+        onReorder={(nextIds) => {
           if (!onTemplate) {
             return;
           }
           try {
-            onTemplate(
-              moveItemAmongSiblings(template, siblingIds, itemId, direction),
-            );
+            onTemplate(reorderItemsAmongSiblings(template, nextIds));
           } catch (error) {
             toast.error(error instanceof Error ? error.message : "Could not move");
           }

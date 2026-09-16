@@ -1,6 +1,5 @@
 "use client";
 
-import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -8,6 +7,7 @@ import {
   ProjectRequirementBody,
   ProjectRequirementSheet,
 } from "@/components/check-depths";
+import { DragHandle, usePointerReorder } from "@/components/check-reorder";
 import {
   ChecklistItemForm,
   newSectionDraft,
@@ -29,7 +29,7 @@ import {
   addProjectItem,
   addAttachment,
   downloadBytes,
-  moveProjectItem,
+  reorderProjectItems,
   proposeJobItemPromotion,
   readAttachment,
   removeProjectItem,
@@ -398,15 +398,13 @@ export function ProjectCheckList({
     }
   }
 
-  async function move(itemId: string, direction: "up" | "down") {
+  async function commitOrder(nextIds: string[]) {
     setPending(true);
     try {
       onWorkspace(
-        await moveProjectItem({
+        await reorderProjectItems({
           projectId: project.id,
-          itemId,
-          siblingIds,
-          direction,
+          siblingIds: nextIds,
         }),
       );
     } catch (error) {
@@ -415,6 +413,18 @@ export function ProjectCheckList({
       setPending(false);
     }
   }
+
+  const drag = usePointerReorder({
+    ids: siblingIds,
+    enabled: reorder && items.length > 1,
+    onCommit: (nextIds) => {
+      void commitOrder(nextIds);
+    },
+  });
+  const byId = new Map(items.map((item) => [item.id, item]));
+  const visible = (reorder ? drag.ids : siblingIds)
+    .map((id) => byId.get(id))
+    .filter((item): item is ChecklistItem => item != null);
 
   return (
     <>
@@ -433,45 +443,36 @@ export function ProjectCheckList({
         <p className="text-sm text-muted-foreground">No checks in this list yet.</p>
       ) : (
         <ul className="divide-y divide-border">
-          {items.map((item, index) => (
+          {visible.map((item) => (
             <li key={item.id}>
               <CheckBrowseRow
                 title={item.title}
                 signal={projectItemSignal(item, project)}
-                onInspect={() => setOpenId(item.id)}
+                rowId={item.id}
+                active={drag.activeId === item.id}
+                onInspect={() => {
+                  if (drag.consumeClick()) {
+                    return;
+                  }
+                  setOpenId(item.id);
+                }}
+                leading={
+                  reorder ? (
+                    <DragHandle
+                      label={item.title}
+                      onPointerDown={(event) => drag.start(item.id, event)}
+                      onPointerMove={drag.move}
+                      onPointerUp={drag.end}
+                      onPointerCancel={drag.end}
+                      onKeyDown={(event) => drag.handleKey(item.id, event)}
+                    />
+                  ) : null
+                }
                 badge={
                   isJobOnlyItem(item) ? (
                     <Badge variant="secondary" className="shrink-0">
                       Job
                     </Badge>
-                  ) : null
-                }
-                trailing={
-                  reorder ? (
-                    <span className="flex shrink-0 gap-1">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="icon"
-                        className="size-11"
-                        disabled={pending || index === 0}
-                        aria-label={`Move ${item.title} up`}
-                        onClick={() => void move(item.id, "up")}
-                      >
-                        <ChevronUpIcon />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="icon"
-                        className="size-11"
-                        disabled={pending || index === items.length - 1}
-                        aria-label={`Move ${item.title} down`}
-                        onClick={() => void move(item.id, "down")}
-                      >
-                        <ChevronDownIcon />
-                      </Button>
-                    </span>
                   ) : null
                 }
               />
@@ -491,7 +492,7 @@ export function ProjectCheckList({
       ) : null}
       <ProjectRequirementSheet
         item={openItem}
-        items={items}
+        items={visible}
         open={openItem != null && editor == null}
         onClose={() => setOpenId(null)}
         onSelect={setOpenId}

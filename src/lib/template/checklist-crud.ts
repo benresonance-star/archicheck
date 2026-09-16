@@ -264,6 +264,42 @@ export function moveItemAmongSiblings(
   return reorderSiblingSlots(template, nextOrder);
 }
 
+export function arrayMove<T>(list: T[], from: number, to: number): T[] {
+  if (from === to || from < 0 || to < 0 || from >= list.length || to >= list.length) {
+    return list;
+  }
+  const next = [...list];
+  const [entry] = next.splice(from, 1);
+  if (entry === undefined) {
+    return list;
+  }
+  next.splice(to, 0, entry);
+  return next;
+}
+
+export function siblingOrder(template: TemplateDocument, siblingIds: string[]): string[] {
+  return template.items
+    .filter((item) => siblingIds.includes(item.id))
+    .map((item) => item.id);
+}
+
+export function reorderItemsAmongSiblings(
+  template: TemplateDocument,
+  nextOrder: string[],
+): TemplateDocument {
+  const present = nextOrder.filter((id) =>
+    template.items.some((entry) => entry.id === id),
+  );
+  if (present.length === 0) {
+    return structuredClone(template);
+  }
+  const current = siblingOrder(template, present);
+  if (current.join("\n") === present.join("\n")) {
+    return structuredClone(template);
+  }
+  return reorderSiblingSlots(template, present);
+}
+
 function reorderSiblingSlots(
   template: TemplateDocument,
   nextOrder: string[],
