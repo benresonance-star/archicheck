@@ -7,7 +7,11 @@ import {
   type ScoutFinding,
   type ScoutReport,
 } from "@/lib/scout/types";
-import { STATEWIDE_SOURCES, type PreviousSnapshot } from "@/lib/scout/watch-list";
+import {
+  DEFAULT_WATCH_SOURCES,
+  type PreviousSnapshot,
+  type WatchSource,
+} from "@/lib/scout/watch-list";
 import type { Typology } from "@/lib/types";
 
 export async function runScout(input: {
@@ -15,11 +19,21 @@ export async function runScout(input: {
   municipality: string;
   typology: Typology;
   previous: PreviousSnapshot[];
+  sources?: WatchSource[];
+  includeLocal?: boolean;
+  ignoreTypology?: boolean;
+  kind?: "statewide" | "project";
 }): Promise<ScoutReport> {
   const previousById = new Map(input.previous.map((row) => [row.sourceId, row]));
-  const sources = STATEWIDE_SOURCES.filter((source) =>
-    source.appliesTo.includes(input.typology),
-  );
+  const includeLocal = input.includeLocal !== false;
+  const ignoreTypology = Boolean(input.ignoreTypology);
+  const kind = input.kind ?? "project";
+  const pool = (
+    input.sources === undefined ? DEFAULT_WATCH_SOURCES : input.sources
+  ).filter((source) => source.enabled !== false);
+  const sources = ignoreTypology
+    ? pool
+    : pool.filter((source) => source.appliesTo.includes(input.typology));
 
   const statewideSnapshots = await Promise.all(
     sources.map((source) =>
@@ -38,32 +52,36 @@ export async function runScout(input: {
       snapshot: statewideSnapshots[index],
       previous: previousById.get(source.id),
       typology: input.typology,
+      ignoreTypology,
     }),
   );
 
-  const municipality = resolveMunicipality(input.municipality);
   const snapshots = [...statewideSnapshots];
-  const localConfigured = Boolean(municipality);
+  let localConfigured = false;
 
-  if (!municipality) {
-    findings.push(localUnconfiguredFinding());
-  } else {
-    const url = localAmendmentsUrl(municipality);
-    const localSnapshot = await fetchSnapshot({
-      sourceId: "local-amendments",
-      title: `${municipality.name} amendments`,
-      url,
-      scope: "local",
-    });
-    snapshots.push(localSnapshot);
-    findings.push(
-      interpretLocal({
-        municipalityName: municipality.name,
+  if (includeLocal) {
+    const municipality = resolveMunicipality(input.municipality);
+    localConfigured = Boolean(municipality);
+    if (!municipality) {
+      findings.push(localUnconfiguredFinding());
+    } else {
+      const url = localAmendmentsUrl(municipality);
+      const localSnapshot = await fetchSnapshot({
+        sourceId: "local-amendments",
+        title: `${municipality.name} amendments`,
         url,
-        snapshot: localSnapshot,
-        previous: previousById.get("local-amendments"),
-      }),
-    );
+        scope: "local",
+      });
+      snapshots.push(localSnapshot);
+      findings.push(
+        interpretLocal({
+          municipalityName: municipality.name,
+          url,
+          snapshot: localSnapshot,
+          previous: previousById.get("local-amendments"),
+        }),
+      );
+    }
   }
 
   return {
@@ -71,6 +89,7 @@ export async function runScout(input: {
     formatVersion: SCOUT_FORMAT_VERSION,
     id: crypto.randomUUID(),
     projectId: input.projectId,
+    kind,
     ranAt: new Date().toISOString(),
     municipality: input.municipality.trim(),
     localConfigured,

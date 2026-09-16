@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AppHeader } from "@/components/app-header";
+import { StatewideNoticeboard } from "@/components/statewide-noticeboard";
 import { TypologyGrid } from "@/components/typology-grid";
 import { listProjects } from "@/lib/client-store";
 import { TYPOLOGY_ORDER } from "@/lib/typology";
@@ -38,6 +39,15 @@ export function HomeBody() {
             JSON (IndexedDB). Export a ZIP to move them — that archive is the
             lossless copy. Light and dark modes are in the header.
           </p>
+        </section>
+        <section className="space-y-3">
+          <h2 className="font-heading text-2xl">Statewide noticeboard</h2>
+          <p className="text-sm text-muted-foreground">
+            NCC, ARBV, AIA, builders’ associations and planning sources. Open
+            Scout process to change sites, timing and whether Cursor, a Grok
+            Bot or someone else runs it.
+          </p>
+          <StatewideNoticeboard compact />
         </section>
         <TypologyGrid counts={counts} />
         <section className="space-y-3">

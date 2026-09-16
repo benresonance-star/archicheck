@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AppHeader } from "@/components/app-header";
 import { ScoutInbox } from "@/components/scout-inbox";
@@ -60,9 +61,12 @@ export function ScoutPage({ id }: { id: string }) {
         </p>
         <h1 className="font-heading text-3xl">Code scout</h1>
         <p className="text-sm text-muted-foreground">
-          Watches statewide Victorian / NCC sources and this project’s
-          municipality. Alerts stay in the app. Proposed sentences are drafts
-          until you accept them.
+          Watches statewide Victorian / NCC / ARBV / AIA / builders sources
+          (editable on the home noticeboard) plus this project’s municipality.
+          Proposed sentences are drafts until you accept them.{" "}
+          <Link className="underline underline-offset-2" href="/scout">
+            Scout process
+          </Link>
         </p>
         <ScoutInbox
           projectId={id}

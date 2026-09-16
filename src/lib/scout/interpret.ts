@@ -10,8 +10,10 @@ export function interpretSource(input: {
   snapshot: ScoutSnapshot;
   previous: PreviousSnapshot | undefined;
   typology: Typology;
+  ignoreTypology?: boolean;
 }): ScoutFinding {
-  const applies = input.source.appliesTo.includes(input.typology);
+  const applies =
+    Boolean(input.ignoreTypology) || input.source.appliesTo.includes(input.typology);
   const itemIds = applies ? input.source.itemIds : [];
   const baseline = !input.previous;
   const hashChanged = Boolean(

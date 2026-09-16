@@ -70,6 +70,7 @@ export type ScoutReport = {
   formatVersion: typeof SCOUT_FORMAT_VERSION;
   id: string;
   projectId: string;
+  kind: "statewide" | "project";
   ranAt: string;
   municipality: string;
   localConfigured: boolean;
@@ -78,7 +79,17 @@ export type ScoutReport = {
   findings: ScoutFinding[];
 };
 
-export const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+export function scoutIsDue(
+  ranAt: string | null,
+  cadenceDays = 7,
+  now = Date.now(),
+): boolean {
+  if (!ranAt) {
+    return true;
+  }
+  const days = Number.isFinite(cadenceDays) && cadenceDays > 0 ? cadenceDays : 7;
+  return now - Date.parse(ranAt) >= days * 24 * 60 * 60 * 1000;
+}
 
 export function actionLabel(action: ScoutAction): string {
   switch (action) {
@@ -122,11 +133,4 @@ export function openFindingCount(report: ScoutReport | null): number {
     (finding) =>
       finding.status === "open" && finding.action !== "no_change",
   ).length;
-}
-
-export function scoutIsDue(ranAt: string | null, now = Date.now()): boolean {
-  if (!ranAt) {
-    return true;
-  }
-  return now - Date.parse(ranAt) >= WEEK_MS;
 }

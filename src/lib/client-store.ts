@@ -16,11 +16,16 @@ import {
 } from "@/lib/types";
 import { validateProjectDocument, validateTemplateDocument } from "@/lib/validate";
 import { applyProposedToTemplate } from "@/lib/scout/apply-wording";
+import {
+  mergeScoutSettings,
+  STATEWIDE_BOARD_ID,
+  type ScoutSettings,
+} from "@/lib/scout/settings";
 import type { ScoutFinding, ScoutProposed, ScoutReport } from "@/lib/scout/types";
 import type { PreviousSnapshot } from "@/lib/scout/watch-list";
 
 const DB_NAME = "vic-arch-checklist";
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 const MAX_ATTACHMENT_BYTES = 12 * 1024 * 1024;
 
 type AttachmentRecord = {
@@ -51,6 +56,9 @@ function openDb(): Promise<IDBDatabase> {
       }
       if (!db.objectStoreNames.contains("scoutSnapshots")) {
         db.createObjectStore("scoutSnapshots", { keyPath: "key" });
+      }
+      if (!db.objectStoreNames.contains("scoutSettings")) {
+        db.createObjectStore("scoutSettings", { keyPath: "id" });
       }
     };
     request.onsuccess = () => resolve(request.result);
@@ -374,7 +382,7 @@ export async function loadScoutReport(
     tx.objectStore("scoutReports").get(projectId),
   )) as ScoutReport | undefined;
   await txDone(tx);
-  return report ?? null;
+  return report ? { ...report, kind: report.kind ?? "project" } : null;
 }
 
 export async function loadScoutSnapshots(
@@ -475,19 +483,56 @@ export async function applyProposedWording(input: {
   return { template: next, report };
 }
 
-export async function runProjectScout(projectId: string): Promise<ScoutReport> {
-  const { project } = await loadProject(projectId);
-  const previous = await loadScoutSnapshots(projectId);
+export async function loadScoutSettings(): Promise<ScoutSettings> {
+  try {
+    const db = await openDb();
+    const tx = db.transaction("scoutSettings", "readonly");
+    const saved = (await requestToPromise(
+      tx.objectStore("scoutSettings").get("default"),
+    )) as ScoutSettings | undefined;
+    await txDone(tx);
+    return mergeScoutSettings(saved ?? null);
+  } catch {
+    return mergeScoutSettings(null);
+  }
+}
+
+export async function saveScoutSettings(
+  settings: ScoutSettings,
+): Promise<ScoutSettings> {
+  const next = mergeScoutSettings(settings);
+  const db = await openDb();
+  const tx = db.transaction("scoutSettings", "readwrite");
+  tx.objectStore("scoutSettings").put(next);
+  await txDone(tx);
+  return next;
+}
+
+export async function runStatewideScout(): Promise<ScoutReport> {
+  const settings = await loadScoutSettings();
+  const previous = await loadScoutSnapshots(STATEWIDE_BOARD_ID);
   const response = await fetch("/api/scout/run", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      projectId,
-      municipality: project.site.municipality,
-      typology: project.site.typology,
+      projectId: STATEWIDE_BOARD_ID,
+      kind: "statewide",
       previous,
+      sources: enabledOrAll(settings),
     }),
   });
+  return persistScoutResponse(response);
+}
+
+function enabledOrAll(settings: ScoutSettings) {
+  const enabled = settings.sources.filter((source) => source.enabled);
+  if (enabled.length === 0) {
+    throw new Error("Enable at least one scout site under Scout process");
+  }
+  return enabled;
+}
+
+async function persistScoutResponse(response: Response): Promise<ScoutReport> {
   const data = (await response.json()) as {
     error?: string;
     report?: ScoutReport;
@@ -497,4 +542,23 @@ export async function runProjectScout(projectId: string): Promise<ScoutReport> {
   }
   await saveScoutReport(data.report);
   return data.report;
+}
+
+export async function runProjectScout(projectId: string): Promise<ScoutReport> {
+  const { project } = await loadProject(projectId);
+  const settings = await loadScoutSettings();
+  const previous = await loadScoutSnapshots(projectId);
+  const response = await fetch("/api/scout/run", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      projectId,
+      kind: "project",
+      municipality: project.site.municipality,
+      typology: project.site.typology,
+      previous,
+      sources: enabledOrAll(settings),
+    }),
+  });
+  return persistScoutResponse(response);
 }

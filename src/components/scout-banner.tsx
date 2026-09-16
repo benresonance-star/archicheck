@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { loadScoutReport } from "@/lib/client-store";
+import { loadScoutReport, loadScoutSettings } from "@/lib/client-store";
 import { openFindingCount, scoutIsDue } from "@/lib/scout/types";
 
 export function ScoutBanner({ projectId }: { projectId: string }) {
@@ -12,9 +12,13 @@ export function ScoutBanner({ projectId }: { projectId: string }) {
   const [tone, setTone] = useState<"due" | "open" | "ok">("ok");
 
   useEffect(() => {
-    void loadScoutReport(projectId).then((report) => {
+    void (async () => {
+      const [report, settings] = await Promise.all([
+        loadScoutReport(projectId),
+        loadScoutSettings(),
+      ]);
       const open = openFindingCount(report);
-      const due = scoutIsDue(report?.ranAt ?? null);
+      const due = scoutIsDue(report?.ranAt ?? null, settings.cadenceDays);
       if (due) {
         setTone("due");
         setLabel(report ? "Scout due" : "Run scout");
@@ -25,7 +29,7 @@ export function ScoutBanner({ projectId }: { projectId: string }) {
         setTone("ok");
         setLabel("Scout quiet");
       }
-    });
+    })();
   }, [projectId]);
 
   return (

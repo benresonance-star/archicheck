@@ -44,9 +44,14 @@ export function AppHeader({
             <Link href={backHref}>Back</Link>
           </Button>
         ) : (
-          <Link href="/" className="text-sm font-medium tracking-wide">
-            Vic checklist
-          </Link>
+          <div className="flex min-w-0 items-center gap-3">
+            <Link href="/" className="text-sm font-medium tracking-wide">
+              Vic checklist
+            </Link>
+            <Link href="/scout" className="text-sm text-muted-foreground">
+              Scout
+            </Link>
+          </div>
         )}
         <div className="min-w-0 flex-1 truncate font-heading text-lg">
           {title}

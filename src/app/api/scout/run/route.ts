@@ -1,7 +1,7 @@
 import { jsonFromError, jsonOk } from "@/lib/http";
 import { runScout } from "@/lib/scout/run";
 import { isTypology } from "@/lib/types";
-import type { PreviousSnapshot } from "@/lib/scout/watch-list";
+import { parseWatchSources, type PreviousSnapshot } from "@/lib/scout/watch-list";
 
 export const runtime = "nodejs";
 
@@ -12,15 +12,33 @@ export async function POST(request: Request) {
       municipality?: string;
       typology?: string;
       previous?: PreviousSnapshot[];
+      sources?: unknown;
+      includeLocal?: boolean;
+      ignoreTypology?: boolean;
+      kind?: "statewide" | "project";
     };
-    if (!body.projectId || !body.typology || !isTypology(body.typology)) {
+    const kind = body.kind === "statewide" ? "statewide" : "project";
+    if (!body.projectId) {
+      return jsonFromError(new Error("projectId is required"));
+    }
+    const typology =
+      kind === "statewide"
+        ? "house"
+        : body.typology && isTypology(body.typology)
+          ? body.typology
+          : null;
+    if (!typology) {
       return jsonFromError(new Error("projectId and typology are required"));
     }
     const report = await runScout({
       projectId: body.projectId,
       municipality: body.municipality ?? "",
-      typology: body.typology,
+      typology,
       previous: body.previous ?? [],
+      sources: body.sources === undefined ? undefined : parseWatchSources(body.sources),
+      includeLocal: kind === "statewide" ? false : body.includeLocal !== false,
+      ignoreTypology: kind === "statewide" || Boolean(body.ignoreTypology),
+      kind,
     });
     return jsonOk({ report });
   } catch (error) {

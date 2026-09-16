@@ -36,7 +36,13 @@ In the UI: **Export ZIP** on a project, then **Import ZIP** on a fresh install (
 
 ## Code scout
 
-Each project has a **Code scout** screen. It fetches statewide Victorian / NCC pages plus that project’s municipality (from the site record). Alerts stay in the app. The first run stores a baseline; later runs (badge after seven days) compare hashes. You can tick flagged items yourself, or edit and accept proposed wording into a **draft template** — answers are never auto-changed.
+The **home page** has a statewide noticeboard. **Scout process** (`/scout`) is where you change sites, cadence (1 / 7 / 14 / 28 days) and scout type: Cursor in-app, Grok Bot, or another person/process.
+
+Default sites include NCC (BPC and ABCB), ARBV, AIA Victorian Chapter, Master Builders Victoria, HIA, BPC news, planning schemes, Townhouse Code, Better Apartments, the developer bond page and the Gazette. Each source states what it looks for. You can disable, edit URLs, or add https sites.
+
+Each **project** still has **Code scout** for that job’s municipality.
+
+Alerts stay in the app. The first run stores a baseline; later runs compare hashes. You can tick flagged items yourself, or edit and accept proposed wording into a **draft template** on a project — answers are never auto-changed.
 
 This is a practice aid, not legal advice. Some official sites block automated fetch; those findings still list the URL and item ids.
 

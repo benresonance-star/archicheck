@@ -8,6 +8,12 @@ import {
 import { resolveMunicipality } from "../src/lib/scout/municipalities";
 import { scoutIsDue } from "../src/lib/scout/types";
 import { applyProposedToTemplate } from "../src/lib/scout/apply-wording";
+import {
+  defaultScoutSettings,
+  grokBotScoutBrief,
+  mergeScoutSettings,
+  settingsHaveRequiredBodies,
+} from "../src/lib/scout/settings";
 import { STATEWIDE_SOURCES } from "../src/lib/scout/watch-list";
 import type { ScoutFinding, ScoutSnapshot } from "../src/lib/scout/types";
 import type { TemplateDocument } from "../src/lib/types";
@@ -120,6 +126,51 @@ test("scout is due after a week", () => {
     scoutIsDue(new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString()),
     true,
   );
+  assert.equal(
+    scoutIsDue(new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), 1),
+    true,
+  );
+});
+
+test("bundled watch list includes NCC, ARBV, AIA and builders associations", () => {
+  const settings = defaultScoutSettings();
+  assert.equal(settingsHaveRequiredBodies(settings), true);
+  const ids = settings.sources.map((source) => source.id);
+  assert.ok(ids.includes("ncc-vic"));
+  assert.ok(ids.includes("ncc-abcb"));
+  assert.ok(ids.includes("arbv-process"));
+  assert.ok(ids.includes("aia-vic"));
+  assert.ok(ids.includes("mbav"));
+  assert.ok(ids.includes("hia"));
+});
+
+test("mergeScoutSettings adds new bundled sites without dropping custom ones", () => {
+  const saved = defaultScoutSettings();
+  saved.sources = saved.sources.filter((source) => source.id !== "hia");
+  saved.sources.push({
+    id: "custom-practice",
+    title: "Practice wiki",
+    url: "https://example.test/wiki",
+    scope: "statewide",
+    category: "other",
+    enabled: true,
+    builtin: false,
+    itemIds: [],
+    flag: "Internal notes",
+    proposedDetail: "",
+    appliesTo: ["house"],
+  });
+  const merged = mergeScoutSettings(saved);
+  assert.ok(merged.sources.some((source) => source.id === "hia"));
+  assert.ok(merged.sources.some((source) => source.id === "custom-practice"));
+});
+
+test("Grok Bot brief lists enabled sites and what they look for", () => {
+  const brief = grokBotScoutBrief(defaultScoutSettings());
+  assert.ok(brief.includes("VicCodeScout"));
+  assert.ok(brief.includes("Australian Institute of Architects"));
+  assert.ok(brief.includes("Master Builders Victoria"));
+  assert.ok(brief.includes("National Construction Code"));
 });
 
 test("accepting proposed wording updates every flagged item, not answers", () => {
