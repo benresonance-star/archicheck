@@ -87,6 +87,57 @@ const CD_BADS_POS: ItemAssessment = {
 
 const ASSESSMENTS: Record<string, ItemAssessment> = {
   "cd-bads-pos": CD_BADS_POS,
+  "dw-cd-north": {
+    schemaVersion: ITEM_ASSESSMENT_SCHEMA_VERSION,
+    requirement: {
+      kind: "office_practice",
+      statement:
+        "North point on working drawings is solar north from the survey, not title north.",
+      sourceRefs: [
+        {
+          citation: "Victorian Architects Code of Professional Conduct",
+          url: "https://www.arbv.vic.gov.au/working-architect",
+        },
+      ],
+    },
+    method: {
+      id: "check-dw-cd-north-survey",
+      description:
+        "Compare the north point on each architectural sheet with the survey north arrow and the title plan. Title north often differs from solar north.",
+      acceptanceCriteria: [
+        "Every working-drawing sheet shows solar north.",
+        "The north point matches the survey, not the title-plan north, unless a note explains a deliberate difference.",
+      ],
+    },
+    applicability: {
+      elementTypes: ["drawing", "site"],
+      conditions: "Working-drawing issue for a Victorian residential building permit.",
+    },
+    requiredInputs: [
+      {
+        id: "survey",
+        label: "Site survey with solar north",
+        kind: "drawing",
+        required: true,
+      },
+      {
+        id: "working-set",
+        label: "Architectural working drawing set",
+        kind: "drawing",
+        required: true,
+      },
+    ],
+    requiredEvidence: [
+      {
+        id: "north-match",
+        label: "North point on a typical sheet matching the survey",
+        kind: "drawing",
+      },
+    ],
+    humanReview: {
+      required: false,
+    },
+  },
 };
 
 export function assessmentForItem(itemId: string): ItemAssessment | undefined {

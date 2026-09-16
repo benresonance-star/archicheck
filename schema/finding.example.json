@@ -6,8 +6,8 @@
   "itemId": "cd-bads-pos",
   "checklist": {
     "id": "vic-residential",
-    "version": "1.0.7",
-    "checksum": "98d45ded619d7b2fb71c9bd9e7e9fdf66fb66e0440137da96662e25d1c407a31"
+    "version": "1.0.8",
+    "checksum": "605d515b39b060db8d764e7f0969fb39a7e084e51d15f85d2ac72aa98744fe3e"
   },
   "designRevision": {
     "id": "ext-concept-rev-a",

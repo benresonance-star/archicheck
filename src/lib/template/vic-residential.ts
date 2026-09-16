@@ -743,6 +743,42 @@ const ITEMS: ChecklistItem[] = [
     false,
     ["Building Amendment (Building Manuals and Mandatory Inspections) Regulations 2025"],
   ),
+  item(
+    "doc-cd-brief",
+    "documentation",
+    "Documentation matches the current brief",
+    "Review the working set against the current brief. Record brief changes and amend the brief before issue.",
+    ALL,
+    true,
+    ["ARBV Guideline — Client–architect agreements", "Victorian Architects Code of Professional Conduct"],
+  ),
+  item(
+    "doc-cd-conditions",
+    "documentation",
+    "Previous approvals and review comments closed out",
+    "Check the set against previously submitted or endorsed documents, conditions of approval, and earlier design-review comments. Close out deficiencies before this issue.",
+    ALL,
+    true,
+    ["Planning and Environment Act 1987 (Vic)", "Victorian Architects Code of Professional Conduct"],
+  ),
+  item(
+    "doc-cd-nonconforming",
+    "documentation",
+    "Non-conforming design identified",
+    "List elements that do not conform with the planning permit, NCC 2025 or the brief. Eliminate them or record the modification sought from the relevant authority.",
+    ALL,
+    true,
+    ["Building Act 1993 (Vic)", "Planning and Environment Act 1987 (Vic)", "NCC 2025"],
+  ),
+  item(
+    "doc-cd-closeout",
+    "documentation",
+    "Stage close-out before issue",
+    "Finalise the cost plan with the quantity surveyor, send a stage-change memo to the client, notify consultants that documentation is proceeding, and obtain written client sign-off. Confirm the set meets budget, program, buildability and safety notes on file.",
+    ALL,
+    true,
+    ["ARBV Guideline — Client–architect agreements", "Victorian Architects Code of Professional Conduct"],
+  ),
 
   item(
     "tn-set",
@@ -1098,8 +1134,8 @@ const GROKBOTS: GrokBotBrief[] = [
     "documentation",
     "Working",
     "Documentation checker",
-    "Diffs the building-permit set against endorsed planning drawings and NCC 2025 energy, livable housing and condensation.",
-    "Compare notes in the project JSON against NCC 2025 items (7-star, livable housing, condensation, waterproofing). List gaps that would stall a Victorian building permit. Note Building Act s 10 if a pre-1 May 2026 permit still sits on NCC 2022. Do not issue drawings.",
+    "Diffs the building-permit set against endorsed planning drawings, NCC 2025, and the documentation sheet checks (site, GA, RCP, roof, schedules).",
+    "Compare notes in the project JSON against NCC 2025 items (7-star, livable housing, condensation, waterproofing) and the documentation sheet checks. List gaps that would stall a Victorian building permit. Note Building Act s 10 if a pre-1 May 2026 permit still sits on NCC 2022. Do not issue drawings.",
   ),
   bot(
     "tender",
@@ -1151,7 +1187,7 @@ function withChecksum(
   return {
     ...template,
     checksum:
-      "98d45ded619d7b2fb71c9bd9e7e9fdf66fb66e0440137da96662e25d1c407a31",
+      "605d515b39b060db8d764e7f0969fb39a7e084e51d15f85d2ac72aa98744fe3e",
   };
 }
 
@@ -1159,7 +1195,7 @@ export const BUNDLED_TEMPLATE: TemplateDocument = withChecksum({
   format: TEMPLATE_FORMAT,
   formatVersion: FORMAT_VERSION,
   id: "vic-residential",
-  version: "1.0.7",
+  version: "1.0.8",
   title: "Victoria residential — houses, townhouses and apartments",
   jurisdiction: "Victoria, Australia",
   description:

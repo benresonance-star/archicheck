@@ -2,7 +2,7 @@
   "format": "vic-arch-checklist-template",
   "formatVersion": "1.0.0",
   "id": "vic-residential",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "title": "Victoria residential — houses, townhouses and apartments",
   "jurisdiction": "Victoria, Australia",
   "description": "ARBV-aligned stages from pre-design through post-occupancy, with a drawing or document and associated checklist on each stage, Clause 54 / 55 / 58, Better Apartments Design Standards (BADS) on apartment items, NCC 2025 (in force in Victoria from 1 May 2026), and apartment developer-bond notes.",
@@ -1899,6 +1899,111 @@
       "grokbotId": "bot-documentation"
     },
     {
+      "id": "doc-cd-brief",
+      "stageId": "documentation",
+      "title": "Documentation matches the current brief",
+      "detail": "Review the working set against the current brief. Record brief changes and amend the brief before issue.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "ARBV Guideline — Client–architect agreements",
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-documentation"
+    },
+    {
+      "id": "doc-cd-conditions",
+      "stageId": "documentation",
+      "title": "Previous approvals and review comments closed out",
+      "detail": "Check the set against previously submitted or endorsed documents, conditions of approval, and earlier design-review comments. Close out deficiencies before this issue.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Planning and Environment Act 1987 (Vic)",
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "Planning and Environment Act 1987 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/planning-and-environment-act-1987"
+        },
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-documentation"
+    },
+    {
+      "id": "doc-cd-nonconforming",
+      "stageId": "documentation",
+      "title": "Non-conforming design identified",
+      "detail": "List elements that do not conform with the planning permit, NCC 2025 or the brief. Eliminate them or record the modification sought from the relevant authority.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Building Act 1993 (Vic)",
+        "Planning and Environment Act 1987 (Vic)",
+        "NCC 2025"
+      ],
+      "resources": [
+        {
+          "label": "Building Act 1993 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-act-1993"
+        },
+        {
+          "label": "Planning and Environment Act 1987 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/planning-and-environment-act-1987"
+        },
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
+        }
+      ],
+      "grokbotId": "bot-documentation"
+    },
+    {
+      "id": "doc-cd-closeout",
+      "stageId": "documentation",
+      "title": "Stage close-out before issue",
+      "detail": "Finalise the cost plan with the quantity surveyor, send a stage-change memo to the client, notify consultants that documentation is proceeding, and obtain written client sign-off. Confirm the set meets budget, program, buildability and safety notes on file.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "ARBV Guideline — Client–architect agreements",
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-documentation"
+    },
+    {
       "id": "tn-set",
       "stageId": "tender",
       "title": "Tender set issued",
@@ -3206,6 +3311,946 @@
       "deliverableId": "del-cd-working"
     },
     {
+      "id": "dw-cd-north",
+      "stageId": "documentation",
+      "title": "Solar north matches the survey",
+      "detail": "North point is solar north from the survey, not title north. Recheck against the site survey before issue.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-working",
+      "assessment": {
+        "schemaVersion": "1.0.0",
+        "requirement": {
+          "kind": "office_practice",
+          "statement": "North point on working drawings is solar north from the survey, not title north.",
+          "sourceRefs": [
+            {
+              "citation": "Victorian Architects Code of Professional Conduct",
+              "url": "https://www.arbv.vic.gov.au/working-architect"
+            }
+          ]
+        },
+        "method": {
+          "id": "check-dw-cd-north-survey",
+          "description": "Compare the north point on each architectural sheet with the survey north arrow and the title plan. Title north often differs from solar north.",
+          "acceptanceCriteria": [
+            "Every working-drawing sheet shows solar north.",
+            "The north point matches the survey, not the title-plan north, unless a note explains a deliberate difference."
+          ]
+        },
+        "applicability": {
+          "elementTypes": [
+            "drawing",
+            "site"
+          ],
+          "conditions": "Working-drawing issue for a Victorian residential building permit."
+        },
+        "requiredInputs": [
+          {
+            "id": "survey",
+            "label": "Site survey with solar north",
+            "kind": "drawing",
+            "required": true
+          },
+          {
+            "id": "working-set",
+            "label": "Architectural working drawing set",
+            "kind": "drawing",
+            "required": true
+          }
+        ],
+        "requiredEvidence": [
+          {
+            "id": "north-match",
+            "label": "North point on a typical sheet matching the survey",
+            "kind": "drawing"
+          }
+        ],
+        "humanReview": {
+          "required": false
+        }
+      }
+    },
+    {
+      "id": "dw-cd-scale",
+      "stageId": "documentation",
+      "title": "Bar scale and print check",
+      "detail": "Every sheet has a bar scale or stated scale. Print a full-size sheet and check it with a scale rule before issuing paper or PDFs that a quantity surveyor may scale.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-working"
+    },
+    {
+      "id": "dw-cd-stamp",
+      "stageId": "documentation",
+      "title": "Issue stamp and date",
+      "detail": "Title block is complete. Stamp the issue (preliminary, planning, tender or contract) and date. Cover-sheet drawing list matches the set.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-working"
+    },
+    {
+      "id": "dw-cd-legend",
+      "stageId": "documentation",
+      "title": "Legends, tags and cross-references",
+      "detail": "Legends cover abbreviations, materials, wall types and finishes. Room names, door and window numbers, wall tags, grids, section and elevation markers, and detail references agree across the set.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-working"
+    },
+    {
+      "id": "dw-cd-demo-retain",
+      "stageId": "documentation",
+      "title": "Retain versus demolish noted",
+      "detail": "Every existing feature to stay or go is noted across the site — buildings, fences, gates, vegetation and paving. Retained walls are solid; demolished walls are dashed.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-demo"
+    },
+    {
+      "id": "dw-cd-demo-trees",
+      "stageId": "documentation",
+      "title": "Trees to retain and tree protection zones",
+      "detail": "Trees to be retained are shown with tree protection zones. Coordinate with any planning permit landscape or tree conditions.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Planning and Environment Act 1987 (Vic)",
+        "VPP Clause 54 / 55 / 58 landscaping"
+      ],
+      "resources": [
+        {
+          "label": "Planning and Environment Act 1987 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/planning-and-environment-act-1987"
+        },
+        {
+          "label": "VPP Clause 55",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/55"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-demo"
+    },
+    {
+      "id": "dw-cd-demo-survey",
+      "stageId": "documentation",
+      "title": "Existing levels and structure from survey",
+      "detail": "Existing ground levels, pits, slabs, parapets, roofs, services, footings and columns match the survey. Check walls and columns back to the survey.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Land Use Victoria title search",
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "LANDATA",
+          "url": "https://www.landata.vic.gov.au/"
+        },
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-demo"
+    },
+    {
+      "id": "dw-cd-demo-protect",
+      "stageId": "documentation",
+      "title": "Protection works, compound and crossings",
+      "detail": "Protection of adjoining property and crossings is noted. Show the skip, site shed and any hoarding. Coordinate with structural and civil for underpinning or propping on the boundary.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Building Act 1993 (Vic)",
+        "Building Regulations 2018 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "Building Act 1993 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-act-1993"
+        },
+        {
+          "label": "Building Regulations 2018 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/statutory-rules/building-regulations-2018/007"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-demo"
+    },
+    {
+      "id": "dw-cd-site-title",
+      "stageId": "documentation",
+      "title": "Boundaries, easements and setbacks",
+      "detail": "Boundary and easement dimensions and bearings match the title. Setbacks from all boundaries are dimensioned. Set-out is from a known grid or survey point.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Land Use Victoria title search",
+        "Building Regulations 2018 Part 5"
+      ],
+      "resources": [
+        {
+          "label": "LANDATA",
+          "url": "https://www.landata.vic.gov.au/"
+        },
+        {
+          "label": "Building Regulations 2018 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/statutory-rules/building-regulations-2018/007"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-site"
+    },
+    {
+      "id": "dw-cd-site-civil",
+      "stageId": "documentation",
+      "title": "Levels, crossovers and stormwater discharge",
+      "detail": "Spot levels or contours, kerbs, channels, crossovers, pits and the stormwater point of discharge are shown. Confirm grades at every building entry with civil drawings and livable-housing / access requirements.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2025 Livable Housing Design",
+        "NCC 2025 (ABCB)"
+      ],
+      "resources": [
+        {
+          "label": "NCC 2025 livable housing (H8)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted/volume-two/h-class-1-and-10-buildings/part-h8-livable-housing-design"
+        },
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-site"
+    },
+    {
+      "id": "dw-cd-site-services",
+      "stageId": "documentation",
+      "title": "Meters, fire and electrical plant on site",
+      "detail": "Authority meters, hydrants, boosters, substations or main switchboards, and external lighting are located with height where it matters. Coordinate with electrical, hydraulic and the fire engineer.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2025 (ABCB)",
+        "Building Act 1993 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
+        },
+        {
+          "label": "Building Act 1993 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-act-1993"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-site"
+    },
+    {
+      "id": "dw-cd-site-context",
+      "stageId": "documentation",
+      "title": "Adjoining dwellings, landscape and waste",
+      "detail": "Adjoining dwellings, landscape (garden, grass, paving), bin storage and collection, site access, and parking bays with dimensions are on the plan. Coordinate paving and retaining with civil and landscape.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "VPP Clause 52.06",
+        "VPP Clause 54 / 55 / 58"
+      ],
+      "resources": [
+        {
+          "label": "VPP Clause 52.06 (parking)",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/52.06"
+        },
+        {
+          "label": "VPP Clause 55",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/55"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-site"
+    },
+    {
+      "id": "dw-cd-ga-coord",
+      "stageId": "documentation",
+      "title": "Plans match elevations; name the responsible party",
+      "detail": "Wall thicknesses, windows and materials match elevations. Remove “by others”; name the consultant or trade. Beams, voids, eaves, canopies and bulkheads over are dashed.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-ga"
+    },
+    {
+      "id": "dw-cd-ga-fire",
+      "stageId": "documentation",
+      "title": "Fire and acoustic walls, hydrants and egress",
+      "detail": "Fire-rated and acoustic walls are tagged and not broken for plumbing. Show hydrants, hose cabinets, extinguishers and the fire indicator panel. Confirm travel distances and emergency-door size with the building surveyor and fire engineer.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2025 (ABCB)",
+        "Building Act 1993 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
+        },
+        {
+          "label": "Building Act 1993 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-act-1993"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-ga"
+    },
+    {
+      "id": "dw-cd-ga-wet",
+      "stageId": "documentation",
+      "title": "Wet areas, wastes, falls and membranes",
+      "detail": "Plumbing fixtures sit on suitable walls. Show floor wastes or trench grates with falls, wet-area membranes, hose cocks, downpipes and any water tank (size, location, purpose). Finished floor levels stay flush at finish changes.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "AS 3740",
+        "NCC 2025 Part H2"
+      ],
+      "resources": [
+        {
+          "label": "NCC 2025 damp and weatherproofing (H2)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted/volume-two/h-class-1-and-10-buildings/part-h2-damp-and-weatherproofing"
+        },
+        {
+          "label": "Standards Australia",
+          "url": "https://www.standards.org.au/"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-ga"
+    },
+    {
+      "id": "dw-cd-ga-access",
+      "stageId": "documentation",
+      "title": "Doors, stairs and circulation",
+      "detail": "Every door is numbered, including glazed doors; check swing and size. Stairs show direction, riser count, finishes and a cut-stringer note where needed. Confirm stairs and wheelchair turning / latch-side clearances with NCC 2025 and AS 1428.1.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2025 (ABCB)",
+        "NCC 2025 Livable Housing Design",
+        "AS 1428.1"
+      ],
+      "resources": [
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
+        },
+        {
+          "label": "NCC 2025 livable housing (H8)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted/volume-two/h-class-1-and-10-buildings/part-h8-livable-housing-design"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-ga"
+    },
+    {
+      "id": "dw-cd-ga-types",
+      "stageId": "documentation",
+      "title": "Apartment, kitchen and bathroom type tags",
+      "detail": "Apartment or room-type, kitchen and bathroom type tags are on the plans and match the schedules.",
+      "appliesTo": [
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Better Apartments Design Standards",
+        "Clause 58"
+      ],
+      "resources": [
+        {
+          "label": "Better Apartments Design Standards",
+          "url": "https://www.planning.vic.gov.au/guides-and-resources/guides/all-guides/better-apartments"
+        },
+        {
+          "label": "VPP Clause 58",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/58"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-ga"
+    },
+    {
+      "id": "dw-cd-rcp-heights",
+      "stageId": "documentation",
+      "title": "Ceiling heights, finishes and access panels",
+      "detail": "Ceiling finishes, heights or springing heights, bulkheads, pelmets and access hatches are shown. Note fire-rated and acoustic ceilings.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2025 (ABCB)",
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
+        },
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-rcp"
+    },
+    {
+      "id": "dw-cd-rcp-services",
+      "stageId": "documentation",
+      "title": "Lighting, grilles and indoor units",
+      "detail": "Lighting layout, supply and return grilles, and indoor air-conditioning units are shown and coordinated with electrical and mechanical. Outdoor condensers are located. No clash with door swings.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2025 (ABCB)",
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
+        },
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-rcp"
+    },
+    {
+      "id": "dw-cd-rcp-detection",
+      "stageId": "documentation",
+      "title": "Smoke, thermal and security devices",
+      "detail": "Smoke alarms, thermal detectors, speakers and security sensors are shown to the NCC and the brief. Coordinate with the electrical set and the building surveyor.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2025 (ABCB)",
+        "Building Regulations 2018 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
+        },
+        {
+          "label": "Building Regulations 2018 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/statutory-rules/building-regulations-2018/007"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-rcp"
+    },
+    {
+      "id": "dw-cd-rcp-structure",
+      "stageId": "documentation",
+      "title": "Skylights, voids and services vs structure",
+      "detail": "Skylights, voids and service shafts are shown. Confirm they do not clash with roof structure, trusses, beams or slab thickness. Allow 250 mm for heating ducts and 350 mm for cooling where those services run in the ceiling.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2025 (ABCB)",
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
+        },
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-rcp"
+    },
+    {
+      "id": "dw-cd-elev-heights",
+      "stageId": "documentation",
+      "title": "Heights match endorsed planning drawings",
+      "detail": "Building heights match endorsed town-planning drawings. Show natural ground, cut ground, fall of ground, FFL, FCL, SSL, eaves and parapet RLs. Existing buildings to remain have survey heights.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Planning and Environment Act 1987 (Vic)",
+        "Building Act 1993 (Vic) s 24"
+      ],
+      "resources": [
+        {
+          "label": "Planning and Environment Act 1987 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/planning-and-environment-act-1987"
+        },
+        {
+          "label": "Building Act 1993 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-act-1993"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-elev"
+    },
+    {
+      "id": "dw-cd-elev-junctions",
+      "stageId": "documentation",
+      "title": "Material junctions, DPC and movement joints",
+      "detail": "Every material junction is resolved. Show damp-proof course, weep holes, tanking, slab-edge finish, expansion joints and hatch patterns that match the schedule. Walls run to the underside of slab or beam unless noted, with deflection heads where needed.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2025 Part H2",
+        "NCC 2025 (ABCB)"
+      ],
+      "resources": [
+        {
+          "label": "NCC 2025 damp and weatherproofing (H2)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted/volume-two/h-class-1-and-10-buildings/part-h2-damp-and-weatherproofing"
+        },
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-elev"
+    },
+    {
+      "id": "dw-cd-elev-openings",
+      "stageId": "documentation",
+      "title": "Window operation, sills and tags",
+      "detail": "Window tags, opening type and sill material/location are on the elevations and match the schedule. Note voids. Show the boundary line dashed.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "AS 1288",
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "Standards Australia",
+          "url": "https://www.standards.org.au/"
+        },
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-elev"
+    },
+    {
+      "id": "dw-cd-elev-stairs",
+      "stageId": "documentation",
+      "title": "Stairs, balustrades and ground clearance",
+      "detail": "Stair goings and risers work with the levels (nominally 250 mm going, 190 mm riser unless the NCC solution differs). Balustrade extent, fixing and material are noted or referred to a detail. Check falls from steps and paving (max 900 mm to natural ground unless a barrier is required). Allow 250 mm clearance under a suspended floor where used.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2025 (ABCB)",
+        "AS 1428.1"
+      ],
+      "resources": [
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
+        },
+        {
+          "label": "NCC 2025 livable housing (H8)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted/volume-two/h-class-1-and-10-buildings/part-h8-livable-housing-design"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-elev"
+    },
+    {
+      "id": "dw-cd-roof-drain",
+      "stageId": "documentation",
+      "title": "Gutters, downpipes and overflows",
+      "detail": "Gutter size is calculated. Show 1:100 fall direction, rainwater heads, sumps and overflow outlets. Downpipes do not clash with walls, footings or work below.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2025 (ABCB)",
+        "NCC 2025 Part H2"
+      ],
+      "resources": [
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
+        },
+        {
+          "label": "NCC 2025 damp and weatherproofing (H2)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted/volume-two/h-class-1-and-10-buildings/part-h2-damp-and-weatherproofing"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-roof"
+    },
+    {
+      "id": "dw-cd-roof-plant",
+      "stageId": "documentation",
+      "title": "Plant, structure and flashings",
+      "detail": "Roof-top plant has a location agreed with consultants. Structure can take the load. Show barge, parapet, apron, ridge and penetration flashings, roof finish tags and base metal thickness.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2025 (ABCB)",
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
+        },
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-roof"
+    },
+    {
+      "id": "dw-cd-roof-penet",
+      "stageId": "documentation",
+      "title": "Penetrations, flues and skylights",
+      "detail": "Vents, flues, skylights and other penetrations are located and flashed. Confirm they miss structure and the ceiling layout.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2025 (ABCB)",
+        "NCC 2025 condensation"
+      ],
+      "resources": [
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
+        },
+        {
+          "label": "NCC 2025 condensation changes",
+          "url": "https://ncc.abcb.gov.au/ncc-2025/ncc-2025-key-changes/ncc-2025-condensation-mitigation-changes"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-roof"
+    },
+    {
+      "id": "dw-cd-roof-access",
+      "stageId": "documentation",
+      "title": "Safe roof access",
+      "detail": "Catwalks, anchor points, platforms and ladders needed to maintain plant and gutters are shown.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Occupational Health and Safety Act 2004 (Vic)",
+        "NCC 2025 (ABCB)"
+      ],
+      "resources": [
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
+        },
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-roof"
+    },
+    {
+      "id": "doc-cd-doors",
+      "stageId": "documentation",
+      "title": "Door and window schedule vs drawings",
+      "detail": "Indicative sizes, opening type and direction, and fire doors/seals/closers match plans, elevations, RCPs and joinery. Note AS 1288 glazing. Fire doors coordinated with the building surveyor.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "AS 1288",
+        "NCC 2025 (ABCB)"
+      ],
+      "resources": [
+        {
+          "label": "Standards Australia",
+          "url": "https://www.standards.org.au/"
+        },
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-schedules"
+    },
+    {
+      "id": "doc-cd-hardware",
+      "stageId": "documentation",
+      "title": "Hardware, restrictors and ventilation",
+      "detail": "Hardware is noted or directed to a hardware schedule, dimensioned from finished floor and a known edge. Include flywire, blinds, opening restrictors, friction stays on awnings/casements, and trickle vents to habitable rooms where used. Full-height glass is laminated or toughened as required.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "AS 1288",
+        "NCC 2025 (ABCB)"
+      ],
+      "resources": [
+        {
+          "label": "Standards Australia",
+          "url": "https://www.standards.org.au/"
+        },
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-schedules"
+    },
+    {
+      "id": "doc-cd-sills",
+      "stageId": "documentation",
+      "title": "Sill heights and lintels",
+      "detail": "Sill levels are dimensioned above finished floor. Lintels match the structural set. Sliding-door and operable-wall weights and tracks are coordinated with the structural engineer.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2025 (ABCB)",
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
+        },
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-schedules"
+    },
+    {
+      "id": "doc-cd-materials",
+      "stageId": "documentation",
+      "title": "Materials, FFE and finishes schedules",
+      "detail": "Each scheduled item names manufacturer, product, code, colour/finish and overall size. Cover internal and external materials, fixtures, fittings, equipment, door hardware, insulation, paint, signage and joinery.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-schedules"
+    },
+    {
       "id": "doc-spec-rev",
       "stageId": "documentation",
       "title": "Specification revision matches the drawings",
@@ -3969,8 +5014,8 @@
       "name": "Working",
       "title": "Documentation checker",
       "stageId": "documentation",
-      "description": "Diffs the building-permit set against endorsed planning drawings and NCC 2025 energy, livable housing and condensation.",
-      "firstTask": "Compare notes in the project JSON against NCC 2025 items (7-star, livable housing, condensation, waterproofing). List gaps that would stall a Victorian building permit. Note Building Act s 10 if a pre-1 May 2026 permit still sits on NCC 2022. Do not issue drawings.",
+      "description": "Diffs the building-permit set against endorsed planning drawings, NCC 2025, and the documentation sheet checks (site, GA, RCP, roof, schedules).",
+      "firstTask": "Compare notes in the project JSON against NCC 2025 items (7-star, livable housing, condensation, waterproofing) and the documentation sheet checks. List gaps that would stall a Victorian building permit. Note Building Act s 10 if a pre-1 May 2026 permit still sits on NCC 2022. Do not issue drawings.",
       "plugins": [
         "web",
         "files"
@@ -4146,6 +5191,90 @@
       ]
     },
     {
+      "id": "del-cd-demo",
+      "stageId": "documentation",
+      "kind": "drawing",
+      "title": "Demolition and existing conditions",
+      "summary": "Demo and existing-conditions plans showing what is retained, removed and protected.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ]
+    },
+    {
+      "id": "del-cd-site",
+      "stageId": "documentation",
+      "kind": "drawing",
+      "title": "Site plan",
+      "summary": "Set-out, levels, services, access and neighbouring interfaces on the working site plan.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ]
+    },
+    {
+      "id": "del-cd-ga",
+      "stageId": "documentation",
+      "kind": "drawing",
+      "title": "General arrangement plans",
+      "summary": "Floor plans coordinated with structure, services, fire, wet areas and access.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ]
+    },
+    {
+      "id": "del-cd-rcp",
+      "stageId": "documentation",
+      "kind": "drawing",
+      "title": "Reflected ceiling plans",
+      "summary": "Ceiling heights, finishes, lighting, mechanical and fire devices, checked against structure.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ]
+    },
+    {
+      "id": "del-cd-elev",
+      "stageId": "documentation",
+      "kind": "drawing",
+      "title": "Elevations, sections and details",
+      "summary": "Heights, levels, material junctions and construction details that match the plans.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ]
+    },
+    {
+      "id": "del-cd-roof",
+      "stageId": "documentation",
+      "kind": "drawing",
+      "title": "Roof plan",
+      "summary": "Falls, gutters, downpipes, plant, flashings and safe roof access.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ]
+    },
+    {
+      "id": "del-cd-schedules",
+      "stageId": "documentation",
+      "kind": "document",
+      "title": "Door, window and materials schedules",
+      "summary": "Schedules that match the drawings and call up glass, hardware and products.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ]
+    },
+    {
       "id": "del-cd-spec",
       "stageId": "documentation",
       "kind": "document",
@@ -4230,5 +5359,5 @@
       ]
     }
   ],
-  "checksum": "98d45ded619d7b2fb71c9bd9e7e9fdf66fb66e0440137da96662e25d1c407a31"
+  "checksum": "605d515b39b060db8d764e7f0969fb39a7e084e51d15f85d2ac72aa98744fe3e"
 }

@@ -32,7 +32,7 @@ In the UI: **Export ZIP** on a project, then **Import ZIP** on a fresh install (
 
 ## Generic templates
 
-The **Templates** header link (`/templates`) shows the bundled house, townhouse and apartment lists as checkable references. Each stage names a **drawing or document** and an associated QA checklist, then the stage process checks. Open **Apartment** for BADS (Better Apartments Design Standards) as separate ticks. Each item cites a **Source** (the instrument) and **Resource(s)** — helper sites as blue links on a neutral panel, separate from Source. Ticks stay on the device; they are not a project ZIP. Start a project when you need notes, attachments and export.
+The **Templates** header link (`/templates`) shows the bundled house, townhouse and apartment lists as checkable references. Each stage names a **drawing or document** and an associated QA checklist, then the stage process checks. Construction documentation includes sheet checks (demolition, site, GA, RCP, elevations, roof, schedules) taken from a typical CD QA list, rewritten for Victoria and NCC 2025. Open **Apartment** for BADS (Better Apartments Design Standards) as separate ticks. Each item cites a **Source** (the instrument) and **Resource(s)** — helper sites as blue links on a neutral panel, separate from Source. Ticks stay on the device; they are not a project ZIP. Start a project when you need notes, attachments and export.
 
 ## Code scout
 

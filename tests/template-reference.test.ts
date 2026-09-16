@@ -25,7 +25,7 @@ test("every bundled checklist item cites a source and helper resources", () => {
       item.id,
     );
   }
-  assert.equal(BUNDLED_TEMPLATE.version, "1.0.7");
+  assert.equal(BUNDLED_TEMPLATE.version, "1.0.8");
   const nccNotes = BUNDLED_TEMPLATE.items.find((item) => item.id === "doc-ncc");
   assert.equal(nccNotes?.title, "NCC 2025 compliance notes");
   assert.ok(nccNotes?.detail.includes("1 May 2026"));
@@ -126,7 +126,7 @@ test("every stage has a drawing or document and an associated checklist", () => 
     (group) => group.stage.id === "documentation",
   );
   assert.ok(documentation);
-  assert.equal(documentation?.deliverables.length, 2);
+  assert.equal(documentation?.deliverables.length, 9);
   assert.ok(
     documentation?.deliverables.some(
       (entry) => entry.deliverable.kind === "drawing",
@@ -137,4 +137,30 @@ test("every stage has a drawing or document and an associated checklist", () => 
       (entry) => entry.deliverable.kind === "document",
     ),
   );
+  const titles = documentation?.deliverables.map(
+    (entry) => entry.deliverable.title,
+  );
+  for (const title of [
+    "Working drawings",
+    "Demolition and existing conditions",
+    "Site plan",
+    "General arrangement plans",
+    "Reflected ceiling plans",
+    "Elevations, sections and details",
+    "Roof plan",
+    "Door, window and materials schedules",
+    "Specification",
+  ]) {
+    assert.ok(titles?.includes(title), title);
+  }
+  const houseIds = groupedTemplateStages(BUNDLED_TEMPLATE, "house")
+    .find((group) => group.stage.id === "documentation")
+    ?.items.map((item) => item.id);
+  const apartmentIds = groupedTemplateStages(BUNDLED_TEMPLATE, "apartment")
+    .find((group) => group.stage.id === "documentation")
+    ?.items.map((item) => item.id);
+  assert.equal(houseIds?.includes("dw-cd-ga-types"), false);
+  assert.equal(apartmentIds?.includes("dw-cd-ga-types"), true);
+  assert.ok(houseIds?.includes("dw-cd-north"));
+  assert.ok(houseIds?.includes("doc-cd-closeout"));
 });
