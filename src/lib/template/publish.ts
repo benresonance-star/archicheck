@@ -56,6 +56,16 @@ export function comparisonRows(
   return rows;
 }
 
+export function comparisonHasVisibleDelta(rows: TemplateItemChange[]): boolean {
+  return rows.some((row) => {
+    const kind = changeKind(row);
+    if (kind === "wording" || kind === "edit") {
+      return wordingChanged(row);
+    }
+    return kind === "add" || kind === "remove" || kind === "move";
+  });
+}
+
 export function publishFindingToTemplate(input: {
   template: TemplateDocument;
   finding: ScoutFinding;

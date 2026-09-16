@@ -214,18 +214,29 @@ export function isCannedProposedDetail(detail: string | undefined): boolean {
   );
 }
 
-export function normalizeScoutFinding(finding: ScoutFinding): ScoutFinding {
-  if (finding.status !== "open") {
-    return finding;
+export function isAutoScoutFlag(finding: ScoutFinding): boolean {
+  if (finding.action === "add" && finding.proposed?.newItem) {
+    return false;
   }
+  if (finding.hashChanged) {
+    return true;
+  }
+  if (isCannedProposedDetail(finding.proposed?.detail)) {
+    return true;
+  }
+  if (/hash change/i.test(finding.flag)) {
+    return true;
+  }
+  return (
+    finding.action === "needs_human" && finding.proposed != null
+  );
+}
+
+export function normalizeScoutFinding(finding: ScoutFinding): ScoutFinding {
   if (finding.action === "add" && finding.proposed?.newItem) {
     return finding;
   }
-  const autoScout =
-    finding.hashChanged ||
-    isCannedProposedDetail(finding.proposed?.detail) ||
-    (finding.action === "needs_human" && finding.proposed != null);
-  if (!autoScout) {
+  if (!isAutoScoutFlag(finding)) {
     return finding;
   }
   return {

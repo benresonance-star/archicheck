@@ -37,6 +37,7 @@ import {
 import {
   findingActionBadge,
   findingDisplayFlag,
+  findingOffersWording,
   findingStatusLabel,
   isBlockedFinding,
   openFindingCount,
@@ -44,7 +45,10 @@ import {
   type ScoutFinding,
   type ScoutReport,
 } from "@/lib/scout/types";
-import { comparisonRows } from "@/lib/template/publish";
+import {
+  comparisonHasVisibleDelta,
+  comparisonRows,
+} from "@/lib/template/publish";
 import { BUNDLED_TEMPLATE } from "@/lib/template/vic-residential";
 import type { TemplateDocument } from "@/lib/types";
 
@@ -359,7 +363,8 @@ function BoardFinding({
   const proposed = { ...finding.proposed, detail };
   const rows = comparisonRows(template, finding, proposed);
   const canPublish =
-    Boolean(finding.proposed && detail.trim()) &&
+    findingOffersWording(finding) &&
+    Boolean(detail.trim()) &&
     finding.status === "open" &&
     !blocked &&
     finding.action !== "no_change";
@@ -400,7 +405,9 @@ function BoardFinding({
             </ul>
           </div>
         ) : null}
-        {blocked || !finding.proposed ? null : (
+        {blocked ||
+        !findingOffersWording(finding) ||
+        !comparisonHasVisibleDelta(rows) ? null : (
           <>
             <FindingComparison rows={rows} />
             {canPublish ? (

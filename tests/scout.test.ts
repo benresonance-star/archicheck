@@ -234,6 +234,27 @@ test("Grok Bot brief lists enabled sites and forbids wording rewrites", () => {
   assert.ok(brief.includes("Propose flags only"));
 });
 
+test("published hash-change findings become flags", () => {
+  const finding = normalizeScoutFinding({
+    id: "f-ncc",
+    sourceId: "ncc-abcb-2025",
+    sourceTitle: "NCC 2025 Housing Provisions",
+    url: "https://ncc.abcb.gov.au/ncc-2025",
+    scope: "statewide",
+    action: "replace",
+    itemIds: ["pd-arbv"],
+    flag: "Hash change on NCC 2025",
+    proposed: { detail: "Confirm architect registration is current." },
+    confidence: "low",
+    status: "published",
+    hashChanged: false,
+    baseline: false,
+  });
+  assert.equal(finding.action, "needs_human");
+  assert.equal(finding.proposed, null);
+  assert.equal(findingActionBadge(finding), "Source changed");
+});
+
 test("stored canned replace findings become flags", () => {
   const gazette = STATEWIDE_SOURCES.find((row) => row.id === "gazette");
   assert.ok(gazette);

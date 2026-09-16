@@ -27,12 +27,16 @@ import { MUNICIPALITIES, resolveMunicipality } from "@/lib/scout/municipalities"
 import {
   findingActionBadge,
   findingDisplayFlag,
+  findingOffersWording,
   findingStatusLabel,
   isBlockedFinding,
   type ScoutFinding,
   type ScoutReport,
 } from "@/lib/scout/types";
-import { comparisonRows } from "@/lib/template/publish";
+import {
+  comparisonHasVisibleDelta,
+  comparisonRows,
+} from "@/lib/template/publish";
 import type { TemplateDocument } from "@/lib/types";
 
 export function ScoutInbox({
@@ -278,7 +282,8 @@ function FindingCard({
   }
 
   const showAccept =
-    Boolean(finding.proposed && detail.trim()) &&
+    findingOffersWording(finding) &&
+    Boolean(detail.trim()) &&
     finding.action !== "no_change" &&
     finding.status === "open" &&
     !isBlockedFinding(finding);
@@ -332,8 +337,12 @@ function FindingCard({
             No checklist items for this typology on this source.
           </p>
         )}
-        {blocked || !finding.proposed ? null : <FindingComparison rows={rows} />}
-        {blocked || !finding.proposed?.detail ? null : (
+        {blocked ||
+        !findingOffersWording(finding) ||
+        !comparisonHasVisibleDelta(rows) ? null : (
+          <FindingComparison rows={rows} />
+        )}
+        {blocked || !findingOffersWording(finding) || !finding.proposed?.detail ? null : (
           <div className="space-y-1">
             <Label htmlFor={`${finding.id}-proposed`}>Proposed wording</Label>
             <Textarea
