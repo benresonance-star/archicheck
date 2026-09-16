@@ -410,6 +410,11 @@ function DocumentLensLists({
                 return (
                   <CollapseSection
                     key={`${group.stage.id}-${document.kind}`}
+                    className={
+                      editing
+                        ? "border-edit-border bg-edit text-edit-foreground"
+                        : undefined
+                    }
                     rememberScroll={rememberScroll}
                     restoreScroll={restoreScroll}
                     header={
@@ -487,7 +492,11 @@ function StageReferenceLists({
             return (
               <CollapseSection
                 key="stage-checks"
-                className="bg-muted/40"
+                className={
+                  editing
+                    ? "border-edit-border bg-edit text-edit-foreground"
+                    : "bg-muted/40"
+                }
                 rememberScroll={rememberScroll}
                 restoreScroll={restoreScroll}
                 header={
@@ -519,7 +528,11 @@ function StageReferenceLists({
             return (
               <CollapseSection
                 key={section.deliverable.id}
-                className="bg-muted/40"
+                className={
+                  editing
+                    ? "border-edit-border bg-edit text-edit-foreground"
+                    : "bg-muted/40"
+                }
                 rememberScroll={rememberScroll}
                 restoreScroll={restoreScroll}
                 header={

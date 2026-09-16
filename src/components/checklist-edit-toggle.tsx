@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 export function editToggleClass(editing: boolean): string {
   return editing
-    ? "border-edit-border bg-edit text-edit-foreground"
+    ? "border-edit-border bg-edit text-edit-foreground shadow-sm"
     : "border-border bg-card";
 }
 
@@ -18,7 +18,7 @@ export function editListClass(editing: boolean): string {
 
 export function editPageClass(editing: boolean): string {
   return editing
-    ? "rounded-2xl border border-edit-border bg-edit/80 p-3 sm:p-4"
+    ? "rounded-2xl border-2 border-edit-border bg-edit p-3 sm:p-4"
     : "";
 }
 
@@ -33,6 +33,7 @@ export function ChecklistEditToggle({
     <div
       className={cn(
         "flex min-h-11 items-center justify-between gap-3 rounded-xl border px-3",
+        editing && "border-l-4 border-l-edit-accent",
         editToggleClass(editing),
       )}
     >
@@ -44,6 +45,7 @@ export function ChecklistEditToggle({
         checked={editing}
         onCheckedChange={onChange}
         aria-label={editing ? "Stop editing checks" : "Edit checks"}
+        className={editing ? "data-checked:bg-edit-accent" : undefined}
       />
     </div>
   );

@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { editListClass } from "@/components/checklist-edit-toggle";
+import { cn } from "@/lib/utils";
 import { ProjectCheckList } from "@/components/checklist-item-card";
 import {
   arbvStageHeading,
@@ -70,17 +72,30 @@ export function DocumentChecklist({
         ) : null}
       </div>
       {grouped.length === 0 ? (
-        <ProjectCheckList
-          items={[]}
-          project={workspace.project}
-          template={workspace.template}
-          section={{ stageId, outputKind }}
-          editing={editing}
-          onWorkspace={apply}
-        />
+        <div
+          className={cn(
+            "space-y-3 rounded-2xl border p-3",
+            editListClass(editing),
+          )}
+        >
+          <ProjectCheckList
+            items={[]}
+            project={workspace.project}
+            template={workspace.template}
+            section={{ stageId, outputKind }}
+            editing={editing}
+            onWorkspace={apply}
+          />
+        </div>
       ) : (
         grouped.map((group) => (
-          <div key={group.stage.id} className="space-y-3">
+          <div
+            key={group.stage.id}
+            className={cn(
+              "space-y-3 rounded-2xl border p-3",
+              editListClass(editing),
+            )}
+          >
             <h2 className="font-heading text-lg leading-tight">
               {arbvStageHeading(group.stage)}
             </h2>
