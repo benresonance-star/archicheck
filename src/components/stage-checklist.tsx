@@ -39,6 +39,7 @@ export function StageChecklist({
   grokbot,
   prevHref,
   nextHref,
+  editing = false,
   onWorkspace,
 }: {
   project: ProjectDocument;
@@ -47,6 +48,7 @@ export function StageChecklist({
   grokbot?: GrokBotBrief;
   prevHref?: string;
   nextHref?: string;
+  editing?: boolean;
   onWorkspace?: (next: {
     project: ProjectDocument;
     template: TemplateDocument;
@@ -85,7 +87,7 @@ export function StageChecklist({
           </Button>
         ) : null}
       </div>
-      {stageContentSections(grouped, { includeEmptyStageChecks: true }).map(
+      {stageContentSections(grouped, { includeEmptyStageChecks: editing }).map(
         (section) => {
           switch (section.kind) {
             case "stage-checks":
@@ -105,6 +107,7 @@ export function StageChecklist({
                     project={workspace.project}
                     template={workspace.template}
                     section={{ stageId: stage.id }}
+                    editing={editing}
                     onWorkspace={apply}
                   />
                 </div>
@@ -117,6 +120,7 @@ export function StageChecklist({
                   items={section.items}
                   project={workspace.project}
                   template={workspace.template}
+                  editing={editing}
                   onWorkspace={apply}
                 />
               );
@@ -140,12 +144,14 @@ function DeliverableProjectBlock({
   items,
   project,
   template,
+  editing,
   onWorkspace,
 }: {
   deliverable: StageDeliverable;
   items: ChecklistItem[];
   project: ProjectDocument;
   template: TemplateDocument;
+  editing: boolean;
   onWorkspace: (next: {
     project: ProjectDocument;
     template: TemplateDocument;
@@ -215,6 +221,7 @@ function DeliverableProjectBlock({
           stageId: deliverable.stageId,
           deliverableId: deliverable.id,
         }}
+        editing={editing}
         onWorkspace={onWorkspace}
       />
     </div>

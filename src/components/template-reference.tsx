@@ -47,6 +47,7 @@ export function TemplateReference({
   initialTypology = "house",
   showStartProject = true,
   template = BUNDLED_TEMPLATE,
+  editing = false,
   onTemplate,
 }: {
   typology?: Typology;
@@ -54,6 +55,7 @@ export function TemplateReference({
   initialTypology?: Typology;
   showStartProject?: boolean;
   template?: TemplateDocument;
+  editing?: boolean;
   onTemplate?: (next: TemplateDocument) => void;
 }) {
   const [selected, setSelected] = useState<Typology>(
@@ -203,6 +205,7 @@ export function TemplateReference({
           restoreScroll={restoreScroll}
           template={template}
           typology={typology}
+          editing={editing}
           onTemplate={onTemplate}
         />
       ) : lens === "document" ? (
@@ -214,6 +217,7 @@ export function TemplateReference({
           rememberScroll={rememberScroll}
           restoreScroll={restoreScroll}
           template={template}
+          editing={editing}
           onTemplate={onTemplate}
         />
       ) : (
@@ -243,6 +247,7 @@ export function TemplateReference({
                   restoreScroll={restoreScroll}
                   template={template}
                   typology={typology}
+                  editing={editing}
                   onTemplate={onTemplate}
                 />
               </StagePanel>
@@ -366,6 +371,7 @@ function DocumentLensLists({
   rememberScroll,
   restoreScroll,
   template,
+  editing,
   onTemplate,
 }: {
   groups: StagedOutputLensGroup[];
@@ -375,6 +381,7 @@ function DocumentLensLists({
   rememberScroll: () => void;
   restoreScroll: () => void;
   template: TemplateDocument;
+  editing: boolean;
   onTemplate?: (next: TemplateDocument) => void;
 }) {
   return (
@@ -435,6 +442,7 @@ function DocumentLensLists({
                         stageId: group.stage.id,
                         outputKind: document.kind,
                       }}
+                      editing={editing}
                       onTemplate={onTemplate}
                     />
                   </CollapseSection>
@@ -456,6 +464,7 @@ function StageReferenceLists({
   restoreScroll,
   template,
   typology,
+  editing,
   onTemplate,
 }: {
   group: TemplateStageGroup;
@@ -465,12 +474,13 @@ function StageReferenceLists({
   restoreScroll?: () => void;
   template: TemplateDocument;
   typology: Typology;
+  editing: boolean;
   onTemplate?: (next: TemplateDocument) => void;
 }) {
   return (
     <div className="space-y-3">
       {stageContentSections(group, {
-        includeEmptyStageChecks: onTemplate != null,
+        includeEmptyStageChecks: onTemplate != null && editing,
       }).map((section) => {
         switch (section.kind) {
           case "stage-checks":
@@ -500,6 +510,7 @@ function StageReferenceLists({
                   template={template}
                   typology={typology}
                   section={{ stageId: group.stage.id }}
+                  editing={editing}
                   onTemplate={onTemplate}
                 />
               </CollapseSection>
@@ -534,6 +545,7 @@ function StageReferenceLists({
                     stageId: group.stage.id,
                     deliverableId: section.deliverable.id,
                   }}
+                  editing={editing}
                   onTemplate={onTemplate}
                 />
               </CollapseSection>

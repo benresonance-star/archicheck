@@ -35,6 +35,7 @@ export function ReferenceCheckList({
   template,
   typology,
   section,
+  editing = false,
   onTemplate,
 }: {
   items: ChecklistItem[];
@@ -47,9 +48,9 @@ export function ReferenceCheckList({
     deliverableId?: string;
     outputKind?: OutputKind;
   };
+  editing?: boolean;
   onTemplate?: (next: TemplateDocument) => void;
 }) {
-  const [reorder, setReorder] = useState(false);
   const [editor, setEditor] = useState<
     { mode: "add" } | { mode: "edit"; itemId: string } | null
   >(null);
@@ -58,7 +59,7 @@ export function ReferenceCheckList({
     editor?.mode === "edit"
       ? template.items.find((item) => item.id === editor.itemId)
       : undefined;
-  const editable = onTemplate != null;
+  const editable = onTemplate != null && editing;
 
   function applyAdd(draft: ChecklistItemDraft) {
     if (!onTemplate) {
@@ -94,26 +95,13 @@ export function ReferenceCheckList({
 
   return (
     <div className="space-y-2">
-      {editable ? (
-        <div className="flex justify-end">
-          <Button
-            type="button"
-            variant={reorder ? "default" : "outline"}
-            className="min-h-11"
-            aria-pressed={reorder}
-            onClick={() => setReorder((current) => !current)}
-          >
-            {reorder ? "Done reordering" : "Reorder / add"}
-          </Button>
-        </div>
-      ) : null}
       <TemplateCheckList
         items={items}
         ticks={ticks}
         onTicked={onTicked}
         templateVersion={template.version}
         templateChecksum={template.checksum}
-        reorder={editable && reorder}
+        reorder={editable}
         onReorder={(nextIds) => {
           if (!onTemplate) {
             return;
@@ -130,7 +118,7 @@ export function ReferenceCheckList({
             : undefined
         }
         trailing={
-          editable && reorder ? (
+          editable ? (
             <Button
               type="button"
               variant="outline"

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AppHeader } from "@/components/app-header";
+import { ChecklistEditToggle } from "@/components/checklist-edit-toggle";
 import { DocumentChecklist } from "@/components/document-checklist";
 import { loadProject, syncProjectImpacts } from "@/lib/client-store";
 import {
@@ -32,6 +33,7 @@ export function ProjectDocumentView({
     template: TemplateDocument;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
     void syncProjectImpacts(id)
@@ -105,6 +107,7 @@ export function ProjectDocumentView({
           {arbvStageHeading(stage)}
           {summary ? ` · ${summary}` : ""}
         </p>
+        <ChecklistEditToggle editing={editing} onChange={setEditing} />
         {openImpactCount(project) > 0 ? (
           <p className="text-sm">
             This job has a template impact notice.{" "}
@@ -119,6 +122,7 @@ export function ProjectDocumentView({
           template={template}
           stageId={stageId}
           outputKind={outputKind}
+          editing={editing}
           onWorkspace={setData}
           prevHref={
             prev ? `/p/${project.id}/d/${prev.stageId}/${prev.kind}` : undefined

@@ -23,6 +23,7 @@ export function DocumentChecklist({
   outputKind,
   prevHref,
   nextHref,
+  editing = false,
   onWorkspace,
 }: {
   project: ProjectDocument;
@@ -31,6 +32,7 @@ export function DocumentChecklist({
   outputKind: OutputKind;
   prevHref?: string;
   nextHref?: string;
+  editing?: boolean;
   onWorkspace?: (next: {
     project: ProjectDocument;
     template: TemplateDocument;
@@ -73,6 +75,7 @@ export function DocumentChecklist({
           project={workspace.project}
           template={workspace.template}
           section={{ stageId, outputKind }}
+          editing={editing}
           onWorkspace={apply}
         />
       ) : (
@@ -86,6 +89,7 @@ export function DocumentChecklist({
               project={workspace.project}
               template={workspace.template}
               section={{ stageId: group.stage.id, outputKind }}
+              editing={editing}
               onWorkspace={apply}
             />
           </div>

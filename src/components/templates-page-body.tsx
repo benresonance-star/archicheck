@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { ChecklistEditToggle } from "@/components/checklist-edit-toggle";
 import { FindingComparison } from "@/components/finding-comparison";
 import { TemplateReference } from "@/components/template-reference";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,7 @@ export function TemplatesPageBody({
   const [sourceTitle, setSourceTitle] = useState("");
   const [sourceUrl, setSourceUrl] = useState("");
   const [pending, setPending] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
     void loadLiveTemplate().then((row) => {
@@ -72,6 +74,7 @@ export function TemplatesPageBody({
 
   return (
     <div className="space-y-4">
+      <ChecklistEditToggle editing={editing} onChange={setEditing} />
       {changes.length > 0 ? (
         <div className="space-y-2 rounded-xl border border-border bg-muted/40 p-3">
           <p className="text-sm font-medium">
@@ -104,6 +107,7 @@ export function TemplatesPageBody({
       <TemplateReference
         initialTypology={initialTypology}
         template={working}
+        editing={editing}
         onTemplate={setDraft}
       />
       <Sheet open={reviewOpen} onOpenChange={setReviewOpen}>

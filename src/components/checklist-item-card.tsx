@@ -336,19 +336,20 @@ export function ProjectCheckList({
   project,
   template,
   section,
+  editing = false,
   onWorkspace,
 }: {
   items: ChecklistItem[];
   project: ProjectDocument;
   template: TemplateDocument;
   section: ProjectCheckSection;
+  editing?: boolean;
   onWorkspace: (next: {
     project: ProjectDocument;
     template: TemplateDocument;
   }) => void;
 }) {
   const [openId, setOpenId] = useState<string | null>(null);
-  const [reorder, setReorder] = useState(false);
   const [editor, setEditor] = useState<
     { mode: "add" } | { mode: "edit"; itemId: string } | null
   >(null);
@@ -416,29 +417,18 @@ export function ProjectCheckList({
 
   const drag = usePointerReorder({
     ids: siblingIds,
-    enabled: reorder && items.length > 1,
+    enabled: editing && items.length > 1,
     onCommit: (nextIds) => {
       void commitOrder(nextIds);
     },
   });
   const byId = new Map(items.map((item) => [item.id, item]));
-  const visible = (reorder ? drag.ids : siblingIds)
+  const visible = (editing ? drag.ids : siblingIds)
     .map((id) => byId.get(id))
     .filter((item): item is ChecklistItem => item != null);
 
   return (
     <>
-      <div className="flex justify-end">
-        <Button
-          type="button"
-          variant={reorder ? "default" : "outline"}
-          className="min-h-11"
-          aria-pressed={reorder}
-          onClick={() => setReorder((current) => !current)}
-        >
-          {reorder ? "Done reordering" : "Reorder / add"}
-        </Button>
-      </div>
       {items.length === 0 ? (
         <p className="text-sm text-muted-foreground">No checks in this list yet.</p>
       ) : (
@@ -457,7 +447,7 @@ export function ProjectCheckList({
                   setOpenId(item.id);
                 }}
                 leading={
-                  reorder ? (
+                  editing ? (
                     <DragHandle
                       label={item.title}
                       onPointerDown={(event) => drag.start(item.id, event)}
@@ -480,7 +470,7 @@ export function ProjectCheckList({
           ))}
         </ul>
       )}
-      {reorder ? (
+      {editing ? (
         <Button
           type="button"
           variant="outline"

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AppHeader } from "@/components/app-header";
+import { ChecklistEditToggle } from "@/components/checklist-edit-toggle";
 import { StageChecklist } from "@/components/stage-checklist";
 import { loadProject, syncProjectImpacts } from "@/lib/client-store";
 import { grokbotForStage } from "@/lib/template/vic-residential";
@@ -23,6 +24,7 @@ export function ProjectStageView({
     template: TemplateDocument;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
     void syncProjectImpacts(id)
@@ -78,6 +80,7 @@ export function ProjectStageView({
       />
       <main className="mx-auto max-w-3xl space-y-4 px-4 py-6">
         <p className="text-sm text-muted-foreground">{stage.summary}</p>
+        <ChecklistEditToggle editing={editing} onChange={setEditing} />
         {openImpactCount(project) > 0 ? (
           <p className="text-sm">
             This job has a template impact notice.{" "}
@@ -94,6 +97,7 @@ export function ProjectStageView({
           grokbot={grokbot}
           prevHref={prev ? `/p/${project.id}/s/${prev.id}` : undefined}
           nextHref={next ? `/p/${project.id}/s/${next.id}` : undefined}
+          editing={editing}
           onWorkspace={setData}
         />
       </main>

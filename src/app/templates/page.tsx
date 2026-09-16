@@ -20,7 +20,7 @@ export default async function TemplatesPage({
           </h1>
           <p className="text-muted-foreground leading-relaxed">
             House, townhouse and apartment lists from the live Victoria
-            residential template. Use <strong>Reorder / add</strong> to draft
+            residential template. Turn on <strong>Edit checks</strong> to draft
             checks that populate new projects. Publishing writes a new template
             version; existing jobs get an impact notice and keep their answers
             until they adopt. Use <strong>By document</strong> for the same
