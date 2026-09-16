@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { Stage, TemplateDocument, Typology } from "@/lib/types";
-import { itemsForTypology } from "@/lib/types";
+import { deliverableKindLabel, itemsForTypology } from "@/lib/types";
 
 export function StageIndex({
   template,
@@ -47,7 +47,22 @@ export function StageIndex({
                   <CardDescription>{stage.summary}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                  {(template.deliverables ?? [])
+                    .filter(
+                      (deliverable) =>
+                        deliverable.stageId === stage.id &&
+                        deliverable.appliesTo.includes(typology),
+                    )
+                    .map((deliverable) => (
+                      <p
+                        key={deliverable.id}
+                        className="text-sm text-muted-foreground"
+                      >
+                        {deliverableKindLabel(deliverable.kind)}:{" "}
+                        {deliverable.title}
+                      </p>
+                    ))}
+                  <p className="mt-2 text-xs uppercase tracking-wide text-muted-foreground">
                     Open this stage
                   </p>
                 </CardContent>

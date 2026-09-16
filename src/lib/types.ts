@@ -76,6 +76,7 @@ export type ImpactNotice = {
 export type AttachmentMeta = {
   id: string;
   itemId: string | null;
+  deliverableId?: string | null;
   filename: string;
   mimeType: string;
   size: number;
@@ -118,6 +119,18 @@ export type Stage = {
   summary: string;
 };
 
+export const DELIVERABLE_KINDS = ["drawing", "document"] as const;
+export type DeliverableKind = (typeof DELIVERABLE_KINDS)[number];
+
+export type StageDeliverable = {
+  id: string;
+  stageId: string;
+  kind: DeliverableKind;
+  title: string;
+  summary: string;
+  appliesTo: Typology[];
+};
+
 export type ChecklistResource = {
   label: string;
   url: string;
@@ -133,6 +146,7 @@ export type ChecklistItem = {
   references: string[];
   resources: ChecklistResource[];
   grokbotId: string;
+  deliverableId?: string;
 };
 
 export type GrokBotBrief = {
@@ -158,6 +172,7 @@ export type TemplateDocument = {
   stages: Stage[];
   items: ChecklistItem[];
   grokbots: GrokBotBrief[];
+  deliverables?: StageDeliverable[];
 };
 
 export type PackageAttachmentIndex = {
@@ -255,6 +270,17 @@ export function typologyLabel(typology: Typology): string {
       return "Apartment";
     default:
       return assertNever(typology, `Unknown typology: ${String(typology)}`);
+  }
+}
+
+export function deliverableKindLabel(kind: DeliverableKind): string {
+  switch (kind) {
+    case "drawing":
+      return "Drawing";
+    case "document":
+      return "Document";
+    default:
+      return assertNever(kind, `Unknown deliverable kind: ${String(kind)}`);
   }
 }
 

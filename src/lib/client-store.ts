@@ -241,6 +241,7 @@ export async function setAnswer(
 export async function addAttachment(input: {
   projectId: string;
   itemId: string | null;
+  deliverableId?: string | null;
   filename: string;
   mimeType: string;
   bytes: Uint8Array;
@@ -254,6 +255,7 @@ export async function addAttachment(input: {
   const attachment: AttachmentMeta = {
     id,
     itemId: input.itemId,
+    deliverableId: input.deliverableId ?? null,
     filename,
     mimeType: input.mimeType || "application/octet-stream",
     size: input.bytes.byteLength,

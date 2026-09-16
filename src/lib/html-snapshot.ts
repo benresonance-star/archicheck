@@ -4,11 +4,13 @@ import type {
   TemplateDocument,
 } from "@/lib/types";
 import {
+  deliverableKindLabel,
   itemsForTypology,
   statusLabel,
   typologyLabel,
 } from "@/lib/types";
 import { typologyMeta } from "@/lib/typology";
+import { groupStageContent } from "@/lib/template/group-stage";
 
 function escapeHtml(value: string): string {
   return value
@@ -47,20 +49,57 @@ export function renderSnapshotHtml(input: {
       if (stageItems.length === 0) {
         return "";
       }
-      const rows = stageItems.map((item) => itemRow(item, project)).join("");
+      const grouped = groupStageContent(
+        template,
+        stage.id,
+        project.site.typology,
+        stageItems,
+      );
+      const deliverableHtml = grouped.deliverables
+        .map((entry) => {
+          const files = project.attachments.filter(
+            (file) => file.deliverableId === entry.deliverable.id,
+          );
+          const fileList = files.length
+            ? `<ul>${files
+                .map(
+                  (file) =>
+                    `<li>${escapeHtml(file.filename)} · ${file.size} bytes</li>`,
+                )
+                .join("")}</ul>`
+            : `<p class="empty">No file stored on this drawing or document.</p>`;
+          const rows = entry.items
+            .map((item) => itemRow(item, project))
+            .join("");
+          return `<div class="item">
+            <div class="status">${escapeHtml(deliverableKindLabel(entry.deliverable.kind))}</div>
+            <h3>${escapeHtml(entry.deliverable.title)}</h3>
+            <p>${escapeHtml(entry.deliverable.summary)}</p>
+            ${fileList}
+            ${rows}
+          </div>`;
+        })
+        .join("");
+      const processRows = grouped.processItems
+        .map((item) => itemRow(item, project))
+        .join("");
       return `<section class="stage">
         <h2><span class="num">${stage.number}</span> ${escapeHtml(stage.title)}</h2>
         <p class="summary">${escapeHtml(stage.summary)}</p>
-        ${rows}
+        ${deliverableHtml}
+        ${processRows}
       </section>`;
     })
     .join("");
 
   const attachments = project.attachments
     .map((file) => {
-      const itemTitle =
-        template.items.find((item) => item.id === file.itemId)?.title ??
-        "Project";
+      const itemTitle = file.deliverableId
+        ? (template.deliverables ?? []).find(
+            (entry) => entry.id === file.deliverableId,
+          )?.title ?? "Drawing or document"
+        : template.items.find((item) => item.id === file.itemId)?.title ??
+          "Project";
       return `<li><strong>${escapeHtml(file.filename)}</strong> · ${file.size} bytes · SHA-256 ${escapeHtml(file.sha256.slice(0, 12))}… · ${escapeHtml(itemTitle)}</li>`;
     })
     .join("");

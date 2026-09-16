@@ -7,6 +7,10 @@ import type {
 } from "@/lib/types";
 import { TEMPLATE_FORMAT, FORMAT_VERSION } from "@/lib/types";
 import { resourcesForItem } from "@/lib/template/item-resources";
+import {
+  DELIVERABLE_CHECKS,
+  STAGE_DELIVERABLES,
+} from "@/lib/template/stage-deliverables";
 
 const ALL: Typology[] = ["house", "townhouse", "apartment"];
 const HOUSE: Typology[] = ["house"];
@@ -102,6 +106,7 @@ function item(
   appliesTo: Typology[],
   required: boolean,
   references: string[],
+  deliverableId?: string,
 ): ChecklistItem {
   if (references.length === 0 || references.some((value) => !value.trim())) {
     throw new Error(`Checklist item ${id} must cite at least one source`);
@@ -123,6 +128,7 @@ function item(
     references,
     resources,
     grokbotId: `bot-${stageId}`,
+    ...(deliverableId ? { deliverableId } : {}),
   };
 }
 
@@ -1019,6 +1025,18 @@ const ITEMS: ChecklistItem[] = [
     false,
     ["ARBV Code of Professional Conduct — document and maintain records"],
   ),
+  ...DELIVERABLE_CHECKS.map((entry) =>
+    item(
+      entry.id,
+      entry.stageId,
+      entry.title,
+      entry.detail,
+      entry.appliesTo,
+      entry.required,
+      entry.references,
+      entry.deliverableId,
+    ),
+  ),
 ];
 
 function bot(
@@ -1130,7 +1148,7 @@ function withChecksum(
   return {
     ...template,
     checksum:
-      "425063963fc4e193b44209ccb25b7e92db9ee9b88f538bef694032510410397d",
+      "889ff9a21d5f4e3e33a8f879c57cc63ee0fe10c65a445c8da9bb4277b4b6a9e4",
   };
 }
 
@@ -1138,14 +1156,15 @@ export const BUNDLED_TEMPLATE: TemplateDocument = withChecksum({
   format: TEMPLATE_FORMAT,
   formatVersion: FORMAT_VERSION,
   id: "vic-residential",
-  version: "1.0.5",
+  version: "1.0.6",
   title: "Victoria residential — houses, townhouses and apartments",
   jurisdiction: "Victoria, Australia",
   description:
-    "ARBV-aligned stages from pre-design through post-occupancy, with Clause 54 / 55 / 58, Better Apartments Design Standards (BADS) on apartment items, NCC 2025 (in force in Victoria from 1 May 2026), and apartment developer-bond notes.",
+    "ARBV-aligned stages from pre-design through post-occupancy, with a drawing or document and associated checklist on each stage, Clause 54 / 55 / 58, Better Apartments Design Standards (BADS) on apartment items, NCC 2025 (in force in Victoria from 1 May 2026), and apartment developer-bond notes.",
   stages: STAGES,
   items: ITEMS,
   grokbots: GROKBOTS,
+  deliverables: STAGE_DELIVERABLES,
 });
 
 export function grokbotForStage(

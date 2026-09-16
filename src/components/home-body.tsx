@@ -54,10 +54,11 @@ export function HomeBody() {
           </div>
           <p className="text-sm text-muted-foreground leading-relaxed">
             Checkable copies of the bundled house, townhouse and apartment
-            lists. Apartment items include BADS (Better Apartments Design
-            Standards) as separate ticks. Each item cites a Source and helper
-            Resource(s) as blue links on a neutral panel. Use them as a phone reference
-            before you open a project.
+            lists. Each stage has a drawing or document and an associated
+            checklist, then the stage checks. Apartment items include BADS
+            (Better Apartments Design Standards) as separate ticks. Each item
+            cites a Source and helper Resource(s) as blue links on a neutral
+            panel. Use them as a phone reference before you open a project.
           </p>
           <TemplateReference />
         </section>

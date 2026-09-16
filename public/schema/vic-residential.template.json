@@ -2,10 +2,10 @@
   "format": "vic-arch-checklist-template",
   "formatVersion": "1.0.0",
   "id": "vic-residential",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "title": "Victoria residential — houses, townhouses and apartments",
   "jurisdiction": "Victoria, Australia",
-  "description": "ARBV-aligned stages from pre-design through post-occupancy, with Clause 54 / 55 / 58, Better Apartments Design Standards (BADS) on apartment items, NCC 2025 (in force in Victoria from 1 May 2026), and apartment developer-bond notes.",
+  "description": "ARBV-aligned stages from pre-design through post-occupancy, with a drawing or document and associated checklist on each stage, Clause 54 / 55 / 58, Better Apartments Design Standards (BADS) on apartment items, NCC 2025 (in force in Victoria from 1 May 2026), and apartment developer-bond notes.",
   "stages": [
     {
       "id": "pre-design",
@@ -2607,6 +2607,1216 @@
         }
       ],
       "grokbotId": "bot-post-occupancy"
+    },
+    {
+      "id": "dw-pd-titleblock",
+      "stageId": "pre-design",
+      "title": "Title block, north, scale and revision",
+      "detail": "Project name, address, north point, scale (or NTS), date and revision are on the sheet.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "ARBV Guideline — Client–architect agreements",
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-pre-design",
+      "deliverableId": "del-pd-site"
+    },
+    {
+      "id": "dw-pd-boundaries",
+      "stageId": "pre-design",
+      "title": "Title boundaries, easements and covenants plotted",
+      "detail": "Current title, plan of subdivision, easements, covenants and S173 agreements are plotted or noted on the drawing.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Land Use Victoria title search"
+      ],
+      "resources": [
+        {
+          "label": "LANDATA",
+          "url": "https://www.landata.vic.gov.au/"
+        }
+      ],
+      "grokbotId": "bot-pre-design",
+      "deliverableId": "del-pd-site"
+    },
+    {
+      "id": "dw-pd-overlays",
+      "stageId": "pre-design",
+      "title": "Zone, overlays and hazard notes",
+      "detail": "Zone, overlays, flood, bushfire and heritage notes that affect siting are on the drawing or a keyed schedule.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Victoria Planning Provisions",
+        "Planning scheme maps"
+      ],
+      "resources": [
+        {
+          "label": "VicPlan maps",
+          "url": "https://mapshare.vic.gov.au/vicplan/"
+        },
+        {
+          "label": "Victorian planning schemes",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/"
+        }
+      ],
+      "grokbotId": "bot-pre-design",
+      "deliverableId": "del-pd-site"
+    },
+    {
+      "id": "dw-pd-existing",
+      "stageId": "pre-design",
+      "title": "Existing buildings, trees, services and photos",
+      "detail": "Existing buildings, significant trees, services and photo locations are keyed to the plan.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-pre-design",
+      "deliverableId": "del-pd-site"
+    },
+    {
+      "id": "dw-sk-titleblock",
+      "stageId": "concept",
+      "title": "Title block and option labels",
+      "detail": "Each sketch sheet has a title block, option name and date so the preferred scheme can be identified later.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "ARBV Guideline — Client–architect agreements"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-concept",
+      "deliverableId": "del-sk-concept"
+    },
+    {
+      "id": "dw-sk-plans",
+      "stageId": "concept",
+      "title": "Plans, massing and storeys",
+      "detail": "Plans and massing show dwelling count, storeys and a readable scale or key dimensions.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "VPP Clause 54",
+        "VPP Clause 55",
+        "VPP Clause 58"
+      ],
+      "resources": [
+        {
+          "label": "VPP Clause 54",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/54"
+        },
+        {
+          "label": "VPP Clause 55",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/55"
+        },
+        {
+          "label": "VPP Clause 58",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/58"
+        }
+      ],
+      "grokbotId": "bot-concept",
+      "deliverableId": "del-sk-concept"
+    },
+    {
+      "id": "dw-sk-solar",
+      "stageId": "concept",
+      "title": "Orientation and 7-star testing",
+      "detail": "North, living-room orientation and a note on NatHERS / 7-star testing of the preferred option.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NatHERS",
+        "NCC 2025 energy efficiency (H6)"
+      ],
+      "resources": [
+        {
+          "label": "NatHERS",
+          "url": "https://www.nathers.gov.au/"
+        },
+        {
+          "label": "NCC 2025 energy efficiency (H6)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted/volume-two/h-class-1-and-10-buildings/part-h6-energy-efficiency"
+        }
+      ],
+      "grokbotId": "bot-concept",
+      "deliverableId": "del-sk-concept"
+    },
+    {
+      "id": "dw-sk-option",
+      "stageId": "concept",
+      "title": "Preferred option for client sign-off",
+      "detail": "The preferred option is labelled and ready for the client to sign before design development.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "ARBV Guideline — Client–architect agreements"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-concept",
+      "deliverableId": "del-sk-concept"
+    },
+    {
+      "id": "dw-dd-index",
+      "stageId": "design-development",
+      "title": "Drawing index and revision",
+      "detail": "A drawing index lists every DD sheet. Revision and date match across the set.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-design-development",
+      "deliverableId": "del-dd-set"
+    },
+    {
+      "id": "dw-dd-coord",
+      "stageId": "design-development",
+      "title": "Plans, elevations and sections coordinated",
+      "detail": "Plans, elevations and sections agree on levels, setbacks, openings and roof form.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-design-development",
+      "deliverableId": "del-dd-set"
+    },
+    {
+      "id": "dw-dd-esd",
+      "stageId": "design-development",
+      "title": "Materials, ESD and amenity notes",
+      "detail": "Materials, ESD and amenity notes needed for lodgement or documentation freeze are on the drawings.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2025 (ABCB)",
+        "Better Apartments Design Standards"
+      ],
+      "resources": [
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
+        },
+        {
+          "label": "Better Apartments Design Standards",
+          "url": "https://www.planning.vic.gov.au/guides-and-resources/guides/all-guides/better-apartments"
+        }
+      ],
+      "grokbotId": "bot-design-development",
+      "deliverableId": "del-dd-set"
+    },
+    {
+      "id": "dw-dd-consult",
+      "stageId": "design-development",
+      "title": "Consultant inputs referenced",
+      "detail": "Structural and services inputs are overlayed or listed so clashes are visible before documentation.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-design-development",
+      "deliverableId": "del-dd-set"
+    },
+    {
+      "id": "dw-tp-title",
+      "stageId": "town-planning",
+      "title": "Title block matches the application",
+      "detail": "Project name, address, revision and drawing numbers match the planning application form.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Planning and Environment Act 1987 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "Planning and Environment Act 1987 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/planning-and-environment-act-1987"
+        }
+      ],
+      "grokbotId": "bot-town-planning",
+      "deliverableId": "del-tp-set"
+    },
+    {
+      "id": "dw-tp-assessment",
+      "stageId": "town-planning",
+      "title": "Clause 54 / 55 / 58 assessment drawings",
+      "detail": "Neighbourhood and site description, shadow, garden area and other assessment sheets required by the applicable clause are in the set — or the job is marked N/A if no permit is required.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "VPP Clause 54",
+        "VPP Clause 55",
+        "VPP Clause 58"
+      ],
+      "resources": [
+        {
+          "label": "VPP Clause 54",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/54"
+        },
+        {
+          "label": "VPP Clause 55",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/55"
+        },
+        {
+          "label": "VPP Clause 58",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/58"
+        }
+      ],
+      "grokbotId": "bot-town-planning",
+      "deliverableId": "del-tp-set"
+    },
+    {
+      "id": "dw-tp-summary",
+      "stageId": "town-planning",
+      "title": "Development summary table",
+      "detail": "Heights, setbacks, garden area, parking, site coverage and dwelling mix are tabulated on a drawing.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "VPP Clause 54",
+        "VPP Clause 55",
+        "VPP Clause 58"
+      ],
+      "resources": [
+        {
+          "label": "VPP Clause 54",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/54"
+        },
+        {
+          "label": "VPP Clause 55",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/55"
+        },
+        {
+          "label": "VPP Clause 58",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/58"
+        }
+      ],
+      "grokbotId": "bot-town-planning",
+      "deliverableId": "del-tp-set"
+    },
+    {
+      "id": "dw-tp-neighbour",
+      "stageId": "town-planning",
+      "title": "Neighbourhood and site description",
+      "detail": "Streetscape, adjoining secluded private open space and existing conditions are drawn, not only photographed.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "VPP Clause 54",
+        "VPP Clause 55"
+      ],
+      "resources": [
+        {
+          "label": "VPP Clause 54",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/54"
+        },
+        {
+          "label": "VPP Clause 55",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/55"
+        }
+      ],
+      "grokbotId": "bot-town-planning",
+      "deliverableId": "del-tp-set"
+    },
+    {
+      "id": "dw-cd-index",
+      "stageId": "documentation",
+      "title": "Working drawing index and revisions",
+      "detail": "The drawing index, revisions and dates match the set issued for building permit.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Building Act 1993 (Vic)",
+        "Building Regulations 2018 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "Building Act 1993 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-act-1993"
+        },
+        {
+          "label": "Building Regulations 2018 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/statutory-rules/building-regulations-2018/007"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-working"
+    },
+    {
+      "id": "dw-cd-coord",
+      "stageId": "documentation",
+      "title": "Plans, elevations, sections and details coordinated",
+      "detail": "Architectural sheets agree with each other before they go to the relevant building surveyor.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-working"
+    },
+    {
+      "id": "dw-cd-ncc",
+      "stageId": "documentation",
+      "title": "NCC 2025 notes on the drawings",
+      "detail": "Livable housing, energy, waterproofing and condensation notes required by NCC 2025 (Vic from 1 May 2026) are on the set or clearly referenced to the spec.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2025 (ABCB)",
+        "NCC 2025 Victorian variations (BPC)"
+      ],
+      "resources": [
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
+        },
+        {
+          "label": "NCC 2025 Victorian variations (BPC)",
+          "url": "https://www.vba.vic.gov.au/building/regulatory-framework/ncc-2022/ncc-2025-amended-variations"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-working"
+    },
+    {
+      "id": "dw-cd-endorsed",
+      "stageId": "documentation",
+      "title": "Matches endorsed planning drawings",
+      "detail": "Working drawings match endorsed planning drawings, or approved variations are clouded and noted.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Planning and Environment Act 1987 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "Planning and Environment Act 1987 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/planning-and-environment-act-1987"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-working"
+    },
+    {
+      "id": "doc-spec-rev",
+      "stageId": "documentation",
+      "title": "Specification revision matches the drawings",
+      "detail": "The spec revision and date match the working drawing issue.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-spec"
+    },
+    {
+      "id": "doc-spec-ncc",
+      "stageId": "documentation",
+      "title": "NCC 2025 and standards cited",
+      "detail": "The spec cites NCC 2025 Volume Two / Housing Provisions and the Australian Standards actually used.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2025 (ABCB)",
+        "Standards Australia"
+      ],
+      "resources": [
+        {
+          "label": "NCC 2025 (ABCB)",
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
+        },
+        {
+          "label": "Standards Australia",
+          "url": "https://www.standards.org.au/"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-spec"
+    },
+    {
+      "id": "doc-spec-finishes",
+      "stageId": "documentation",
+      "title": "Finishes, waterproofing and bushfire (if any)",
+      "detail": "Finishes, wet-area waterproofing and, if the lot is BAL-rated, bushfire-construction requirements are called up.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2025 damp and weatherproofing (H2)",
+        "Building Regulations 2018 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "NCC 2025 damp and weatherproofing (H2)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted/volume-two/h-class-1-and-10-buildings/part-h2-damp-and-weatherproofing"
+        },
+        {
+          "label": "Building Regulations 2018 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/statutory-rules/building-regulations-2018/007"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-spec"
+    },
+    {
+      "id": "doc-spec-prelim",
+      "stageId": "documentation",
+      "title": "Preliminaries match the building contract",
+      "detail": "Preliminaries, PC sums and provisional sums match what will be tendered or contracted.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        }
+      ],
+      "grokbotId": "bot-documentation",
+      "deliverableId": "del-cd-spec"
+    },
+    {
+      "id": "doc-tn-list",
+      "stageId": "tender",
+      "title": "Issued drawings and spec listed",
+      "detail": "A transmittal or issue sheet lists every drawing and spec section sent to tenderers.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-tender",
+      "deliverableId": "del-tn-set"
+    },
+    {
+      "id": "doc-tn-addenda",
+      "stageId": "tender",
+      "title": "Addenda recorded",
+      "detail": "Each addendum is numbered, dated and issued to every tenderer.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-tender",
+      "deliverableId": "del-tn-set"
+    },
+    {
+      "id": "doc-tn-form",
+      "stageId": "tender",
+      "title": "Tender form and selection criteria",
+      "detail": "The tender form, closing time and selection criteria are in the set.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        }
+      ],
+      "grokbotId": "bot-tender",
+      "deliverableId": "del-tn-set"
+    },
+    {
+      "id": "doc-tn-sums",
+      "stageId": "tender",
+      "title": "PC and provisional sums listed",
+      "detail": "Known prime-cost and provisional sums are listed so tenders can be compared.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        }
+      ],
+      "grokbotId": "bot-tender",
+      "deliverableId": "del-tn-set"
+    },
+    {
+      "id": "dw-ca-ifc",
+      "stageId": "contract-admin",
+      "title": "Issued-for-construction stamp and revision",
+      "detail": "The set is stamped or titled for construction and carries a unique revision.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Building Act 1993 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "Building Act 1993 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-act-1993"
+        }
+      ],
+      "grokbotId": "bot-contract-admin",
+      "deliverableId": "del-ca-ifc"
+    },
+    {
+      "id": "dw-ca-permit",
+      "stageId": "contract-admin",
+      "title": "Building-permit drawings distinguished",
+      "detail": "Building-permit drawings are distinct from tender sketches so the builder is not building an old issue.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Building Act 1993 (Vic)",
+        "Building Regulations 2018 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "Building Act 1993 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-act-1993"
+        },
+        {
+          "label": "Building Regulations 2018 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/statutory-rules/building-regulations-2018/007"
+        }
+      ],
+      "grokbotId": "bot-contract-admin",
+      "deliverableId": "del-ca-ifc"
+    },
+    {
+      "id": "dw-ca-rfi",
+      "stageId": "contract-admin",
+      "title": "RFIs and site instructions that change drawings",
+      "detail": "RFIs and site instructions that change the set are clouded or listed against the current revision.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-contract-admin",
+      "deliverableId": "del-ca-ifc"
+    },
+    {
+      "id": "dw-ca-issue",
+      "stageId": "contract-admin",
+      "title": "Latest set issued to builder and RBS",
+      "detail": "The current issue has been sent to the builder and the relevant building surveyor.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Building Act 1993 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "Building Act 1993 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-act-1993"
+        }
+      ],
+      "grokbotId": "bot-contract-admin",
+      "deliverableId": "del-ca-ifc"
+    },
+    {
+      "id": "doc-pc-inspect",
+      "stageId": "practical-completion",
+      "title": "Inspection date, attendees and weather",
+      "detail": "The PC inspection record names who attended, the date and weather.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        }
+      ],
+      "grokbotId": "bot-practical-completion",
+      "deliverableId": "del-pc-record"
+    },
+    {
+      "id": "doc-pc-defects",
+      "stageId": "practical-completion",
+      "title": "Defects listed by location",
+      "detail": "Defects are listed by room or location, with photos where they help.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        }
+      ],
+      "grokbotId": "bot-practical-completion",
+      "deliverableId": "del-pc-record"
+    },
+    {
+      "id": "doc-pc-handover",
+      "stageId": "practical-completion",
+      "title": "Keys, manuals and certificates listed",
+      "detail": "Keys, operation manuals, occupancy permit and certificates are listed as handed over.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Building Act 1993 (Vic)",
+        "Building Regulations 2018 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "Building Act 1993 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-act-1993"
+        },
+        {
+          "label": "Building Regulations 2018 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/statutory-rules/building-regulations-2018/007"
+        }
+      ],
+      "grokbotId": "bot-practical-completion",
+      "deliverableId": "del-pc-record"
+    },
+    {
+      "id": "doc-pc-cert",
+      "stageId": "practical-completion",
+      "title": "Practical completion certificate or letter",
+      "detail": "The PC certificate or letter is on the project record with this list attached.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        }
+      ],
+      "grokbotId": "bot-practical-completion",
+      "deliverableId": "del-pc-record"
+    },
+    {
+      "id": "doc-dlp-dates",
+      "stageId": "defects-liability",
+      "title": "DLP start and end dates",
+      "detail": "The register records contractual DLP start and end dates.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        }
+      ],
+      "grokbotId": "bot-defects-liability",
+      "deliverableId": "del-dlp-register"
+    },
+    {
+      "id": "doc-dlp-open",
+      "stageId": "defects-liability",
+      "title": "Open and closed defects with dates",
+      "detail": "Each defect has raised and closed dates, or is still open.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-defects-liability",
+      "deliverableId": "del-dlp-register"
+    },
+    {
+      "id": "doc-dlp-bond",
+      "stageId": "defects-liability",
+      "title": "Apartment bond windows (if captured)",
+      "detail": "If the building is a captured apartment building, the 15–18 and 21–24 month bond inspection windows are noted. Otherwise mark N/A.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Apartment developer bond"
+      ],
+      "resources": [
+        {
+          "label": "Apartment developer bond",
+          "url": "https://www.vic.gov.au/new-bond-system-apartment-builders"
+        }
+      ],
+      "grokbotId": "bot-defects-liability",
+      "deliverableId": "del-dlp-register"
+    },
+    {
+      "id": "doc-dlp-notices",
+      "stageId": "defects-liability",
+      "title": "Builder notifications on file",
+      "detail": "Written notices to the builder about remaining defects are stored with this register.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        }
+      ],
+      "grokbotId": "bot-defects-liability",
+      "deliverableId": "del-dlp-register"
+    },
+    {
+      "id": "doc-fc-inspect",
+      "stageId": "final-certificate",
+      "title": "Final inspection notes",
+      "detail": "A final inspection after DLP is recorded, or the reason it was not required.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        }
+      ],
+      "grokbotId": "bot-final-certificate",
+      "deliverableId": "del-fc-pack"
+    },
+    {
+      "id": "doc-fc-warr",
+      "stageId": "final-certificate",
+      "title": "Warranties and certificates listed",
+      "detail": "Domestic building insurance, occupancy permit and product warranties are listed in the pack.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)",
+        "Building Act 1993 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        },
+        {
+          "label": "Building Act 1993 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-act-1993"
+        }
+      ],
+      "grokbotId": "bot-final-certificate",
+      "deliverableId": "del-fc-pack"
+    },
+    {
+      "id": "doc-fc-security",
+      "stageId": "final-certificate",
+      "title": "Security and retention release notes",
+      "detail": "Retention or security release is noted against the contract.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Domestic Building Contracts Act 1995 (Vic)",
+        "Security of Payment Act 2002 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "Domestic Building Contracts Act 1995 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/domestic-building-contracts-act-1995"
+        },
+        {
+          "label": "Security of Payment Act 2002 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/building-and-construction-industry-security-payment-act-2002"
+        }
+      ],
+      "grokbotId": "bot-final-certificate",
+      "deliverableId": "del-fc-pack"
+    },
+    {
+      "id": "doc-fc-archive",
+      "stageId": "final-certificate",
+      "title": "Archive of permits, drawings and this ZIP",
+      "detail": "The pack lists where permits, the drawing record and this project ZIP are stored.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Victorian Architects Code of Professional Conduct",
+        "Architects Act 1991 (Vic)"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        },
+        {
+          "label": "Architects Act 1991 (Vic)",
+          "url": "https://www.legislation.vic.gov.au/in-force/acts/architects-act-1991"
+        }
+      ],
+      "grokbotId": "bot-final-certificate",
+      "deliverableId": "del-fc-pack"
+    },
+    {
+      "id": "doc-poe-dates",
+      "stageId": "post-occupancy",
+      "title": "Interview or visit dates",
+      "detail": "Seasonal visit or interview dates are recorded (winter and summer where possible).",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "ARBV"
+      ],
+      "resources": [
+        {
+          "label": "ARBV",
+          "url": "https://www.arbv.vic.gov.au/"
+        }
+      ],
+      "grokbotId": "bot-post-occupancy",
+      "deliverableId": "del-poe-record"
+    },
+    {
+      "id": "doc-poe-comfort",
+      "stageId": "post-occupancy",
+      "title": "Comfort, energy and condensation notes",
+      "detail": "Occupant notes on winter/summer comfort, bills or NatHERS vs actual, and condensation are written down.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "NCC 2025 energy efficiency (H6)",
+        "NatHERS"
+      ],
+      "resources": [
+        {
+          "label": "NCC 2025 energy efficiency (H6)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted/volume-two/h-class-1-and-10-buildings/part-h6-energy-efficiency"
+        },
+        {
+          "label": "NatHERS",
+          "url": "https://www.nathers.gov.au/"
+        }
+      ],
+      "grokbotId": "bot-post-occupancy",
+      "deliverableId": "del-poe-record"
+    },
+    {
+      "id": "doc-poe-landscape",
+      "stageId": "post-occupancy",
+      "title": "Landscape establishment",
+      "detail": "Deep soil, planting and irrigation notes after the first seasons.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "VPP Clause 55",
+        "VPP Clause 58"
+      ],
+      "resources": [
+        {
+          "label": "VPP Clause 55",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/55"
+        },
+        {
+          "label": "VPP Clause 58",
+          "url": "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/58"
+        }
+      ],
+      "grokbotId": "bot-post-occupancy",
+      "deliverableId": "del-poe-record"
+    },
+    {
+      "id": "doc-poe-lessons",
+      "stageId": "post-occupancy",
+      "title": "Lessons for the next Victorian residential job",
+      "detail": "A short list of what to change on the next house, townhouse or apartment.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ],
+      "required": true,
+      "references": [
+        "Victorian Architects Code of Professional Conduct"
+      ],
+      "resources": [
+        {
+          "label": "ARBV — working as an architect",
+          "url": "https://www.arbv.vic.gov.au/working-architect"
+        }
+      ],
+      "grokbotId": "bot-post-occupancy",
+      "deliverableId": "del-poe-record"
     }
   ],
   "grokbots": [
@@ -2798,5 +4008,151 @@
       ]
     }
   ],
-  "checksum": "425063963fc4e193b44209ccb25b7e92db9ee9b88f538bef694032510410397d"
+  "deliverables": [
+    {
+      "id": "del-pd-site",
+      "stageId": "pre-design",
+      "kind": "drawing",
+      "title": "Site information drawing",
+      "summary": "A site plan that carries title, survey, overlays and keyed photos before sketching starts.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ]
+    },
+    {
+      "id": "del-sk-concept",
+      "stageId": "concept",
+      "kind": "drawing",
+      "title": "Concept sketch set",
+      "summary": "Plans and massing for the preferred option the client can sign.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ]
+    },
+    {
+      "id": "del-dd-set",
+      "stageId": "design-development",
+      "kind": "drawing",
+      "title": "Design development set",
+      "summary": "Coordinated plans, elevations and sections ready to lodge or to freeze for documentation.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ]
+    },
+    {
+      "id": "del-tp-set",
+      "stageId": "town-planning",
+      "kind": "drawing",
+      "title": "Town planning drawing set",
+      "summary": "The application drawings and assessment sheets. Mark N/A on the job if no planning permit is required.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ]
+    },
+    {
+      "id": "del-cd-working",
+      "stageId": "documentation",
+      "kind": "drawing",
+      "title": "Working drawings",
+      "summary": "The building-permit working drawing set, coordinated with endorsed planning drawings.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ]
+    },
+    {
+      "id": "del-cd-spec",
+      "stageId": "documentation",
+      "kind": "document",
+      "title": "Specification",
+      "summary": "Written spec that matches the working drawing revision and cites NCC 2025.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ]
+    },
+    {
+      "id": "del-tn-set",
+      "stageId": "tender",
+      "kind": "document",
+      "title": "Tender set",
+      "summary": "The issued drawings, spec, addenda and tender form sent to builders.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ]
+    },
+    {
+      "id": "del-ca-ifc",
+      "stageId": "contract-admin",
+      "kind": "drawing",
+      "title": "For-construction issue",
+      "summary": "The stamped for-construction set issued to the builder and the relevant building surveyor.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ]
+    },
+    {
+      "id": "del-pc-record",
+      "stageId": "practical-completion",
+      "kind": "document",
+      "title": "Defects list and PC record",
+      "summary": "Inspection notes, defects list, handover items and the practical completion certificate or letter.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ]
+    },
+    {
+      "id": "del-dlp-register",
+      "stageId": "defects-liability",
+      "kind": "document",
+      "title": "Defects close-out register",
+      "summary": "Open and closed defects through the contractual defects liability period.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ]
+    },
+    {
+      "id": "del-fc-pack",
+      "stageId": "final-certificate",
+      "kind": "document",
+      "title": "Final certificate pack",
+      "summary": "Final inspection, warranties, security release notes and the archive of this job.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ]
+    },
+    {
+      "id": "del-poe-record",
+      "stageId": "post-occupancy",
+      "kind": "document",
+      "title": "Post-occupancy evaluation record",
+      "summary": "Seasonal comfort, energy and landscape notes after people have lived in the building.",
+      "appliesTo": [
+        "house",
+        "townhouse",
+        "apartment"
+      ]
+    }
+  ],
+  "checksum": "889ff9a21d5f4e3e33a8f879c57cc63ee0fe10c65a445c8da9bb4277b4b6a9e4"
 }

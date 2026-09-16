@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/accordion";
 import { ItemResources } from "@/components/item-resources";
 import { SourceCitations } from "@/components/source-citations";
+import { DeliverableHeading } from "@/components/deliverable-heading";
 import { BUNDLED_TEMPLATE } from "@/lib/template/vic-residential";
 import {
   emptyTemplateTicks,
@@ -20,6 +21,7 @@ import {
   loadTemplateTicks,
   referenceProgress,
   saveTemplateTicks,
+  type TemplateStageGroup,
   type TemplateTicks,
 } from "@/lib/template-reference";
 import { typologyLabel, type ChecklistItem, type Typology } from "@/lib/types";
@@ -167,21 +169,11 @@ export function TemplateReference({
           No generic items for this view.
         </p>
       ) : stageId ? (
-        <ul className="space-y-2">
-          {visibleGroups[0]?.items.map((item) => (
-            <li key={item.id}>
-              <ReferenceItem
-                title={item.title}
-                detail={item.detail}
-                required={item.required}
-                references={item.references}
-                resources={item.resources}
-                ticked={Boolean(ticks[typology][item.id])}
-                onTicked={(value) => setTicked(item.id, value)}
-              />
-            </li>
-          ))}
-        </ul>
+        <StageReferenceLists
+          group={visibleGroups[0]}
+          ticks={ticks[typology]}
+          onTicked={setTicked}
+        />
       ) : (
         <Accordion
           type="multiple"
@@ -228,21 +220,13 @@ export function TemplateReference({
                   </span>
                 </AccordionTrigger>
                 <AccordionContent>
-                  <ul className="space-y-2 pb-2">
-                    {group.items.map((item) => (
-                      <li key={item.id}>
-                        <ReferenceItem
-                          title={item.title}
-                          detail={item.detail}
-                          required={item.required}
-                          references={item.references}
-                          resources={item.resources}
-                          ticked={Boolean(ticks[typology][item.id])}
-                          onTicked={(value) => setTicked(item.id, value)}
-                        />
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="pb-2">
+                    <StageReferenceLists
+                      group={group}
+                      ticks={ticks[typology]}
+                      onTicked={setTicked}
+                    />
+                  </div>
                 </AccordionContent>
               </AccordionItem>
             );
@@ -268,6 +252,69 @@ export function TemplateReference({
         </Button>
       </div>
     </section>
+  );
+}
+
+function StageReferenceLists({
+  group,
+  ticks,
+  onTicked,
+}: {
+  group: TemplateStageGroup;
+  ticks: Record<string, boolean>;
+  onTicked: (itemId: string, ticked: boolean) => void;
+}) {
+  return (
+    <div className="space-y-4">
+      {group.deliverables.map((entry) => (
+        <div
+          key={entry.deliverable.id}
+          className="space-y-2 rounded-xl border border-border bg-muted/40 p-3"
+        >
+          <DeliverableHeading deliverable={entry.deliverable} />
+          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Associated checklist
+          </p>
+          <ul className="space-y-2">
+            {entry.items.map((item) => (
+              <li key={item.id}>
+                <ReferenceItem
+                  title={item.title}
+                  detail={item.detail}
+                  required={item.required}
+                  references={item.references}
+                  resources={item.resources}
+                  ticked={Boolean(ticks[item.id])}
+                  onTicked={(value) => onTicked(item.id, value)}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+      {group.processItems.length > 0 ? (
+        <div className="space-y-2">
+          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Stage checks
+          </p>
+          <ul className="space-y-2">
+            {group.processItems.map((item) => (
+              <li key={item.id}>
+                <ReferenceItem
+                  title={item.title}
+                  detail={item.detail}
+                  required={item.required}
+                  references={item.references}
+                  resources={item.resources}
+                  ticked={Boolean(ticks[item.id])}
+                  onTicked={(value) => onTicked(item.id, value)}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+    </div>
   );
 }
 

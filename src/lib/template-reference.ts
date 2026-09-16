@@ -1,4 +1,5 @@
 import { BUNDLED_TEMPLATE } from "@/lib/template/vic-residential";
+import { groupStageContent, type StageDeliverableGroup } from "@/lib/template/group-stage";
 import {
   itemsForTypology,
   TYPOLOGIES,
@@ -15,6 +16,8 @@ export type TemplateTicks = Record<Typology, Record<string, boolean>>;
 export type TemplateStageGroup = {
   stage: Stage;
   items: ChecklistItem[];
+  deliverables: StageDeliverableGroup[];
+  processItems: ChecklistItem[];
 };
 
 export function emptyTemplateTicks(): TemplateTicks {
@@ -66,10 +69,21 @@ export function groupedTemplateStages(
 ): TemplateStageGroup[] {
   const items = itemsForTypology(template.items, typology);
   return template.stages
-    .map((stage) => ({
-      stage,
-      items: items.filter((item) => item.stageId === stage.id),
-    }))
+    .map((stage) => {
+      const stageItems = items.filter((entry) => entry.stageId === stage.id);
+      const grouped = groupStageContent(
+        template,
+        stage.id,
+        typology,
+        stageItems,
+      );
+      return {
+        stage,
+        items: stageItems,
+        deliverables: grouped.deliverables,
+        processItems: grouped.processItems,
+      };
+    })
     .filter((group) => group.items.length > 0);
 }
 

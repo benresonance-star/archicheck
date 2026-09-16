@@ -28,6 +28,7 @@ A standalone `project.json` import restores answers, notes, and the template *as
 - `template.id` + `template.version` + `template.checksum` bind the project to the template copy stored in the ZIP. Import does **not** silently upgrade to a newer bundled template.
 - `answers` is a map keyed by checklist item id. Unknown keys are kept. Notes are ordinary strings, including empty strings.
 - Checklist items cite `references` (instrument names). Optional `resources` are `{label, url}` helper links (`https://` only). Bundled items always include at least one. Older ZIPs without `resources` still validate.
+- Optional `deliverables` on the template name the drawing or document for each stage. Checklist items may set `deliverableId` to join that associated checklist. Attachments may set `deliverableId` for the file stored on that drawing or document. Older ZIPs without these fields still validate.
 - Attachment bytes are hashed with SHA-256 (lowercase hex). Import fails if any hash or size disagrees.
 
 ## Canonical checksum

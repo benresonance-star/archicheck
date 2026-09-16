@@ -25,7 +25,7 @@ test("every bundled checklist item cites a source and helper resources", () => {
       item.id,
     );
   }
-  assert.equal(BUNDLED_TEMPLATE.version, "1.0.5");
+  assert.equal(BUNDLED_TEMPLATE.version, "1.0.6");
   const nccNotes = BUNDLED_TEMPLATE.items.find((item) => item.id === "doc-ncc");
   assert.equal(nccNotes?.title, "NCC 2025 compliance notes");
   assert.ok(nccNotes?.detail.includes("1 May 2026"));
@@ -106,4 +106,35 @@ test("reference progress counts ticked items only", () => {
   const progress = referenceProgress(items, { [items[0].id]: true });
   assert.equal(progress.total, items.length);
   assert.equal(progress.done, 1);
+});
+
+test("every stage has a drawing or document and an associated checklist", () => {
+  const deliverables = BUNDLED_TEMPLATE.deliverables ?? [];
+  assert.ok(deliverables.length >= BUNDLED_TEMPLATE.stages.length);
+  for (const stage of BUNDLED_TEMPLATE.stages) {
+    const forStage = deliverables.filter((entry) => entry.stageId === stage.id);
+    assert.ok(forStage.length >= 1, stage.id);
+    for (const deliverable of forStage) {
+      const checks = BUNDLED_TEMPLATE.items.filter(
+        (item) => item.deliverableId === deliverable.id,
+      );
+      assert.ok(checks.length >= 3, deliverable.id);
+      assert.ok(checks.every((item) => item.stageId === stage.id));
+    }
+  }
+  const documentation = groupedTemplateStages(BUNDLED_TEMPLATE, "house").find(
+    (group) => group.stage.id === "documentation",
+  );
+  assert.ok(documentation);
+  assert.equal(documentation?.deliverables.length, 2);
+  assert.ok(
+    documentation?.deliverables.some(
+      (entry) => entry.deliverable.kind === "drawing",
+    ),
+  );
+  assert.ok(
+    documentation?.deliverables.some(
+      (entry) => entry.deliverable.kind === "document",
+    ),
+  );
 });
