@@ -1,8 +1,9 @@
 import type { Typology } from "@/lib/types";
-import type {
-  ScoutFinding,
-  ScoutReport,
-  ScoutSnapshot,
+import {
+  flagSaysHashChanged,
+  type ScoutFinding,
+  type ScoutReport,
+  type ScoutSnapshot,
 } from "@/lib/scout/types";
 import {
   DEFAULT_WATCH_SOURCES,
@@ -215,6 +216,9 @@ export function isCannedProposedDetail(detail: string | undefined): boolean {
 }
 
 export function isAutoScoutFlag(finding: ScoutFinding): boolean {
+  if (finding.action === "no_change") {
+    return false;
+  }
   if (finding.action === "add" && finding.proposed?.newItem) {
     return false;
   }
@@ -224,12 +228,10 @@ export function isAutoScoutFlag(finding: ScoutFinding): boolean {
   if (isCannedProposedDetail(finding.proposed?.detail)) {
     return true;
   }
-  if (/hash change/i.test(finding.flag)) {
+  if (flagSaysHashChanged(finding.flag)) {
     return true;
   }
-  return (
-    finding.action === "needs_human" && finding.proposed != null
-  );
+  return finding.action === "needs_human" && finding.proposed != null;
 }
 
 export function normalizeScoutFinding(finding: ScoutFinding): ScoutFinding {

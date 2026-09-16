@@ -234,6 +234,21 @@ test("Grok Bot brief lists enabled sites and forbids wording rewrites", () => {
   assert.ok(brief.includes("Propose flags only"));
 });
 
+test("no hash change stays quiet and is not a flag", () => {
+  const source = STATEWIDE_SOURCES[0];
+  const finding = interpretSource({
+    source,
+    snapshot: snapshot({ sourceId: source.id, sha256: "abc" }),
+    previous: { sourceId: source.id, sha256: "abc" },
+    typology: "house",
+  });
+  assert.equal(finding.action, "no_change");
+  assert.match(finding.flag, /no hash change/i);
+  const normalised = normalizeScoutFinding(finding);
+  assert.equal(normalised.action, "no_change");
+  assert.equal(findingActionBadge(normalised), "No change");
+});
+
 test("published hash-change findings become flags", () => {
   const finding = normalizeScoutFinding({
     id: "f-ncc",

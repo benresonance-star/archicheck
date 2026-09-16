@@ -139,6 +139,13 @@ export function isBlockedFinding(finding: ScoutFinding): boolean {
   );
 }
 
+export function flagSaysHashChanged(flag: string): boolean {
+  if (/no hash change/i.test(flag)) {
+    return false;
+  }
+  return /hash change/i.test(flag);
+}
+
 export function findingOffersWording(finding: ScoutFinding): boolean {
   if (!finding.proposed) {
     return false;
@@ -157,13 +164,14 @@ export function findingActionBadge(finding: ScoutFinding): string {
   if (isBlockedFinding(finding)) {
     return "Blocked";
   }
-  if (finding.hashChanged || /hash change/i.test(finding.flag)) {
+  if (finding.action === "no_change") {
+    return actionLabel("no_change");
+  }
+  if (finding.hashChanged || flagSaysHashChanged(finding.flag)) {
     return "Source changed";
   }
   if (!findingOffersWording(finding)) {
-    return actionLabel(
-      finding.action === "no_change" ? "no_change" : "needs_human",
-    );
+    return actionLabel("needs_human");
   }
   return actionLabel(finding.action);
 }
