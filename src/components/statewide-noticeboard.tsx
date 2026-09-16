@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ChevronDown } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ScoutSection, SCOUT_HOME_OPEN_KEY } from "@/components/scout-section";
 import {
   loadScoutReport,
   loadScoutSettings,
@@ -29,16 +31,24 @@ import {
 import {
   actionLabel,
   findingStatusLabel,
+  isBlockedFinding,
   openFindingCount,
   scoutIsDue,
   type ScoutFinding,
   type ScoutReport,
 } from "@/lib/scout/types";
 
-export function StatewideNoticeboard({ compact = false }: { compact?: boolean }) {
+export function StatewideNoticeboard({
+  compact = false,
+  collapsible = false,
+}: {
+  compact?: boolean;
+  collapsible?: boolean;
+}) {
   const [settings, setSettings] = useState<ScoutSettings | null>(null);
   const [report, setReport] = useState<ScoutReport | null>(null);
   const [running, setRunning] = useState(false);
+  const [blockedOpen, setBlockedOpen] = useState(false);
 
   useEffect(() => {
     void (async () => {
@@ -57,6 +67,8 @@ export function StatewideNoticeboard({ compact = false }: { compact?: boolean })
       ),
     [report],
   );
+  const blocked = alerts.filter((finding) => isBlockedFinding(finding));
+  const changes = alerts.filter((finding) => !isBlockedFinding(finding));
   const quiet = (report?.findings ?? []).filter(
     (finding) => finding.action === "no_change",
   );
@@ -92,22 +104,21 @@ export function StatewideNoticeboard({ compact = false }: { compact?: boolean })
     );
   }
 
-  const shown = compact ? alerts.slice(0, 4) : alerts;
+  const badges = [
+    due ? (report ? "Run due" : "Not run") : "Up to date",
+    runnerLabel(settings.runner),
+    changes.length ? `${changes.length} change${changes.length === 1 ? "" : "s"}` : "",
+    blocked.length ? `${blocked.length} blocked` : "",
+    open && !blocked.length && !changes.length ? `${open} open` : "",
+  ].filter(Boolean);
 
-  return (
-    <section className="space-y-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <Badge variant={due ? "destructive" : "secondary"}>
-          {due ? (report ? `${cadenceLabel(cadenceDays)} run due` : "Not run yet") : "Up to date"}
-        </Badge>
-        <Badge variant="outline">{runnerLabel(settings.runner)}</Badge>
-        {open ? <Badge>{open} open</Badge> : null}
-      </div>
-      <p className="text-sm text-muted-foreground">
+  const body = (
+    <>
+      <p className="text-sm text-scout-foreground/80">
         {runnerSummary(settings.runner, settings.otherLabel)} Cadence:{" "}
         {cadenceLabel(settings.cadenceDays).toLowerCase()}.
       </p>
-      <p className="text-sm text-muted-foreground">
+      <p className="text-sm text-scout-foreground/80">
         {report
           ? `Last hash-check ${new Date(report.ranAt).toLocaleString("en-AU", { timeZone: "Australia/Melbourne" })}`
           : "No statewide run on this phone yet."}
@@ -128,52 +139,115 @@ export function StatewideNoticeboard({ compact = false }: { compact?: boolean })
         ) : null}
       </div>
       {!report ? (
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-scout-foreground/80">
           Statewide sources include NCC, ARBV, AIA, Master Builders Victoria, HIA,
           planning schemes and the Gazette. Edit the list under Scout process.
         </p>
-      ) : shown.length === 0 ? (
-        <p className="text-sm text-muted-foreground">
+      ) : alerts.length === 0 ? (
+        <p className="text-sm text-scout-foreground/80">
           Noticeboard is quiet
           {quiet.length ? `: ${quiet.map((finding) => finding.sourceTitle).join(" · ")}` : "."}
         </p>
       ) : (
-        <ul className="space-y-3">
-          {shown.map((finding) => (
-            <li key={finding.id}>
-              {compact ? (
-                <CompactFinding finding={finding} />
-              ) : (
-                <BoardFinding
-                  finding={finding}
-                  onReport={setReport}
+        <div className="space-y-4">
+          {changes.length > 0 ? (
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium">Changes to review</h3>
+              <FindingList
+                compact={compact}
+                findings={changes}
+                onReport={setReport}
+              />
+            </div>
+          ) : null}
+          {blocked.length > 0 ? (
+            <div className="overflow-hidden rounded-xl border border-scout-border bg-scout-foreground/5">
+              <button
+                type="button"
+                className="flex min-h-12 w-full items-center justify-between gap-2 px-3 py-2 text-left"
+                aria-expanded={blockedOpen}
+                onClick={() => setBlockedOpen((value) => !value)}
+              >
+                <span className="text-sm font-medium">
+                  Blocked from this server ({blocked.length})
+                </span>
+                <ChevronDown
+                  className={`size-4 shrink-0 transition-transform ${blockedOpen ? "rotate-180" : ""}`}
                 />
-              )}
-            </li>
-          ))}
-        </ul>
+              </button>
+              {blockedOpen ? (
+                <div className="space-y-2 border-t border-scout-border p-3">
+                  <p className="text-sm text-scout-foreground/80">
+                    BPC and planning.vic.gov.au block automated checks. Open the
+                    official page in Safari.
+                  </p>
+                  <FindingList
+                    compact={compact}
+                    findings={blocked}
+                    onReport={setReport}
+                  />
+                </div>
+              ) : null}
+            </div>
+          ) : null}
+        </div>
       )}
-      {compact && alerts.length > 4 ? (
-        <p className="text-sm text-muted-foreground">
-          <Link className="underline underline-offset-2" href="/scout">
-            {alerts.length - 4} more on the full noticeboard
-          </Link>
-        </p>
-      ) : null}
-    </section>
+    </>
+  );
+
+  if (!collapsible) {
+    return <div className="space-y-4">{body}</div>;
+  }
+
+  return (
+    <ScoutSection
+      title="Statewide noticeboard"
+      subtitle="NCC, ARBV, AIA, builders’ associations and planning. Tap to collapse."
+      badges={badges}
+      storageKey={compact ? SCOUT_HOME_OPEN_KEY : undefined}
+      defaultOpen
+    >
+      {body}
+    </ScoutSection>
+  );
+}
+
+function FindingList({
+  compact,
+  findings,
+  onReport,
+}: {
+  compact: boolean;
+  findings: ScoutFinding[];
+  onReport: (report: ScoutReport) => void;
+}) {
+  return (
+    <ul className="space-y-3">
+      {findings.map((finding) => (
+        <li key={finding.id}>
+          {compact ? (
+            <CompactFinding finding={finding} />
+          ) : (
+            <BoardFinding finding={finding} onReport={onReport} />
+          )}
+        </li>
+      ))}
+    </ul>
   );
 }
 
 function CompactFinding({ finding }: { finding: ScoutFinding }) {
   return (
-    <Card>
+    <Card className="border-scout-border bg-scout-foreground/5">
       <CardHeader>
         <div className="flex flex-wrap gap-2">
           <Badge>{actionLabel(finding.action)}</Badge>
           <Badge variant="outline">{findingStatusLabel(finding.status)}</Badge>
         </div>
         <CardTitle className="text-lg">{finding.sourceTitle}</CardTitle>
-        <CardDescription>{finding.flag}</CardDescription>
+        <CardDescription className="text-scout-foreground/80">
+          {finding.flag}
+        </CardDescription>
       </CardHeader>
       {finding.url ? (
         <CardContent>
@@ -204,7 +278,7 @@ function BoardFinding({
   }
 
   return (
-    <Card>
+    <Card className="border-scout-border bg-scout-foreground/5">
       <CardHeader>
         <div className="flex flex-wrap gap-2">
           <Badge>{actionLabel(finding.action)}</Badge>
@@ -217,11 +291,7 @@ function BoardFinding({
       <CardContent className="space-y-3">
         {finding.url ? (
           <Button className="min-h-11 w-full sm:w-auto" asChild>
-            <a
-              href={finding.url}
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href={finding.url} target="_blank" rel="noreferrer">
               Open source
             </a>
           </Button>

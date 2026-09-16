@@ -6,7 +6,7 @@ import {
   localUnconfiguredFinding,
 } from "../src/lib/scout/interpret";
 import { resolveMunicipality } from "../src/lib/scout/municipalities";
-import { scoutIsDue } from "../src/lib/scout/types";
+import { isBlockedFinding, scoutIsDue } from "../src/lib/scout/types";
 import { applyProposedToTemplate } from "../src/lib/scout/apply-wording";
 import {
   defaultScoutSettings,
@@ -78,6 +78,29 @@ test("changed hash proposes replace wording and a flag", () => {
   assert.ok(finding.flag.includes("Clause 55"));
   assert.ok(finding.proposed?.detail);
   assert.ok(finding.itemIds.includes("cd-cl55"));
+});
+
+test("blocked Cloudflare fetches are grouped separately from wording changes", () => {
+  const source = STATEWIDE_SOURCES[0];
+  const blocked = interpretSource({
+    source,
+    snapshot: snapshot({
+      sourceId: source.id,
+      ok: false,
+      sha256: null,
+      error: "HTTP 403",
+    }),
+    previous: { sourceId: source.id, sha256: "old" },
+    typology: "house",
+  });
+  assert.equal(isBlockedFinding(blocked), true);
+  const changed = interpretSource({
+    source,
+    snapshot: snapshot({ sourceId: source.id, sha256: "new" }),
+    previous: { sourceId: source.id, sha256: "old" },
+    typology: "house",
+  });
+  assert.equal(isBlockedFinding(changed), false);
 });
 
 test("failed fetch needs a human and still carries a flag", () => {

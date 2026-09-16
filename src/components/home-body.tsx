@@ -40,15 +40,7 @@ export function HomeBody() {
             lossless copy. Light and dark modes are in the header.
           </p>
         </section>
-        <section className="space-y-3">
-          <h2 className="font-heading text-2xl">Statewide noticeboard</h2>
-          <p className="text-sm text-muted-foreground">
-            NCC, ARBV, AIA, builders’ associations and planning sources. Open
-            Scout process to change sites, timing and whether Cursor, a Grok
-            Bot or someone else runs it.
-          </p>
-          <StatewideNoticeboard compact />
-        </section>
+        <StatewideNoticeboard compact collapsible />
         <TypologyGrid counts={counts} />
         <section className="space-y-3">
           <h2 className="font-heading text-2xl">Recent projects</h2>

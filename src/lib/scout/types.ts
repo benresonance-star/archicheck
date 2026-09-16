@@ -125,6 +125,17 @@ export function findingStatusLabel(status: ScoutFindingStatus): string {
   }
 }
 
+export function isBlockedFinding(finding: ScoutFinding): boolean {
+  if (finding.action !== "needs_human" || finding.hashChanged) {
+    return false;
+  }
+  return (
+    finding.flag.includes("blocked") ||
+    finding.flag.includes("HTTP 403") ||
+    finding.flag.includes("HTTP 404")
+  );
+}
+
 export function openFindingCount(report: ScoutReport | null): number {
   if (!report) {
     return 0;
