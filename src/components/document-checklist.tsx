@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ChecklistItemCard } from "@/components/checklist-item-card";
-import { itemsGroupedByStage } from "@/lib/template/output-lens";
+import { arbvStageHeading, itemsGroupedByStage } from "@/lib/template/output-lens";
 import type {
   ChecklistItem,
   ProjectDocument,
@@ -67,7 +67,7 @@ export function DocumentChecklist({
         grouped.map((group) => (
           <div key={group.stage.id} className="space-y-3">
             <h2 className="font-heading text-lg leading-tight">
-              {String(group.stage.number).padStart(2, "0")} {group.stage.title}
+              {arbvStageHeading(group.stage)}
             </h2>
             {group.items.map((item) => (
               <ChecklistItemCard

@@ -293,59 +293,31 @@ function isDrawingKind(kind: OutputKind): boolean {
   return (DRAWING_KINDS as readonly string[]).includes(kind);
 }
 
-export function stageDocumentSetLabel(stage: Stage): string {
-  switch (stage.id) {
-    case "pre-design":
-      return "Pre-design";
-    case "concept":
-      return "Concept";
-    case "design-development":
-      return "Design development";
-    case "town-planning":
-      return "Planning";
-    case "documentation":
-      return "Contract documentation";
-    case "tender":
-      return "Tender";
-    case "contract-admin":
-      return "Contract administration";
-    case "practical-completion":
-      return "Practical completion";
-    case "defects-liability":
-      return "Defects liability";
-    case "final-certificate":
-      return "Final certificate";
-    case "post-occupancy":
-      return "Post-occupancy";
-    default:
-      return stage.title;
-  }
+export function arbvStageHeading(stage: Stage): string {
+  return `${String(stage.number).padStart(2, "0")} ${stage.title}`;
 }
 
-function lowerFirst(value: string): string {
-  if (value.length === 0) {
-    return value;
-  }
-  return value.slice(0, 1).toLowerCase() + value.slice(1);
+export function stagedDocumentTitle(_stage: Stage, kind: OutputKind): string {
+  return outputKindLabel(kind);
 }
 
-export function stagedDocumentTitle(stage: Stage, kind: OutputKind): string {
-  return `${stageDocumentSetLabel(stage)} ${lowerFirst(outputKindLabel(kind))}`;
+export function stagedDocumentHeading(stage: Stage, kind: OutputKind): string {
+  return `${arbvStageHeading(stage)} · ${outputKindLabel(kind)}`;
 }
 
 export function stagedDocumentSummary(stage: Stage, kind: OutputKind): string {
   const base = OUTPUT_KIND_META[kind].summary;
   if (stage.id === "town-planning" && isDrawingKind(kind)) {
-    return `${base} This is the planning application set, not the contract working drawings.`;
+    return `${base} Town planning application set — not 05 Construction documentation.`;
   }
   if (stage.id === "documentation" && isDrawingKind(kind)) {
-    return `${base} This is the contract / building-permit set, not the town planning drawings.`;
+    return `${base} Construction documentation / building-permit set — not 04 Town planning.`;
   }
   if (stage.id === "concept" && isDrawingKind(kind)) {
-    return `${base} Concept sketches only — not planning or contract drawings.`;
+    return `${base} 02 Concept / sketch design only — not town planning or construction documentation.`;
   }
   if (stage.id === "design-development" && isDrawingKind(kind)) {
-    return `${base} Design-development drawings before the planning set is frozen.`;
+    return `${base} 03 Design development drawings before the town planning set is frozen.`;
   }
   return base;
 }

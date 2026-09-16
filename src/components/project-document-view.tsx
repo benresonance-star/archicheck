@@ -5,10 +5,12 @@ import { AppHeader } from "@/components/app-header";
 import { DocumentChecklist } from "@/components/document-checklist";
 import { loadProject, syncProjectImpacts } from "@/lib/client-store";
 import {
+  arbvStageHeading,
   findStagedDocument,
   flattenStagedDocuments,
   groupedOutputDocuments,
   isOutputKind,
+  stagedDocumentHeading,
 } from "@/lib/template/output-lens";
 import {
   openImpactCount,
@@ -94,10 +96,13 @@ export function ProjectDocumentView({
 
   return (
     <div className="pb-[env(safe-area-inset-bottom)]">
-      <AppHeader title={group.title} backHref={`/p/${project.id}`} />
+      <AppHeader
+        title={stagedDocumentHeading(group.stage, group.kind)}
+        backHref={`/p/${project.id}`}
+      />
       <main className="mx-auto max-w-3xl space-y-4 px-4 py-6">
         <p className="text-sm text-muted-foreground">
-          {String(group.stage.number).padStart(2, "0")} {group.stage.title}
+          {arbvStageHeading(group.stage)}
           {" · "}
           {group.summary}
         </p>

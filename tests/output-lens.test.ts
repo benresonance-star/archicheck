@@ -18,6 +18,10 @@ test("every bundled item maps to one output document", () => {
 test("document lens is broken into stages and keeps planning drawings off the contract set", () => {
   for (const typology of ["house", "townhouse", "apartment"] as const) {
     const groups = groupedOutputDocuments(BUNDLED_TEMPLATE, typology);
+    assert.deepEqual(
+      groups.map((group) => group.stage.id),
+      BUNDLED_TEMPLATE.stages.map((stage) => stage.id),
+    );
     const stageIds = groups.map((group) => group.stage.id);
     assert.ok(stageIds.includes("town-planning"), `${typology} town-planning`);
     assert.ok(stageIds.includes("documentation"), `${typology} documentation`);
@@ -31,8 +35,10 @@ test("document lens is broken into stages and keeps planning drawings off the co
     const contractPlans = contract.documents.find((doc) => doc.kind === "plans");
     assert.ok(planningPlans, `${typology} planning plans`);
     assert.ok(contractPlans, `${typology} contract plans`);
-    assert.ok(planningPlans.title.includes("Planning"));
-    assert.ok(contractPlans.title.includes("Contract documentation"));
+    assert.equal(planningPlans.title, "Plans");
+    assert.equal(contractPlans.title, "Plans");
+    assert.equal(planning.stage.title, "Town planning");
+    assert.equal(contract.stage.title, "Construction documentation");
     assert.ok(
       planningPlans.items.every((item) => item.stageId === "town-planning"),
     );

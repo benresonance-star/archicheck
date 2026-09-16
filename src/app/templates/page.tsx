@@ -20,12 +20,14 @@ export default async function TemplatesPage({
           </h1>
           <p className="text-muted-foreground leading-relaxed">
             House, townhouse and apartment lists from the bundled Victoria
-            residential template. Use <strong>By document</strong> for outputs
-            under each ARBV stage — planning plans and elevations stay separate
-            from the contract documentation set. Use <strong>By stage</strong>{" "}
-            for the full stage list. Open <strong>Apartment</strong> for BADS as
-            separate ticks. Tick items as a quick reference on this device, then
-            start a project when you need notes, attachments and a ZIP.
+            residential template. Use <strong>By document</strong> for the same
+            ARBV stages (01 Pre-design through 11 Post-occupancy), with Plans,
+            Elevations and the other outputs listed under each stage. Town
+            planning drawings stay separate from construction documentation.
+            Use <strong>By stage</strong> for the full stage checklist. Open{" "}
+            <strong>Apartment</strong> for BADS as separate ticks. Tick items
+            as a quick reference on this device, then start a project when you
+            need notes, attachments and a ZIP.
           </p>
         </section>
         <TemplateReference initialTypology={typology} />

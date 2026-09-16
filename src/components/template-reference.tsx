@@ -30,6 +30,7 @@ import {
   type TemplateTicks,
 } from "@/lib/template-reference";
 import {
+  arbvStageHeading,
   groupedOutputDocuments,
   type StagedOutputLensGroup,
 } from "@/lib/template/output-lens";
@@ -231,8 +232,7 @@ export function TemplateReference({
                   <span className="flex min-w-0 flex-1 items-center justify-between gap-3 pr-2">
                     <span className="min-w-0">
                       <span className="block font-heading text-lg leading-tight">
-                        {String(group.stage.number).padStart(2, "0")}{" "}
-                        {group.stage.title}
+                        {arbvStageHeading(group.stage)}
                       </span>
                       <span className="block text-sm font-normal text-muted-foreground">
                         {group.stage.summary}
@@ -324,8 +324,7 @@ function DocumentLensLists({
               <span className="flex min-w-0 flex-1 items-center justify-between gap-3 pr-2">
                 <span className="min-w-0">
                   <span className="block font-heading text-lg leading-tight">
-                    {String(group.stage.number).padStart(2, "0")}{" "}
-                    {group.stage.title}
+                    {arbvStageHeading(group.stage)}
                   </span>
                   <span className="block text-sm font-normal text-muted-foreground">
                     {group.stage.summary}

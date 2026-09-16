@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  arbvStageHeading,
   groupedOutputDocuments,
   type OutputKind,
 } from "@/lib/template/output-lens";
@@ -50,7 +51,7 @@ export function DocumentIndex({
           <li key={group.stage.id} className="space-y-3">
             <div>
               <h3 className="font-heading text-lg leading-tight">
-                {String(group.stage.number).padStart(2, "0")} {group.stage.title}
+                {arbvStageHeading(group.stage)}
               </h3>
               <p className="text-sm text-muted-foreground">
                 {group.stage.summary}

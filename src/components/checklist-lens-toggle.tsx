@@ -9,7 +9,7 @@ export type ChecklistLens = (typeof CHECKLIST_LENSES)[number];
 export function checklistLensSummary(lens: ChecklistLens): string {
   switch (lens) {
     case "document":
-      return "Checks grouped by stage, then by output. Planning plans and elevations stay separate from the contract documentation set.";
+      return "The same ARBV stages as the stage list (01–11), with Plans, Elevations and the other outputs under each stage.";
     case "stage":
       return "Checks grouped by ARBV stage.";
     default:
