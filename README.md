@@ -20,7 +20,13 @@ npm test
 npm run dev
 ```
 
-Open [http://127.0.0.1:43181](http://127.0.0.1:43181).
+Open [http://127.0.0.1:43181](http://127.0.0.1:43181) on the same machine.
+
+This app is used on iPhone. **Localhost is not visible there.** After each change we publish a public Vercel URL (temporary deploy to claim, or the GitHub-connected production URL once that exists).
+
+```bash
+npx vercel deploy --temporary --yes --prod
+```
 
 ## Acceptance test
 
@@ -40,4 +46,4 @@ Each stage has a named Grok Bot brief (copy the first task). Bots must not lodge
 
 Projects live **on the device** (IndexedDB JSON). The ZIP is the portable archive (manifest, project, template, attachments). Server files under `data/projects` are only used by the Node test harness.
 
-To put this on the public internet: create a GitHub repo (Create repo in Cursor), then connect that repo to Vercel. Projects stay on each phone; Export ZIP to copy them.
+Public hosting: push `main` to GitHub, then connect that repo in Vercel so production updates on every push. Until GitHub exists, use the temporary Vercel deploy above and claim it.

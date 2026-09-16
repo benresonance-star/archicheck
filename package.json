@@ -8,7 +8,8 @@
     "start": "next start --hostname 0.0.0.0 --port 43181",
     "lint": "eslint",
     "test": "tsx --test tests/round-trip.test.ts tests/scout.test.ts",
-    "emit-schema": "tsx scripts/emit-public-schema.ts"
+    "emit-schema": "tsx scripts/emit-public-schema.ts",
+    "publish:web": "vercel deploy --temporary --yes --prod"
   },
   "dependencies": {
     "ajv": "^8.20.0",
