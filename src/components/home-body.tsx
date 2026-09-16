@@ -56,7 +56,7 @@ export function HomeBody() {
             Checkable copies of the bundled house, townhouse and apartment
             lists. Apartment items include BADS (Better Apartments Design
             Standards) as separate ticks. Each item cites a Source and helper
-            Resource(s) on a sage-green panel. Use them as a phone reference
+            Resource(s) as blue links on a neutral panel. Use them as a phone reference
             before you open a project.
           </p>
           <TemplateReference />

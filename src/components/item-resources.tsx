@@ -10,8 +10,8 @@ export function ItemResources({
   }
   const label = resources.length === 1 ? "Resource" : "Resources";
   return (
-    <div className="rounded-lg border border-resource-border bg-resource px-3 py-2 text-resource-foreground">
-      <p className="text-xs font-medium leading-relaxed">
+    <div className="rounded-lg border border-border bg-muted px-3 py-2">
+      <p className="text-xs font-medium leading-relaxed text-muted-foreground">
         {label}
       </p>
       <ul className="mt-1 space-y-1">
@@ -21,7 +21,7 @@ export function ItemResources({
               href={resource.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm font-medium text-resource-accent underline underline-offset-2"
+              className="text-sm font-medium text-link underline underline-offset-2"
             >
               {resource.label}
             </a>

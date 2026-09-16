@@ -80,9 +80,10 @@ export function renderSnapshotHtml(input: {
       --line: #d8ccb8;
       --card: #fffaf3;
       --accent: #8a4b21;
-      --resource-bg: #dcecd8;
-      --resource-ink: #1f4d28;
-      --resource-line: #7aa074;
+      --resource-bg: #efe9de;
+      --resource-ink: #5c5346;
+      --resource-line: #d8ccb8;
+      --resource-link: #2563eb;
     }
     @media (prefers-color-scheme: dark) {
       :root {
@@ -92,9 +93,10 @@ export function renderSnapshotHtml(input: {
         --line: #3a3229;
         --card: #221e1a;
         --accent: #e0a36c;
-        --resource-bg: #1c2e22;
-        --resource-ink: #c8e6c4;
-        --resource-line: #4d7a58;
+        --resource-bg: #2a2723;
+        --resource-ink: #cbbba8;
+        --resource-line: #3a3229;
+        --resource-link: #7ab0ff;
       }
     }
     body {
@@ -123,7 +125,7 @@ export function renderSnapshotHtml(input: {
     }
     .resources p { margin: 0 0 0.25rem; font-size: 0.85rem; }
     .resources ul { margin: 0; padding-left: 1.1rem; }
-    .resources a { color: var(--resource-ink); }
+    .resources a { color: var(--resource-link); }
     footer { max-width: 42rem; margin: 0 auto; padding: 1.25rem; color: var(--muted); font-size: 0.9rem; }
   </style>
 </head>

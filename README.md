@@ -32,7 +32,7 @@ In the UI: **Export ZIP** on a project, then **Import ZIP** on a fresh install (
 
 ## Generic templates
 
-The home page and **Templates** (`/templates`) show the bundled house, townhouse and apartment lists as checkable references. Open **Apartment** for BADS (Better Apartments Design Standards) as separate ticks. Each item cites a **Source** (the instrument) and **Resource(s)** — helper sites on a sage-green panel, separate from Source. Ticks stay on the device; they are not a project ZIP. Start a project when you need notes, attachments and export.
+The home page and **Templates** (`/templates`) show the bundled house, townhouse and apartment lists as checkable references. Open **Apartment** for BADS (Better Apartments Design Standards) as separate ticks. Each item cites a **Source** (the instrument) and **Resource(s)** — helper sites as blue links on a neutral panel, separate from Source. Ticks stay on the device; they are not a project ZIP. Start a project when you need notes, attachments and export.
 
 ## Code scout
 
