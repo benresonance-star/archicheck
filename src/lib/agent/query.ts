@@ -7,6 +7,11 @@ import type {
   Typology,
 } from "@/lib/types";
 import { isRequirementKind, isTypology } from "@/lib/types";
+import {
+  isOutputKind,
+  outputKindForItem,
+  type OutputKind,
+} from "@/lib/template/output-lens";
 
 export type ChecklistQuery = {
   typology?: Typology;
@@ -14,6 +19,7 @@ export type ChecklistQuery = {
   deliverableId?: string;
   elementType?: string;
   requirementKind?: RequirementKind;
+  outputKind?: OutputKind;
   itemIds?: string[];
   availableInputs?: Record<string, boolean | string | number | null>;
 };
@@ -83,6 +89,7 @@ export function parseChecklistQuery(
 
   const typologyRaw = first("typology");
   const requirementKindRaw = first("requirementKind");
+  const outputKindRaw = first("outputKind");
   const available: Record<string, boolean> = {};
   for (const id of all("input")) {
     if (id) {
@@ -97,6 +104,9 @@ export function parseChecklistQuery(
     ...(first("elementType") ? { elementType: first("elementType") } : {}),
     ...(requirementKindRaw && isRequirementKind(requirementKindRaw)
       ? { requirementKind: requirementKindRaw }
+      : {}),
+    ...(outputKindRaw && isOutputKind(outputKindRaw)
+      ? { outputKind: outputKindRaw }
       : {}),
     ...(all("itemId").length > 0 ? { itemIds: all("itemId") } : {}),
     ...(Object.keys(available).length > 0 ? { availableInputs: available } : {}),
@@ -130,6 +140,9 @@ export function queryChecklistItems(
       if (item.assessment?.requirement.kind !== query.requirementKind) {
         return false;
       }
+    }
+    if (query.outputKind && outputKindForItem(item) !== query.outputKind) {
+      return false;
     }
     return true;
   });

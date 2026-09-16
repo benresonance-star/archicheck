@@ -32,6 +32,8 @@ export async function GET(request: Request) {
           deliverableId: "drawing or document id",
           elementType: "target element type, e.g. balcony",
           requirementKind: "regulatory | guidance | office_practice",
+          outputKind:
+            "client-brief | report | site-plan | demolition | plans | rcp | elevations | sections | details | roof-plan | schedules | specification | drawing-standards | record",
           itemId: "repeatable stable item id",
           input: "repeatable available input id; omitted inputs are reported as missing",
         },
