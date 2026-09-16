@@ -3,9 +3,14 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { addAttachment, downloadBytes, readAttachment, setAnswer } from "@/lib/client-store";
-import { ProjectCheckDepths } from "@/components/check-depths";
+import {
+  CheckBrowseRow,
+  ProjectRequirementBody,
+  ProjectRequirementSheet,
+} from "@/components/check-depths";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { projectItemSignal } from "@/lib/check-depths";
 import type {
   AttachmentMeta,
   ChecklistItem,
@@ -48,47 +53,14 @@ export function AttachmentFileList({
   );
 }
 
-export function ProjectCheckList({
-  items,
-  project,
-  onProject,
-}: {
-  items: ChecklistItem[];
-  project: ProjectDocument;
-  onProject: (project: ProjectDocument) => void;
-}) {
-  const [openId, setOpenId] = useState<string | null>(null);
-  return (
-    <ul className="divide-y divide-border">
-      {items.map((item) => (
-        <li key={item.id}>
-          <ChecklistItemCard
-            item={item}
-            project={project}
-            onProject={onProject}
-            open={openId === item.id}
-            onOpenChange={() =>
-              setOpenId((current) => (current === item.id ? null : item.id))
-            }
-          />
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-export function ChecklistItemCard({
+function ProjectInspectActions({
   item,
   project,
   onProject,
-  open,
-  onOpenChange,
 }: {
   item: ChecklistItem;
   project: ProjectDocument;
   onProject: (project: ProjectDocument) => void;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
 }) {
   const answer = project.answers[item.id];
   const status = answer?.status ?? "todo";
@@ -128,7 +100,7 @@ export function ChecklistItemCard({
   }
 
   return (
-    <ProjectCheckDepths
+    <ProjectRequirementBody
       item={item}
       status={status}
       notes={notes}
@@ -138,8 +110,6 @@ export function ChecklistItemCard({
       templateVersion={project.template.version}
       templateChecksum={project.template.checksum}
       pending={pending}
-      open={open}
-      onOpenChange={onOpenChange}
       actions={
         <div className="space-y-3">
           <div className="space-y-1">
@@ -200,5 +170,50 @@ export function ChecklistItemCard({
         </div>
       }
     />
+  );
+}
+
+export function ProjectCheckList({
+  items,
+  project,
+  onProject,
+}: {
+  items: ChecklistItem[];
+  project: ProjectDocument;
+  onProject: (project: ProjectDocument) => void;
+}) {
+  const [openId, setOpenId] = useState<string | null>(null);
+  const openItem = items.find((item) => item.id === openId);
+
+  return (
+    <>
+      <ul className="divide-y divide-border">
+        {items.map((item) => (
+          <li key={item.id}>
+            <CheckBrowseRow
+              title={item.title}
+              signal={projectItemSignal(item, project)}
+              onInspect={() => setOpenId(item.id)}
+            />
+          </li>
+        ))}
+      </ul>
+      <ProjectRequirementSheet
+        item={openItem}
+        items={items}
+        open={openItem != null}
+        onClose={() => setOpenId(null)}
+        onSelect={setOpenId}
+      >
+        {openItem ? (
+          <ProjectInspectActions
+            key={openItem.id}
+            item={openItem}
+            project={project}
+            onProject={onProject}
+          />
+        ) : null}
+      </ProjectRequirementSheet>
+    </>
   );
 }

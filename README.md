@@ -34,7 +34,7 @@ In the UI: **Export ZIP** on a project, then **Import ZIP** on a fresh install (
 
 The **Templates** header link (`/templates`) shows the bundled house, townhouse and apartment lists as checkable references. **By document** uses the same ARBV stages (01–11), then lists Plans, Elevations, RCP and the other outputs under each stage. Town planning drawings stay separate from construction documentation. **By stage** keeps the full stage checklist. Construction documentation sheet checks were taken from a typical CD QA list, rewritten for Victoria and NCC 2025. Open **Apartment** for BADS as separate ticks.
 
-Each deliverable is a compact list of **rows** (title + tick). One row opens at a time for **understanding** (what must be established, why, evidence, assessment) and **Audit** (sources, template version, previous status, findings). Signals such as Evidence missing sit on the row only when they are not To do. Ticks stay on the device; they are not a project ZIP.
+Each deliverable is a compact **browse** list (title + tick). Tapping a title opens a **requirement** sheet for understanding and **Audit** — the list does not expand in place. Signals such as Evidence missing sit on the row only when they are not To do. Ticks stay on the device; they are not a project ZIP.
 
 ## Code scout
 

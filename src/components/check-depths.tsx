@@ -4,12 +4,20 @@ import { useState, type ReactNode } from "react";
 import { ItemResources } from "@/components/item-resources";
 import { SourceCitations } from "@/components/source-citations";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import {
   checkSignalLabel,
   checkSignalVariant,
   checkUnderstanding,
-  deriveCheckSignal,
   findingsForItem,
   itemRestrictionParts,
   rowShowsSignal,
@@ -51,61 +59,33 @@ function DepthQuestion({
   );
 }
 
-function CheckDepthCard({
+export function CheckBrowseRow({
   title,
-  restrictions,
   signal,
   leading,
-  open,
-  onOpenChange,
-  children,
+  onInspect,
 }: {
   title: string;
-  restrictions: string[];
   signal: CheckSignal;
   leading?: ReactNode;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  children: ReactNode;
+  onInspect: () => void;
 }) {
   return (
-    <article className="overflow-visible">
-      <div className="flex items-center gap-3 py-1.5">
-        {leading}
-        <button
-          type="button"
-          aria-expanded={open}
-          className="flex min-h-10 min-w-0 flex-1 items-center gap-2 text-left"
-          onClick={() => onOpenChange(!open)}
-        >
-          <span className="min-w-0 flex-1 text-sm font-medium leading-snug break-words">
-            {title}
-          </span>
-          {rowShowsSignal(signal) ? <SignalBadge signal={signal} /> : null}
-        </button>
-      </div>
-      {open ? (
-        <div className="overflow-visible space-y-3 border-t border-border pb-3 pt-3">
-          {restrictions.length > 0 ? (
-            <p className="text-xs leading-relaxed text-muted-foreground break-words">
-              {restrictions.join(" · ")}
-            </p>
-          ) : null}
-          {children}
-        </div>
-      ) : null}
-    </article>
+    <div className="flex items-center gap-3 py-1.5">
+      {leading}
+      <button
+        type="button"
+        aria-haspopup="dialog"
+        className="flex min-h-10 min-w-0 flex-1 items-center gap-2 text-left"
+        onClick={onInspect}
+      >
+        <span className="min-w-0 flex-1 text-sm font-medium leading-snug break-words">
+          {title}
+        </span>
+        {rowShowsSignal(signal) ? <SignalBadge signal={signal} /> : null}
+      </button>
+    </div>
   );
-}
-
-function useExclusiveOpen() {
-  const [openId, setOpenId] = useState<string | null>(null);
-  return {
-    openId,
-    toggle(id: string) {
-      setOpenId((current) => (current === id ? null : id));
-    },
-  };
 }
 
 function UnderstandingBody({
@@ -145,9 +125,15 @@ function UnderstandingBody({
   });
   const itemFindings = findingsForItem(findings, item.id);
   const sourceRefs = item.assessment?.requirement.sourceRefs ?? [];
+  const restrictions = itemRestrictionParts(item);
 
   return (
     <>
+      {restrictions.length > 0 ? (
+        <p className="text-xs leading-relaxed text-muted-foreground break-words">
+          {restrictions.join(" · ")}
+        </p>
+      ) : null}
       <DepthQuestion question="What must be established?">
         <p>{understanding.established}</p>
       </DepthQuestion>
@@ -291,49 +277,71 @@ function UnderstandingBody({
   );
 }
 
-export function TemplateCheckDepths({
+function CheckRequirementSheet({
   item,
-  ticked,
-  onTicked,
-  templateVersion,
-  templateChecksum,
   open,
-  onOpenChange,
+  onClose,
+  onPrev,
+  onNext,
+  hasPrev,
+  hasNext,
+  children,
 }: {
-  item: ChecklistItem;
-  ticked: boolean;
-  onTicked: (ticked: boolean) => void;
-  templateVersion: string;
-  templateChecksum: string;
+  item: ChecklistItem | undefined;
   open: boolean;
-  onOpenChange: (open: boolean) => void;
+  onClose: () => void;
+  onPrev?: () => void;
+  onNext?: () => void;
+  hasPrev: boolean;
+  hasNext: boolean;
+  children: ReactNode;
 }) {
   return (
-    <CheckDepthCard
-      title={item.title}
-      restrictions={itemRestrictionParts(item)}
-      signal={templateCheckSignal(ticked)}
+    <Sheet
       open={open}
-      onOpenChange={onOpenChange}
-      leading={
-        <Checkbox
-          className="size-5 shrink-0"
-          checked={ticked}
-          aria-label={`Tick ${item.title}`}
-          onCheckedChange={(value) => onTicked(value === true)}
-        />
-      }
+      onOpenChange={(next) => {
+        if (!next) {
+          onClose();
+        }
+      }}
     >
-      <UnderstandingBody
-        item={item}
-        notes=""
-        files={[]}
-        ticked={ticked}
-        mode="template"
-        templateVersion={templateVersion}
-        templateChecksum={templateChecksum}
-      />
-    </CheckDepthCard>
+      <SheetContent
+        side="bottom"
+        className="h-[92dvh] max-h-[92dvh] gap-0 overflow-hidden rounded-t-2xl pb-[env(safe-area-inset-bottom)] md:inset-y-0 md:right-0 md:left-auto md:h-full md:max-h-none md:w-[28rem] md:max-w-none md:rounded-none md:border-t-0 md:border-l"
+      >
+        <SheetHeader className="border-b border-border pr-12">
+          <SheetTitle className="text-lg leading-snug break-words">
+            {item?.title ?? "Check"}
+          </SheetTitle>
+          <SheetDescription>
+            Requirement — inspect this check, then close to return to the list.
+          </SheetDescription>
+        </SheetHeader>
+        <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-4 py-4">
+          {item ? <div key={item.id}>{children}</div> : null}
+        </div>
+        <SheetFooter className="flex-row gap-2 border-t border-border">
+          <Button
+            type="button"
+            variant="outline"
+            className="min-h-11 flex-1"
+            disabled={!hasPrev}
+            onClick={onPrev}
+          >
+            Previous
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            className="min-h-11 flex-1"
+            disabled={!hasNext}
+            onClick={onNext}
+          >
+            Next
+          </Button>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   );
 }
 
@@ -350,32 +358,71 @@ export function TemplateCheckList({
   templateVersion: string;
   templateChecksum: string;
 }) {
-  const { openId, toggle } = useExclusiveOpen();
+  const [openId, setOpenId] = useState<string | null>(null);
+  const openIndex = items.findIndex((item) => item.id === openId);
+  const openItem = openIndex >= 0 ? items[openIndex] : undefined;
+
   if (items.length === 0) {
     return (
       <p className="text-sm text-muted-foreground">No checks on this document.</p>
     );
   }
+
   return (
-    <ul className="divide-y divide-border">
-      {items.map((item) => (
-        <li key={item.id}>
-          <TemplateCheckDepths
-            item={item}
-            ticked={Boolean(ticks[item.id])}
-            onTicked={(value) => onTicked(item.id, value)}
+    <>
+      <ul className="divide-y divide-border">
+        {items.map((item) => (
+          <li key={item.id}>
+            <CheckBrowseRow
+              title={item.title}
+              signal={templateCheckSignal(Boolean(ticks[item.id]))}
+              onInspect={() => setOpenId(item.id)}
+              leading={
+                <Checkbox
+                  className="size-5 shrink-0"
+                  checked={Boolean(ticks[item.id])}
+                  aria-label={`Tick ${item.title}`}
+                  onCheckedChange={(value) => onTicked(item.id, value === true)}
+                />
+              }
+            />
+          </li>
+        ))}
+      </ul>
+      <CheckRequirementSheet
+        item={openItem}
+        open={openItem != null}
+        onClose={() => setOpenId(null)}
+        hasPrev={openIndex > 0}
+        hasNext={openIndex >= 0 && openIndex < items.length - 1}
+        onPrev={() => {
+          if (openIndex > 0) {
+            setOpenId(items[openIndex - 1]?.id ?? null);
+          }
+        }}
+        onNext={() => {
+          if (openIndex >= 0 && openIndex < items.length - 1) {
+            setOpenId(items[openIndex + 1]?.id ?? null);
+          }
+        }}
+      >
+        {openItem ? (
+          <UnderstandingBody
+            item={openItem}
+            notes=""
+            files={[]}
+            ticked={Boolean(ticks[openItem.id])}
+            mode="template"
             templateVersion={templateVersion}
             templateChecksum={templateChecksum}
-            open={openId === item.id}
-            onOpenChange={() => toggle(item.id)}
           />
-        </li>
-      ))}
-    </ul>
+        ) : null}
+      </CheckRequirementSheet>
+    </>
   );
 }
 
-export function ProjectCheckDepths({
+export function ProjectRequirementBody({
   item,
   status,
   notes,
@@ -385,10 +432,7 @@ export function ProjectCheckDepths({
   templateVersion,
   templateChecksum,
   pending,
-  leading,
   actions,
-  open,
-  onOpenChange,
 }: {
   item: ChecklistItem;
   status: ItemStatus;
@@ -399,26 +443,10 @@ export function ProjectCheckDepths({
   templateVersion: string;
   templateChecksum: string;
   pending?: boolean;
-  leading?: ReactNode;
   actions: ReactNode;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
 }) {
   return (
-    <CheckDepthCard
-      title={item.title}
-      restrictions={itemRestrictionParts(item)}
-      signal={deriveCheckSignal({
-        item,
-        status,
-        notes,
-        files,
-        findings,
-      })}
-      leading={leading}
-      open={open}
-      onOpenChange={onOpenChange}
-    >
+    <>
       <UnderstandingBody
         item={item}
         notes={notes}
@@ -434,6 +462,48 @@ export function ProjectCheckDepths({
       {pending ? (
         <p className="text-xs text-muted-foreground">Saving…</p>
       ) : null}
-    </CheckDepthCard>
+    </>
   );
 }
+
+export function ProjectRequirementSheet({
+  item,
+  items,
+  open,
+  onClose,
+  onSelect,
+  children,
+}: {
+  item: ChecklistItem | undefined;
+  items: ChecklistItem[];
+  open: boolean;
+  onClose: () => void;
+  onSelect: (itemId: string) => void;
+  children: ReactNode;
+}) {
+  const openIndex = item ? items.findIndex((entry) => entry.id === item.id) : -1;
+  return (
+    <CheckRequirementSheet
+      item={item}
+      open={open}
+      onClose={onClose}
+      hasPrev={openIndex > 0}
+      hasNext={openIndex >= 0 && openIndex < items.length - 1}
+      onPrev={() => {
+        const previous = items[openIndex - 1];
+        if (previous) {
+          onSelect(previous.id);
+        }
+      }}
+      onNext={() => {
+        const next = items[openIndex + 1];
+        if (next) {
+          onSelect(next.id);
+        }
+      }}
+    >
+      {children}
+    </CheckRequirementSheet>
+  );
+}
+
