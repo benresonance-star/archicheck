@@ -2,11 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { AppHeader } from "@/components/app-header";
+import { ImpactNoticeCard } from "@/components/impact-notice";
 import { ProjectActions } from "@/components/project-actions";
 import { ScoutBanner } from "@/components/scout-banner";
 import { StageIndex } from "@/components/stage-index";
-import { loadProject } from "@/lib/client-store";
-import { itemsForTypology, type ProjectDocument, type TemplateDocument } from "@/lib/types";
+import { loadProject, syncProjectImpacts } from "@/lib/client-store";
+import {
+  itemsForTypology,
+  openImpactCount,
+  type ProjectDocument,
+  type TemplateDocument,
+} from "@/lib/types";
 import { typologyMeta } from "@/lib/typology";
 
 export function ProjectWorkspace({ id }: { id: string }) {
@@ -17,10 +23,14 @@ export function ProjectWorkspace({ id }: { id: string }) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    void loadProject(id)
+    void syncProjectImpacts(id)
       .then(setData)
-      .catch((caught: unknown) => {
-        setError(caught instanceof Error ? caught.message : "Not found");
+      .catch(() => {
+        void loadProject(id)
+          .then(setData)
+          .catch((caught: unknown) => {
+            setError(caught instanceof Error ? caught.message : "Not found");
+          });
       });
   }, [id]);
 
@@ -78,6 +88,21 @@ export function ProjectWorkspace({ id }: { id: string }) {
           <ProjectActions project={project} />
           <ScoutBanner projectId={project.id} />
         </section>
+        {openImpactCount(project) > 0 ? (
+          <section className="space-y-3">
+            <h2 className="font-heading text-2xl">Template impact</h2>
+            {(project.impacts ?? [])
+              .filter((notice) => notice.status === "open")
+              .map((notice) => (
+                <ImpactNoticeCard
+                  key={notice.id}
+                  projectId={project.id}
+                  notice={notice}
+                  onProject={setData}
+                />
+              ))}
+          </section>
+        ) : null}
         <section className="space-y-3">
           <h2 className="font-heading text-2xl">Stages</h2>
           <StageIndex

@@ -143,9 +143,20 @@ function ItemCard({
       <CardHeader>
         <div className="flex items-start justify-between gap-2">
           <CardTitle className="text-lg leading-snug">{item.title}</CardTitle>
-          {item.required ? <Badge>Required</Badge> : <Badge variant="outline">Optional</Badge>}
+          <div className="flex shrink-0 flex-wrap justify-end gap-1">
+            {status === "needs_recheck" ? (
+              <Badge variant="destructive">Needs recheck</Badge>
+            ) : null}
+            {item.required ? <Badge>Required</Badge> : <Badge variant="outline">Optional</Badge>}
+          </div>
         </div>
         <CardDescription>{item.detail}</CardDescription>
+        {answer?.previousStatus ? (
+          <p className="text-xs text-muted-foreground">
+            Previous status kept on file: {statusLabel(answer.previousStatus)}.
+            Notes and attachments were not cleared.
+          </p>
+        ) : null}
         <div className="space-y-2">
           <SourceCitations references={item.references} />
           <ItemResources resources={item.resources} />

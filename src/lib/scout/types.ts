@@ -25,6 +25,7 @@ export const SCOUT_FINDING_STATUSES = [
   "dismissed",
   "accepted_draft",
   "flagged",
+  "published",
 ] as const;
 export type ScoutFindingStatus = (typeof SCOUT_FINDING_STATUSES)[number];
 
@@ -117,9 +118,11 @@ export function findingStatusLabel(status: ScoutFindingStatus): string {
     case "dismissed":
       return "Dismissed";
     case "accepted_draft":
-      return "In draft template";
+      return "Adopted on this job";
     case "flagged":
       return "Flag only";
+    case "published":
+      return "Published template";
     default:
       return assertNever(status, `Unknown finding status: ${String(status)}`);
   }

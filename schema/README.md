@@ -40,4 +40,4 @@ The machine-readable schema is [`vic-arch-checklist.schema.json`](./vic-arch-che
 
 ## Scout reports
 
-In-app Code scout stores the latest `scout-report` per project on the device (not in the ZIP). A separate statewide noticeboard report (`statewide-board`) and scout settings (sites, cadence, runner) also stay on the device. Accepting proposed wording on a **project** bumps `template.version` to `*-draft.N` and recomputes `checksum`. Project answers are unchanged.
+In-app Code scout stores the latest `scout-report` per project on the device (not in the ZIP). A separate statewide noticeboard report (`statewide-board`) and scout settings (sites, cadence, runner) also stay on the device. Approving a sourced change **publishes** a new live template version. Existing projects receive `impacts` on `project.json`; adopting selected items sets those answers to `needs_recheck` and keeps notes, `previousStatus`, and attachments. Older ZIPs without `impacts` still validate.

@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import { AppHeader } from "@/components/app-header";
 import { StageChecklist } from "@/components/stage-checklist";
-import { loadProject } from "@/lib/client-store";
+import { loadProject, syncProjectImpacts } from "@/lib/client-store";
 import { grokbotForStage } from "@/lib/template/vic-residential";
 import {
   itemsForTypology,
+  openImpactCount,
   type ProjectDocument,
   type TemplateDocument,
 } from "@/lib/types";
@@ -25,10 +26,14 @@ export function ProjectStageView({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    void loadProject(id)
+    void syncProjectImpacts(id)
       .then(setData)
-      .catch((caught: unknown) => {
-        setError(caught instanceof Error ? caught.message : "Not found");
+      .catch(() => {
+        void loadProject(id)
+          .then(setData)
+          .catch((caught: unknown) => {
+            setError(caught instanceof Error ? caught.message : "Not found");
+          });
       });
   }, [id]);
 
@@ -77,6 +82,15 @@ export function ProjectStageView({
       />
       <main className="mx-auto max-w-3xl space-y-4 px-4 py-6">
         <p className="text-sm text-muted-foreground">{stage.summary}</p>
+        {openImpactCount(project) > 0 ? (
+          <p className="text-sm">
+            This job has a template impact notice.{" "}
+            <a className="underline underline-offset-2" href={`/p/${project.id}`}>
+              Review it on the project
+            </a>{" "}
+            before treating ticks as current.
+          </p>
+        ) : null}
         <StageChecklist
           project={project}
           template={template}

@@ -13,8 +13,12 @@ export const ITEM_STATUSES = [
   "done",
   "not_applicable",
   "blocked",
+  "needs_recheck",
 ] as const;
 export type ItemStatus = (typeof ITEM_STATUSES)[number];
+
+export const IMPACT_STATUSES = ["open", "adopted", "dismissed"] as const;
+export type ImpactStatus = (typeof IMPACT_STATUSES)[number];
 
 export type TemplateRef = {
   id: string;
@@ -27,6 +31,46 @@ export type Answer = {
   notes: string;
   updatedAt: string;
   fields: Record<string, string | number | boolean | null>;
+  previousStatus?: ItemStatus;
+};
+
+export type TemplateItemChange = {
+  itemId: string;
+  title: string;
+  beforeTitle: string;
+  afterTitle: string;
+  beforeDetail: string;
+  afterDetail: string;
+  beforeReferences: string[];
+  afterReferences: string[];
+};
+
+export type TemplateRelease = {
+  id: string;
+  findingId: string;
+  sourceTitle: string;
+  sourceUrl: string;
+  fromVersion: string;
+  toVersion: string;
+  publishedAt: string;
+  changes: TemplateItemChange[];
+};
+
+export type ImpactChange = TemplateItemChange & {
+  adopted: boolean;
+};
+
+export type ImpactNotice = {
+  id: string;
+  releaseId: string;
+  findingId: string;
+  sourceTitle: string;
+  sourceUrl: string;
+  fromVersion: string;
+  toVersion: string;
+  publishedAt: string;
+  status: ImpactStatus;
+  changes: ImpactChange[];
 };
 
 export type AttachmentMeta = {
@@ -64,6 +108,7 @@ export type ProjectDocument = {
   site: Site;
   answers: Record<string, Answer>;
   attachments: AttachmentMeta[];
+  impacts?: ImpactNotice[];
 };
 
 export type Stage = {
@@ -150,6 +195,7 @@ export type ProjectSummary = {
   templateVersion: string;
   done: number;
   total: number;
+  openImpacts: number;
 };
 
 export function isTypology(value: string): value is Typology {
@@ -158,6 +204,41 @@ export function isTypology(value: string): value is Typology {
 
 export function isItemStatus(value: string): value is ItemStatus {
   return (ITEM_STATUSES as readonly string[]).includes(value);
+}
+
+export function isImpactStatus(value: string): value is ImpactStatus {
+  return (IMPACT_STATUSES as readonly string[]).includes(value);
+}
+
+export function openImpactCount(project: ProjectDocument): number {
+  return (project.impacts ?? []).filter((notice) => notice.status === "open")
+    .length;
+}
+
+export function mergeAnswer(
+  existing: Answer | undefined,
+  patch: {
+    status?: ItemStatus;
+    notes?: string;
+    fields?: Record<string, string | number | boolean | null>;
+  },
+  now: string,
+): Answer {
+  const status = patch.status ?? existing?.status ?? "todo";
+  const previousStatus =
+    status === "needs_recheck"
+      ? existing?.previousStatus ??
+        (existing && existing.status !== "needs_recheck"
+          ? existing.status
+          : undefined)
+      : undefined;
+  return {
+    status,
+    notes: patch.notes ?? existing?.notes ?? "",
+    updatedAt: now,
+    fields: patch.fields ?? existing?.fields ?? {},
+    previousStatus,
+  };
 }
 
 export function assertNever(value: never, message: string): never {
@@ -189,6 +270,8 @@ export function statusLabel(status: ItemStatus): string {
       return "N/A";
     case "blocked":
       return "Blocked";
+    case "needs_recheck":
+      return "Needs recheck";
     default:
       return assertNever(status, `Unknown status: ${String(status)}`);
   }

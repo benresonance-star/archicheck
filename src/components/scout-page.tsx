@@ -63,7 +63,8 @@ export function ScoutPage({ id }: { id: string }) {
         <p className="text-sm text-muted-foreground">
           Watches statewide Victorian / NCC / ARBV / AIA / builders sources
           (editable on the home noticeboard) plus this project’s municipality.
-          Proposed sentences are drafts until you accept them.{" "}
+          Proposed sentences stay drafts until a reviewer compares them and
+          publishes a template version. This job then gets an impact notice.{" "}
           <Link className="underline underline-offset-2" href="/scout">
             Scout process
           </Link>

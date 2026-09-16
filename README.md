@@ -42,7 +42,7 @@ Default sites include NCC 2025 (BPC and ABCB), ARBV, AIA Victorian Chapter, Mast
 
 Each **project** still has **Code scout** for that job’s municipality.
 
-Alerts stay in the app. The first run stores a baseline; later runs compare hashes. You can tick flagged items yourself, or edit and accept proposed wording into a **draft template** on a project — answers are never auto-changed.
+Alerts stay in the app. The first run stores a baseline; later runs compare hashes. A sourced proposal (scout, Grok Bot, or a person) is compared against the current item. **Approve and publish** writes a new live template version. Existing projects get an **impact notice**; the job reviewer selects which changes to adopt. Adopted checks become **Needs recheck** and keep their notes, previous status and attachments.
 
 This is a practice aid, not legal advice. Some official sites block automated fetch; those findings still list the URL and item ids.
 

@@ -55,6 +55,13 @@ test("export ZIP into a wiped installation restores answers, notes, attachments 
       status: "in_progress",
       notes: "Deemed-to-comply canopy is the open question.",
     });
+    await setAnswer(created.project.id, "pd-title", {
+      status: "done",
+      notes: "Title search on file.",
+    });
+    await setAnswer(created.project.id, "pd-title", {
+      status: "needs_recheck",
+    });
 
     const attachmentBytes = Buffer.from("title search excerpt\n", "utf8");
     await addAttachment({
@@ -88,6 +95,9 @@ test("export ZIP into a wiped installation restores answers, notes, attachments 
       loaded.project.answers["cd-cl55"].notes,
       "Deemed-to-comply canopy is the open question.",
     );
+    assert.equal(loaded.project.answers["pd-title"].status, "needs_recheck");
+    assert.equal(loaded.project.answers["pd-title"].previousStatus, "done");
+    assert.equal(loaded.project.answers["pd-title"].notes, "Title search on file.");
     assert.equal(loaded.project.template.id, unpacked.template.id);
     assert.equal(loaded.project.template.version, unpacked.template.version);
     assert.equal(loaded.project.template.checksum, unpacked.template.checksum);

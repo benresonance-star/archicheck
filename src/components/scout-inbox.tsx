@@ -15,9 +15,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { FindingComparison } from "@/components/finding-comparison";
 import {
-  applyProposedWording,
+  adoptFindingOnProject,
   patchScoutFinding,
+  publishFinding,
   runProjectScout,
   updateMunicipality,
 } from "@/lib/client-store";
@@ -30,6 +32,7 @@ import {
   type ScoutFinding,
   type ScoutReport,
 } from "@/lib/scout/types";
+import { comparisonRows } from "@/lib/template/publish";
 import type { TemplateDocument } from "@/lib/types";
 
 export function ScoutInbox({
@@ -134,8 +137,9 @@ export function ScoutInbox({
       </div>
       {!report ? (
         <p className="text-sm text-muted-foreground">
-          This is a practice aid, not legal advice. Nothing is written into the
-          template until you accept proposed wording.
+          This is a practice aid, not legal advice. Statewide wording is
+          published as a new template version. Existing jobs get an impact
+          notice; they do not change until a reviewer adopts selected checks.
         </p>
       ) : (
         <>
@@ -245,26 +249,45 @@ function FindingCard({
       toast.error("No proposed wording on this finding");
       return;
     }
+    const proposed = { ...finding.proposed, detail };
     try {
-      const { report } = await applyProposedWording({
+      if (finding.scope === "statewide") {
+        const next = await publishFinding({
+          reportId: projectId,
+          finding,
+          proposed,
+        });
+        onReport(next.report);
+        toast.success(
+          `Published template ${next.release.toVersion}. This job has an impact notice to adopt.`,
+        );
+        return;
+      }
+      const next = await adoptFindingOnProject({
         projectId,
         finding,
-        proposed: { ...finding.proposed, detail },
+        proposed,
       });
-      onReport(report);
-      toast.success("Draft template updated. Answers were not changed.");
+      onReport(next.report);
+      toast.success(
+        "Wording adopted on this job. Affected checks need recheck; notes were kept.",
+      );
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Could not apply");
     }
   }
 
   const showAccept =
-    Boolean(finding.proposed?.detail) &&
+    Boolean(detail.trim()) &&
     finding.action !== "no_change" &&
     finding.status === "open" &&
     !isBlockedFinding(finding);
 
   const blocked = isBlockedFinding(finding);
+  const rows = comparisonRows(template, finding, {
+    ...finding.proposed,
+    detail,
+  });
 
   return (
     <Card>
@@ -306,6 +329,7 @@ function FindingCard({
             No checklist items for this typology on this source.
           </p>
         )}
+        {blocked ? null : <FindingComparison rows={rows} />}
         {blocked || !finding.proposed?.detail ? null : (
           <div className="space-y-1">
             <Label htmlFor={`${finding.id}-proposed`}>Proposed wording</Label>
@@ -322,7 +346,9 @@ function FindingCard({
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             {showAccept ? (
               <Button className="min-h-11" onClick={() => void accept()}>
-                Accept into draft
+                {finding.scope === "statewide"
+                  ? "Approve and publish"
+                  : "Adopt on this job"}
               </Button>
             ) : null}
             <Button variant="outline" className="min-h-11" onClick={() => void flagOnly()}>

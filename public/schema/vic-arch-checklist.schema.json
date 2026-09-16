@@ -31,7 +31,16 @@
         "in_progress",
         "done",
         "not_applicable",
-        "blocked"
+        "blocked",
+        "needs_recheck"
+      ]
+    },
+    "impactStatus": {
+      "type": "string",
+      "enum": [
+        "open",
+        "adopted",
+        "dismissed"
       ]
     },
     "templateRef": {
@@ -83,6 +92,161 @@
               "boolean",
               "null"
             ]
+          }
+        },
+        "previousStatus": {
+          "$ref": "#/$defs/itemStatus"
+        }
+      }
+    },
+    "templateItemChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "itemId",
+        "title",
+        "beforeTitle",
+        "afterTitle",
+        "beforeDetail",
+        "afterDetail",
+        "beforeReferences",
+        "afterReferences"
+      ],
+      "properties": {
+        "itemId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string"
+        },
+        "beforeTitle": {
+          "type": "string"
+        },
+        "afterTitle": {
+          "type": "string"
+        },
+        "beforeDetail": {
+          "type": "string"
+        },
+        "afterDetail": {
+          "type": "string"
+        },
+        "beforeReferences": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "afterReferences": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "impactChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "itemId",
+        "title",
+        "beforeTitle",
+        "afterTitle",
+        "beforeDetail",
+        "afterDetail",
+        "beforeReferences",
+        "afterReferences",
+        "adopted"
+      ],
+      "properties": {
+        "itemId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string"
+        },
+        "beforeTitle": {
+          "type": "string"
+        },
+        "afterTitle": {
+          "type": "string"
+        },
+        "beforeDetail": {
+          "type": "string"
+        },
+        "afterDetail": {
+          "type": "string"
+        },
+        "beforeReferences": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "afterReferences": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "adopted": {
+          "type": "boolean"
+        }
+      }
+    },
+    "impactNotice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "releaseId",
+        "findingId",
+        "sourceTitle",
+        "sourceUrl",
+        "fromVersion",
+        "toVersion",
+        "publishedAt",
+        "status",
+        "changes"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "releaseId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "findingId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceTitle": {
+          "type": "string"
+        },
+        "sourceUrl": {
+          "type": "string"
+        },
+        "fromVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "toVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "publishedAt": {
+          "$ref": "#/$defs/isoDateTime"
+        },
+        "status": {
+          "$ref": "#/$defs/impactStatus"
+        },
+        "changes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/impactChange"
           }
         }
       }
@@ -391,6 +555,12 @@
           "type": "array",
           "items": {
             "$ref": "#/$defs/attachment"
+          }
+        },
+        "impacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/impactNotice"
           }
         }
       }

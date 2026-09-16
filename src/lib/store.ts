@@ -11,7 +11,8 @@ import {
   type ProjectSummary,
   type Site,
   type TemplateDocument,
-  itemsForTypology,
+  mergeAnswer,
+  openImpactCount,
   progressForProject,
 } from "@/lib/types";
 import { BUNDLED_TEMPLATE } from "@/lib/template/vic-residential";
@@ -94,6 +95,7 @@ export async function listProjects(): Promise<ProjectSummary[]> {
         templateVersion: project.template.version,
         done,
         total,
+        openImpacts: openImpactCount(project),
       });
     } catch {
       continue;
@@ -135,6 +137,7 @@ export async function createProject(input: {
     site: input.site,
     answers: {},
     attachments: [],
+    impacts: [],
   };
   await writeProjectFiles(project, template);
   return { project, template };
@@ -177,13 +180,11 @@ export async function setAnswer(
   }
   return persistMutatedProject(projectId, (project) => {
     const existing = project.answers[itemId];
-    project.answers[itemId] = {
-      ...existing,
-      status: patch.status ?? existing?.status ?? "todo",
-      notes: patch.notes ?? existing?.notes ?? "",
-      updatedAt: new Date().toISOString(),
-      fields: patch.fields ?? existing?.fields ?? {},
-    };
+    project.answers[itemId] = mergeAnswer(
+      existing,
+      patch,
+      new Date().toISOString(),
+    );
   });
 }
 
@@ -314,11 +315,4 @@ export async function importProjectZip(bytes: Buffer): Promise<{
 
 export async function deleteProject(projectId: string): Promise<void> {
   await rm(projectDir(projectId), { recursive: true, force: true });
-}
-
-export function applicableItemCount(
-  template: TemplateDocument,
-  typology: ProjectDocument["site"]["typology"],
-): number {
-  return itemsForTypology(template.items, typology).length;
 }

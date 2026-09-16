@@ -12,6 +12,9 @@ import {
   type ProjectSummary,
   type Site,
   type TemplateDocument,
+  type TemplateRelease,
+  mergeAnswer,
+  openImpactCount,
   progressForProject,
 } from "@/lib/types";
 import { validateProjectDocument, validateTemplateDocument } from "@/lib/validate";
@@ -21,11 +24,23 @@ import {
   STATEWIDE_BOARD_ID,
   type ScoutSettings,
 } from "@/lib/scout/settings";
-import type { ScoutFinding, ScoutProposed, ScoutReport } from "@/lib/scout/types";
+import {
+  SCOUT_FORMAT_VERSION,
+  SCOUT_REPORT_FORMAT,
+  type ScoutFinding,
+  type ScoutProposed,
+  type ScoutReport,
+} from "@/lib/scout/types";
 import type { PreviousSnapshot } from "@/lib/scout/watch-list";
+import {
+  adoptSelected,
+  dismissNotice,
+  noticeFromRelease,
+  publishFindingToTemplate,
+} from "@/lib/template/publish";
 
 const DB_NAME = "vic-arch-checklist";
-const DB_VERSION = 3;
+const DB_VERSION = 4;
 const MAX_ATTACHMENT_BYTES = 12 * 1024 * 1024;
 
 type AttachmentRecord = {
@@ -59,6 +74,9 @@ function openDb(): Promise<IDBDatabase> {
       }
       if (!db.objectStoreNames.contains("scoutSettings")) {
         db.createObjectStore("scoutSettings", { keyPath: "id" });
+      }
+      if (!db.objectStoreNames.contains("liveTemplate")) {
+        db.createObjectStore("liveTemplate", { keyPath: "id" });
       }
     };
     request.onsuccess = () => resolve(request.result);
@@ -112,6 +130,7 @@ export async function listProjects(): Promise<ProjectSummary[]> {
         templateVersion: project.template.version,
         done,
         total,
+        openImpacts: openImpactCount(project),
       } satisfies ProjectSummary;
     })
     .filter((entry): entry is ProjectSummary => entry !== null)
@@ -161,7 +180,8 @@ export async function createProject(site: Site): Promise<{
   template: TemplateDocument;
 }> {
   const now = new Date().toISOString();
-  const template = structuredClone(BUNDLED_TEMPLATE);
+  const live = await loadLiveTemplate();
+  const template = structuredClone(live.template);
   const project: ProjectDocument = {
     format: PROJECT_FORMAT,
     formatVersion: FORMAT_VERSION,
@@ -177,6 +197,7 @@ export async function createProject(site: Site): Promise<{
     site,
     answers: {},
     attachments: [],
+    impacts: [],
   };
   await writeProject(project, template);
   return { project, template };
@@ -209,13 +230,11 @@ export async function setAnswer(
   }
   return mutateProject(projectId, (project) => {
     const existing = project.answers[itemId];
-    project.answers[itemId] = {
-      ...existing,
-      status: patch.status ?? existing?.status ?? "todo",
-      notes: patch.notes ?? existing?.notes ?? "",
-      updatedAt: new Date().toISOString(),
-      fields: patch.fields ?? existing?.fields ?? {},
-    };
+    project.answers[itemId] = mergeAnswer(
+      existing,
+      patch,
+      new Date().toISOString(),
+    );
   });
 }
 
@@ -457,30 +476,291 @@ export async function updateMunicipality(
   });
 }
 
-export async function applyProposedWording(input: {
+type LiveTemplateRecord = {
+  id: string;
+  template: TemplateDocument;
+  releases: TemplateRelease[];
+};
+
+export async function loadLiveTemplate(): Promise<{
+  template: TemplateDocument;
+  releases: TemplateRelease[];
+}> {
+  try {
+    const db = await openDb();
+    const tx = db.transaction("liveTemplate", "readonly");
+    const row = (await requestToPromise(
+      tx.objectStore("liveTemplate").get(BUNDLED_TEMPLATE.id),
+    )) as LiveTemplateRecord | undefined;
+    await txDone(tx);
+    if (row?.template) {
+      return {
+        template: validateTemplateDocument(row.template),
+        releases: row.releases ?? [],
+      };
+    }
+  } catch {
+    // First run or older IndexedDB without this store yet.
+  }
+  return { template: structuredClone(BUNDLED_TEMPLATE), releases: [] };
+}
+
+async function saveLiveTemplate(
+  template: TemplateDocument,
+  releases: TemplateRelease[],
+): Promise<void> {
+  validateTemplateDocument(template);
+  const db = await openDb();
+  const tx = db.transaction("liveTemplate", "readwrite");
+  tx.objectStore("liveTemplate").put({
+    id: template.id,
+    template: JSON.parse(prettyStringify(template)) as TemplateDocument,
+    releases,
+  } satisfies LiveTemplateRecord);
+  await txDone(tx);
+}
+
+async function stampTemplateChecksum(
+  template: TemplateDocument,
+): Promise<TemplateDocument> {
+  template.checksum = await sha256Json(
+    templateChecksumPayload(template as unknown as Record<string, unknown>),
+  );
+  return template;
+}
+
+export async function addSourcedProposal(input: {
+  sourceTitle: string;
+  sourceUrl: string;
+  flag: string;
+  itemIds: string[];
+  detail: string;
+}): Promise<ScoutReport> {
+  const sourceTitle = input.sourceTitle.trim();
+  const sourceUrl = input.sourceUrl.trim();
+  const flag = input.flag.trim();
+  const detail = input.detail.trim();
+  if (!sourceTitle) {
+    throw new Error("Give the source a name");
+  }
+  if (!sourceUrl.startsWith("https://")) {
+    throw new Error("Source URL must start with https://");
+  }
+  if (input.itemIds.length === 0) {
+    throw new Error("Pick at least one checklist item");
+  }
+  if (!detail) {
+    throw new Error("Write the proposed wording");
+  }
+  const existing = await loadScoutReport(STATEWIDE_BOARD_ID);
+  const finding: ScoutFinding = {
+    id: crypto.randomUUID(),
+    sourceId: `proposal-${crypto.randomUUID()}`,
+    sourceTitle,
+    url: sourceUrl,
+    scope: "statewide",
+    action: "replace",
+    itemIds: input.itemIds,
+    flag: flag || "Sourced wording change proposed for review.",
+    proposed: {
+      detail,
+      references: [sourceUrl],
+    },
+    confidence: "low",
+    status: "open",
+    hashChanged: false,
+    baseline: false,
+  };
+  const report: ScoutReport = existing
+    ? { ...existing, findings: [finding, ...existing.findings] }
+    : {
+        format: SCOUT_REPORT_FORMAT,
+        formatVersion: SCOUT_FORMAT_VERSION,
+        id: crypto.randomUUID(),
+        projectId: STATEWIDE_BOARD_ID,
+        kind: "statewide",
+        ranAt: new Date().toISOString(),
+        municipality: "",
+        localConfigured: false,
+        typology: "house",
+        snapshots: [],
+        findings: [finding],
+      };
+  await saveScoutReport(report);
+  return report;
+}
+
+export async function publishFinding(input: {
+  reportId: string;
+  finding: ScoutFinding;
+  proposed: ScoutProposed;
+}): Promise<{
+  template: TemplateDocument;
+  report: ScoutReport;
+  release: TemplateRelease;
+}> {
+  const live = await loadLiveTemplate();
+  const publishedAt = new Date().toISOString();
+  const published = publishFindingToTemplate({
+    template: live.template,
+    finding: input.finding,
+    proposed: input.proposed,
+    publishedAt,
+    releaseId: crypto.randomUUID(),
+  });
+  await stampTemplateChecksum(published.template);
+  await saveLiveTemplate(published.template, [
+    ...live.releases,
+    published.release,
+  ]);
+  const summaries = await listProjects();
+  for (const summary of summaries) {
+    const loaded = await loadProject(summary.id);
+    const notice = noticeFromRelease({
+      release: published.release,
+      project: loaded.project,
+      template: loaded.template,
+      noticeId: crypto.randomUUID(),
+    });
+    if (!notice) {
+      continue;
+    }
+    loaded.project.impacts = [...(loaded.project.impacts ?? []), notice];
+    loaded.project.revision += 1;
+    loaded.project.updatedAt = publishedAt;
+    await writeProject(loaded.project, loaded.template);
+  }
+  const report = await patchScoutFinding(input.reportId, input.finding.id, {
+    status: "published",
+    proposed: input.proposed,
+  });
+  return {
+    template: published.template,
+    report,
+    release: published.release,
+  };
+}
+
+export async function adoptFindingOnProject(input: {
   projectId: string;
   finding: ScoutFinding;
   proposed: ScoutProposed;
-}): Promise<{ template: TemplateDocument; report: ScoutReport }> {
+}): Promise<{ template: TemplateDocument; report: ScoutReport; project: ProjectDocument }> {
   const { project, template } = await loadProject(input.projectId);
   const next = applyProposedToTemplate(template, input.finding, input.proposed);
   next.version = bumpDraftVersion(next.version);
-  next.checksum = await sha256Json(
-    templateChecksumPayload(next as unknown as Record<string, unknown>),
-  );
+  await stampTemplateChecksum(next);
+  const now = new Date().toISOString();
+  const itemIds =
+    input.finding.itemIds.length > 0
+      ? input.finding.itemIds
+      : input.proposed.newItem
+        ? [input.proposed.newItem.id]
+        : [];
+  for (const itemId of itemIds) {
+    if (!next.items.some((item) => item.id === itemId)) {
+      continue;
+    }
+    project.answers[itemId] = mergeAnswer(
+      project.answers[itemId],
+      { status: "needs_recheck" },
+      now,
+    );
+  }
   project.template = {
     id: next.id,
     version: next.version,
     checksum: next.checksum,
   };
   project.revision += 1;
-  project.updatedAt = new Date().toISOString();
+  project.updatedAt = now;
   await writeProject(project, next);
   const report = await patchScoutFinding(input.projectId, input.finding.id, {
     status: "accepted_draft",
     proposed: input.proposed,
   });
-  return { template: next, report };
+  return { template: next, report, project };
+}
+
+export async function adoptImpact(input: {
+  projectId: string;
+  noticeId: string;
+  selectedItemIds: string[];
+}): Promise<{ project: ProjectDocument; template: TemplateDocument }> {
+  const { project, template } = await loadProject(input.projectId);
+  const notice = (project.impacts ?? []).find(
+    (row) => row.id === input.noticeId,
+  );
+  if (!notice) {
+    throw new Error("Impact notice was not found on this project");
+  }
+  const live = await loadLiveTemplate();
+  const adopted = adoptSelected({
+    project,
+    template,
+    publishedTemplate: live.template,
+    notice,
+    selectedItemIds: input.selectedItemIds,
+    now: new Date().toISOString(),
+  });
+  await stampTemplateChecksum(adopted.template);
+  adopted.project.template = {
+    id: adopted.template.id,
+    version: notice.toVersion,
+    checksum: adopted.template.checksum,
+  };
+  adopted.project.revision += 1;
+  adopted.project.updatedAt = new Date().toISOString();
+  await writeProject(adopted.project, adopted.template);
+  return adopted;
+}
+
+export async function dismissImpact(input: {
+  projectId: string;
+  noticeId: string;
+}): Promise<{ project: ProjectDocument; template: TemplateDocument }> {
+  const { project, template } = await loadProject(input.projectId);
+  const next = dismissNotice(project, input.noticeId);
+  next.revision += 1;
+  next.updatedAt = new Date().toISOString();
+  await writeProject(next, template);
+  return { project: next, template };
+}
+
+export async function syncProjectImpacts(projectId: string): Promise<{
+  project: ProjectDocument;
+  template: TemplateDocument;
+}> {
+  const loaded = await loadProject(projectId);
+  const live = await loadLiveTemplate();
+  if (
+    loaded.project.template.version === live.template.version &&
+    loaded.project.template.checksum === live.template.checksum
+  ) {
+    return loaded;
+  }
+  let added = 0;
+  const now = new Date().toISOString();
+  for (const release of live.releases) {
+    const notice = noticeFromRelease({
+      release,
+      project: loaded.project,
+      template: loaded.template,
+      noticeId: crypto.randomUUID(),
+    });
+    if (!notice) {
+      continue;
+    }
+    loaded.project.impacts = [...(loaded.project.impacts ?? []), notice];
+    added += 1;
+  }
+  if (added === 0) {
+    return loaded;
+  }
+  loaded.project.revision += 1;
+  loaded.project.updatedAt = now;
+  await writeProject(loaded.project, loaded.template);
+  return loaded;
 }
 
 export async function loadScoutSettings(): Promise<ScoutSettings> {

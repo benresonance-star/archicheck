@@ -37,6 +37,9 @@ export function TypologyProjectList({ typology }: { typology: Typology }) {
               <span className="block font-medium">{project.name}</span>
               <span className="text-xs text-muted-foreground">
                 rev {project.revision} · {project.done}/{project.total}
+                {project.openImpacts
+                  ? ` · ${project.openImpacts} impact${project.openImpacts === 1 ? "" : "s"}`
+                  : ""}
               </span>
             </span>
             <span className="text-sm">Open</span>

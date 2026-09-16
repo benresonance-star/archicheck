@@ -14,10 +14,16 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ScoutSection, SCOUT_HOME_OPEN_KEY } from "@/components/scout-section";
+import { FindingComparison } from "@/components/finding-comparison";
+import { SourcedProposalForm } from "@/components/sourced-proposal-form";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
+  loadLiveTemplate,
   loadScoutReport,
   loadScoutSettings,
   patchScoutFinding,
+  publishFinding,
   runStatewideScout,
 } from "@/lib/client-store";
 import {
@@ -38,6 +44,9 @@ import {
   type ScoutFinding,
   type ScoutReport,
 } from "@/lib/scout/types";
+import { comparisonRows } from "@/lib/template/publish";
+import { BUNDLED_TEMPLATE } from "@/lib/template/vic-residential";
+import type { TemplateDocument } from "@/lib/types";
 
 export function StatewideNoticeboard({
   compact = false,
@@ -48,6 +57,9 @@ export function StatewideNoticeboard({
 }) {
   const [settings, setSettings] = useState<ScoutSettings | null>(null);
   const [report, setReport] = useState<ScoutReport | null>(null);
+  const [liveTemplate, setLiveTemplate] = useState<TemplateDocument>(
+    BUNDLED_TEMPLATE,
+  );
   const [running, setRunning] = useState(false);
   const [blockedOpen, setBlockedOpen] = useState(false);
 
@@ -55,6 +67,7 @@ export function StatewideNoticeboard({
     void (async () => {
       setSettings(await loadScoutSettings());
       setReport(await loadScoutReport(STATEWIDE_BOARD_ID));
+      setLiveTemplate((await loadLiveTemplate()).template);
     })();
   }, []);
 
@@ -139,6 +152,12 @@ export function StatewideNoticeboard({
           </Button>
         ) : null}
       </div>
+      {compact ? null : (
+        <SourcedProposalForm
+          template={liveTemplate}
+          onCreated={setReport}
+        />
+      )}
       {!report ? (
         <p className="text-sm text-scout-foreground/80">
           Statewide sources include NCC, ARBV, AIA, Master Builders Victoria, HIA,
@@ -156,8 +175,14 @@ export function StatewideNoticeboard({
               <h3 className="text-sm font-medium">Changes to review</h3>
               <FindingList
                 compact={compact}
+                template={liveTemplate}
                 findings={changes}
                 onReport={setReport}
+                onPublished={() => {
+                  void loadLiveTemplate().then((live) =>
+                    setLiveTemplate(live.template),
+                  );
+                }}
               />
             </div>
           ) : null}
@@ -185,6 +210,7 @@ export function StatewideNoticeboard({
                   </p>
                   <FindingList
                     compact={compact}
+                    template={liveTemplate}
                     findings={blocked}
                     onReport={setReport}
                   />
@@ -216,12 +242,16 @@ export function StatewideNoticeboard({
 
 function FindingList({
   compact,
+  template,
   findings,
   onReport,
+  onPublished,
 }: {
   compact: boolean;
+  template: TemplateDocument;
   findings: ScoutFinding[];
   onReport: (report: ScoutReport) => void;
+  onPublished?: () => void;
 }) {
   return (
     <ul className="space-y-3">
@@ -230,7 +260,12 @@ function FindingList({
           {compact ? (
             <CompactFinding finding={finding} />
           ) : (
-            <BoardFinding finding={finding} onReport={onReport} />
+            <BoardFinding
+              finding={finding}
+              template={template}
+              onReport={onReport}
+              onPublished={onPublished}
+            />
           )}
         </li>
       ))}
@@ -256,26 +291,38 @@ function CompactFinding({ finding }: { finding: ScoutFinding }) {
           {findingDisplayFlag(finding)}
         </CardDescription>
       </CardHeader>
-      {finding.url ? (
-        <CardContent>
+      <CardContent className="space-y-2">
+        {finding.url ? (
           <Button className="min-h-11 w-full" asChild>
             <a href={finding.url} target="_blank" rel="noreferrer">
               Open source
             </a>
           </Button>
-        </CardContent>
-      ) : null}
+        ) : null}
+        {blocked || finding.status !== "open" ? null : (
+          <Button className="min-h-11 w-full" variant="outline" asChild>
+            <Link href="/scout">Compare and publish</Link>
+          </Button>
+        )}
+      </CardContent>
     </Card>
   );
 }
 
 function BoardFinding({
   finding,
+  template,
   onReport,
+  onPublished,
 }: {
   finding: ScoutFinding;
+  template: TemplateDocument;
   onReport: (report: ScoutReport) => void;
+  onPublished?: () => void;
 }) {
+  const [detail, setDetail] = useState(finding.proposed?.detail ?? "");
+  const [pending, setPending] = useState(false);
+
   async function setStatus(status: ScoutFinding["status"]) {
     try {
       onReport(await patchScoutFinding(STATEWIDE_BOARD_ID, finding.id, { status }));
@@ -284,7 +331,39 @@ function BoardFinding({
     }
   }
 
+  async function publish() {
+    if (!finding.proposed) {
+      toast.error("No proposed wording on this finding");
+      return;
+    }
+    setPending(true);
+    try {
+      const next = await publishFinding({
+        reportId: STATEWIDE_BOARD_ID,
+        finding,
+        proposed: { ...finding.proposed, detail },
+      });
+      onReport(next.report);
+      onPublished?.();
+      toast.success(
+        `Published template ${next.release.toVersion}. Existing jobs have an impact notice.`,
+      );
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not publish");
+    } finally {
+      setPending(false);
+    }
+  }
+
   const blocked = isBlockedFinding(finding);
+  const proposed = { ...finding.proposed, detail };
+  const rows = comparisonRows(template, finding, proposed);
+  const canPublish =
+    Boolean(detail.trim()) &&
+    finding.status === "open" &&
+    !blocked &&
+    finding.action !== "no_change";
+
   return (
     <Card className="border-scout-border bg-scout-foreground/5">
       <CardHeader>
@@ -308,16 +387,30 @@ function BoardFinding({
             </a>
           </Button>
         ) : null}
-        {blocked ? null : finding.proposed?.detail ? (
-          <p className="text-sm">{finding.proposed.detail}</p>
-        ) : null}
         {blocked ? null : (
-          <p className="text-sm text-muted-foreground">
-            To push wording into a project template, open that project’s Code scout.
-          </p>
+          <>
+            <FindingComparison rows={rows} />
+            {finding.proposed?.detail !== undefined || canPublish ? (
+              <div className="space-y-1">
+                <Label htmlFor={`${finding.id}-proposed`}>Proposed wording</Label>
+                <Textarea
+                  id={`${finding.id}-proposed`}
+                  className="min-h-24 text-base"
+                  value={detail}
+                  disabled={finding.status !== "open"}
+                  onChange={(event) => setDetail(event.target.value)}
+                />
+              </div>
+            ) : null}
+          </>
         )}
         {finding.status === "open" ? (
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+            {canPublish ? (
+              <Button className="min-h-11" disabled={pending} onClick={() => void publish()}>
+                {pending ? "Publishing…" : "Approve and publish"}
+              </Button>
+            ) : null}
             <Button variant="outline" className="min-h-11" onClick={() => void setStatus("flagged")}>
               Flag only
             </Button>

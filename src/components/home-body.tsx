@@ -83,6 +83,9 @@ export function HomeBody() {
                       <span className="text-xs text-muted-foreground">
                         {project.typology} · rev {project.revision} ·{" "}
                         {project.done}/{project.total}
+                        {project.openImpacts
+                          ? ` · ${project.openImpacts} impact${project.openImpacts === 1 ? "" : "s"}`
+                          : ""}
                       </span>
                     </span>
                     <span className="text-sm text-muted-foreground">Open</span>
