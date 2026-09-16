@@ -9,6 +9,7 @@ import {
   listRollup,
   requiredEvidenceMissing,
   rowShowsSignal,
+  splitRequirementDots,
   templateCheckSignal,
 } from "../src/lib/check-depths";
 import { BUNDLED_TEMPLATE } from "../src/lib/template/vic-residential";
@@ -170,11 +171,23 @@ test("understanding uses the requirement statement, not the how-to title", () =>
     findings: [exampleFinding()],
     mode: "project",
   });
-  assert.match(view.established, /secluded private open space/i);
-  assert.match(view.why, /Regulatory requirement/);
+  assert.ok(
+    view.established.some((line) => /secluded private open space/i.test(line)),
+  );
+  assert.ok(view.why.some((line) => /Regulatory requirement/.test(line)));
   assert.ok(view.evidence.some((line) => /missing/i.test(line)));
   assert.ok(view.assessment.some((line) => /Insufficient information/.test(line)));
-  assert.ok(view.method);
+  assert.ok(view.method.length > 0);
+});
+
+test("livable housing detail splits into task dots", () => {
+  const livable = BUNDLED_TEMPLATE.items.find((item) => item.id === "doc-livable");
+  assert.ok(livable);
+  const dots = splitRequirementDots(livable.detail);
+  assert.ok(dots.length >= 4);
+  assert.ok(dots.some((line) => /step-free/i.test(line)));
+  assert.ok(dots.some((line) => /850 mm/i.test(line)));
+  assert.ok(dots.some((line) => /Design A or B/i.test(line)));
 });
 
 test("template understanding does not claim project evidence", () => {

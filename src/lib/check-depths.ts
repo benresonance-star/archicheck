@@ -28,13 +28,40 @@ export const CHECK_SIGNALS = [
 export type CheckSignal = (typeof CHECK_SIGNALS)[number];
 
 export type CheckUnderstanding = {
-  established: string;
-  why: string;
+  established: string[];
+  why: string[];
   evidence: string[];
   assessment: string[];
-  method?: string;
+  method: string[];
   acceptanceCriteria: string[];
 };
+
+export function splitRequirementDots(text: string): string[] {
+  const trimmed = text.trim();
+  if (!trimmed) {
+    return [];
+  }
+  const sentences = trimmed
+    .split(/(?<=[.!?])\s+(?=[A-Z0-9])/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+  return sentences.flatMap((sentence) => splitSerialList(sentence));
+}
+
+function splitSerialList(sentence: string): string[] {
+  const cleaned = sentence.replace(/[.!?]+$/u, "").trim();
+  if (!/,\s/.test(cleaned) || !/\s+and\s+/u.test(cleaned)) {
+    return cleaned ? [cleaned] : [];
+  }
+  const parts = cleaned
+    .split(/,\s+|\s+and\s+/u)
+    .map((part) => part.trim())
+    .filter(Boolean);
+  if (parts.length < 2) {
+    return [cleaned];
+  }
+  return parts.map((part) => part.charAt(0).toUpperCase() + part.slice(1));
+}
 
 export function latestFindingForItem(
   findings: FindingDocument[] | undefined,
@@ -272,8 +299,9 @@ export function checkUnderstanding(args: {
   const { item, notes, files, status, ticked, findings, mode } = args;
   const assessment = item.assessment;
   const latest = latestFindingForItem(findings, item.id);
-  const established =
-    assessment?.requirement.statement.trim() || item.detail.trim() || item.title;
+  const established = splitRequirementDots(
+    assessment?.requirement.statement.trim() || item.detail.trim() || item.title,
+  );
   const whyParts: string[] = [];
   if (assessment) {
     whyParts.push(requirementKindLabel(assessment.requirement.kind));
@@ -358,10 +386,12 @@ export function checkUnderstanding(args: {
 
   return {
     established,
-    why: whyParts.join(" "),
+    why: whyParts.flatMap((part) => splitRequirementDots(part)),
     evidence,
     assessment: assessmentLines,
-    method: assessment?.method.description,
+    method: assessment?.method.description
+      ? splitRequirementDots(assessment.method.description)
+      : [],
     acceptanceCriteria: assessment?.method.acceptanceCriteria ?? [],
   };
 }

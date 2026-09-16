@@ -135,10 +135,18 @@ function UnderstandingBody({
         </p>
       ) : null}
       <DepthQuestion question="What must be established?">
-        <p>{understanding.established}</p>
+        <ul className="list-disc space-y-1 pl-4">
+          {understanding.established.map((line, index) => (
+            <li key={`${index}-${line}`}>{line}</li>
+          ))}
+        </ul>
       </DepthQuestion>
       <DepthQuestion question="Why?">
-        <p>{understanding.why}</p>
+        <ul className="list-disc space-y-1 pl-4">
+          {understanding.why.map((line, index) => (
+            <li key={`${index}-${line}`}>{line}</li>
+          ))}
+        </ul>
       </DepthQuestion>
       <DepthQuestion question="What evidence exists?">
         <ul className="list-disc space-y-1 pl-4">
@@ -148,13 +156,17 @@ function UnderstandingBody({
         </ul>
       </DepthQuestion>
       <DepthQuestion question="What is the assessment?">
-        <ul className="space-y-1">
+        <ul className="list-disc space-y-1 pl-4">
           {understanding.assessment.map((line) => (
             <li key={line}>{line}</li>
           ))}
         </ul>
-        {understanding.method ? (
-          <p className="mt-2 text-muted-foreground">{understanding.method}</p>
+        {understanding.method.length > 0 ? (
+          <ul className="mt-2 list-disc space-y-1 pl-4 text-muted-foreground">
+            {understanding.method.map((line, index) => (
+              <li key={`${index}-${line}`}>{line}</li>
+            ))}
+          </ul>
         ) : null}
         {understanding.acceptanceCriteria.length > 0 ? (
           <ul className="mt-2 list-disc space-y-1 pl-4 text-muted-foreground">
