@@ -1,0 +1,271 @@
+"use client";
+
+import Link from "next/link";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  applyProposedWording,
+  patchScoutFinding,
+  runProjectScout,
+} from "@/lib/client-store";
+import {
+  actionLabel,
+  findingStatusLabel,
+  type ScoutFinding,
+  type ScoutReport,
+} from "@/lib/scout/types";
+import type { TemplateDocument } from "@/lib/types";
+
+export function ScoutInbox({
+  projectId,
+  template,
+  report,
+  onReport,
+}: {
+  projectId: string;
+  template: TemplateDocument;
+  report: ScoutReport | null;
+  onReport: (report: ScoutReport) => void;
+}) {
+  const [running, setRunning] = useState(false);
+
+  async function run() {
+    setRunning(true);
+    try {
+      const next = await runProjectScout(projectId);
+      onReport(next);
+      toast.success("Scout finished");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Scout failed");
+    } finally {
+      setRunning(false);
+    }
+  }
+
+  const statewide = report?.findings.filter((finding) => finding.scope === "statewide") ?? [];
+  const local = report?.findings.filter((finding) => finding.scope !== "statewide") ?? [];
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-muted-foreground">
+          {report
+            ? `Last run ${new Date(report.ranAt).toLocaleString("en-AU", { timeZone: "Australia/Melbourne" })} · ${report.localConfigured ? report.municipality : "local watch not configured"}`
+            : "No run yet. Statewide sources plus this project’s municipality."}
+        </p>
+        <Button className="min-h-11" disabled={running} onClick={() => void run()}>
+          {running ? "Scouting…" : report ? "Run scout again" : "Run scout"}
+        </Button>
+      </div>
+      {!report ? (
+        <p className="text-sm text-muted-foreground">
+          This is a practice aid, not legal advice. Nothing is written into the
+          template until you accept proposed wording.
+        </p>
+      ) : (
+        <>
+          <section className="space-y-3">
+            <h2 className="font-heading text-2xl">Statewide</h2>
+            {statewide.filter((finding) => finding.action !== "no_change").map((finding) => (
+              <FindingCard
+                key={finding.id}
+                projectId={projectId}
+                template={template}
+                finding={finding}
+                onReport={onReport}
+              />
+            ))}
+            <QuietList
+              title="Statewide quiet"
+              findings={statewide.filter((finding) => finding.action === "no_change")}
+            />
+          </section>
+          <section className="space-y-3">
+            <h2 className="font-heading text-2xl">Municipality</h2>
+            {local.filter((finding) => finding.action !== "no_change").map((finding) => (
+              <FindingCard
+                key={finding.id}
+                projectId={projectId}
+                template={template}
+                finding={finding}
+                onReport={onReport}
+              />
+            ))}
+            <QuietList
+              title="Local quiet"
+              findings={local.filter((finding) => finding.action === "no_change")}
+            />
+          </section>
+        </>
+      )}
+    </div>
+  );
+}
+
+function QuietList({
+  title,
+  findings,
+}: {
+  title: string;
+  findings: ScoutFinding[];
+}) {
+  if (findings.length === 0) {
+    return null;
+  }
+  return (
+    <p className="text-sm text-muted-foreground">
+      {title}: {findings.map((finding) => finding.sourceTitle).join(" · ")}
+    </p>
+  );
+}
+
+function FindingCard({
+  projectId,
+  template,
+  finding,
+  onReport,
+}: {
+  projectId: string;
+  template: TemplateDocument;
+  finding: ScoutFinding;
+  onReport: (report: ScoutReport) => void;
+}) {
+  const [detail, setDetail] = useState(finding.proposed?.detail ?? "");
+  const busy = finding.status !== "open";
+  const stageLinks = useMemo(
+    () =>
+      finding.itemIds.map((itemId) => {
+        const item = template.items.find((entry) => entry.id === itemId);
+        return {
+          itemId,
+          title: item?.title ?? itemId,
+          href: item ? `/p/${projectId}/s/${item.stageId}` : `/p/${projectId}`,
+        };
+      }),
+    [finding.itemIds, projectId, template.items],
+  );
+
+  async function flagOnly() {
+    try {
+      onReport(
+        await patchScoutFinding(projectId, finding.id, { status: "flagged" }),
+      );
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not update");
+    }
+  }
+
+  async function dismiss() {
+    try {
+      onReport(
+        await patchScoutFinding(projectId, finding.id, { status: "dismissed" }),
+      );
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not update");
+    }
+  }
+
+  async function accept() {
+    if (!finding.proposed) {
+      toast.error("No proposed wording on this finding");
+      return;
+    }
+    try {
+      const { report } = await applyProposedWording({
+        projectId,
+        finding,
+        proposed: { ...finding.proposed, detail },
+      });
+      onReport(report);
+      toast.success("Draft template updated. Answers were not changed.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not apply");
+    }
+  }
+
+  const showAccept =
+    Boolean(finding.proposed?.detail) &&
+    finding.action !== "no_change" &&
+    finding.status === "open";
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge>{actionLabel(finding.action)}</Badge>
+          <Badge variant="outline">{finding.scope.replaceAll("_", " ")}</Badge>
+          <Badge variant="secondary">{findingStatusLabel(finding.status)}</Badge>
+          {finding.hashChanged ? <Badge variant="destructive">Hash changed</Badge> : null}
+          {finding.baseline ? <Badge variant="outline">Baseline</Badge> : null}
+        </div>
+        <CardTitle className="text-lg">{finding.sourceTitle}</CardTitle>
+        <CardDescription>{finding.flag}</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        {finding.url ? (
+          <a
+            className="text-sm underline underline-offset-2"
+            href={finding.url}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Open source
+          </a>
+        ) : null}
+        {stageLinks.length > 0 ? (
+          <ul className="space-y-1 text-sm">
+            {stageLinks.map((link) => (
+              <li key={link.itemId}>
+                <Link className="underline underline-offset-2" href={link.href}>
+                  {link.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            No checklist items for this typology on this source.
+          </p>
+        )}
+        {finding.proposed?.detail ? (
+          <div className="space-y-1">
+            <Label htmlFor={`${finding.id}-proposed`}>Proposed wording</Label>
+            <Textarea
+              id={`${finding.id}-proposed`}
+              className="min-h-24 text-base"
+              value={detail}
+              disabled={busy}
+              onChange={(event) => setDetail(event.target.value)}
+            />
+          </div>
+        ) : null}
+        {finding.status === "open" ? (
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+            {showAccept ? (
+              <Button className="min-h-11" onClick={() => void accept()}>
+                Accept into draft
+              </Button>
+            ) : null}
+            <Button variant="outline" className="min-h-11" onClick={() => void flagOnly()}>
+              Flag only
+            </Button>
+            <Button variant="ghost" className="min-h-11" onClick={() => void dismiss()}>
+              Dismiss
+            </Button>
+          </div>
+        ) : null}
+      </CardContent>
+    </Card>
+  );
+}

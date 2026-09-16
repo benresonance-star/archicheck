@@ -36,3 +36,7 @@ A standalone `project.json` import restores answers, notes, and the template *as
 ## Schema file
 
 The machine-readable schema is [`vic-arch-checklist.schema.json`](./vic-arch-checklist.schema.json) (JSON Schema 2020-12). It is also served from `/schema/vic-arch-checklist.schema.json` in the running app.
+
+## Scout reports
+
+In-app Code scout stores the latest `scout-report` per project on the device (not in the ZIP). Accepting proposed wording bumps `template.version` to `*-draft.N` and recomputes `checksum`. Project answers are unchanged.

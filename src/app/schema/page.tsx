@@ -39,6 +39,11 @@ export default function SchemaPage() {
           lossless archive.
         </p>
         <p>
+          Code scout reports live on the device beside the project. Accepting
+          proposed wording writes a draft template version and checksum; it
+          does not rewrite answers.
+        </p>
+        <p>
           <Link href="/" className="underline underline-offset-2">
             Back to typologies
           </Link>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { AppHeader } from "@/components/app-header";
 import { ProjectActions } from "@/components/project-actions";
+import { ScoutBanner } from "@/components/scout-banner";
 import { StageIndex } from "@/components/stage-index";
 import { loadProject } from "@/lib/client-store";
 import { itemsForTypology, type ProjectDocument, type TemplateDocument } from "@/lib/types";
@@ -75,6 +76,7 @@ export function ProjectWorkspace({ id }: { id: string }) {
             {project.template.checksum.slice(0, 12)}…
           </p>
           <ProjectActions project={project} />
+          <ScoutBanner projectId={project.id} />
         </section>
         <section className="space-y-3">
           <h2 className="font-heading text-2xl">Stages</h2>

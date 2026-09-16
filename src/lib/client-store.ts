@@ -1,6 +1,7 @@
-import { sha256Bytes } from "@/lib/web-hash";
+import { sha256Bytes, sha256Json } from "@/lib/web-hash";
 import { packZip, unpackZip, PackageError } from "@/lib/browser-zip";
 import { prettyStringify } from "@/lib/canonical";
+import { templateChecksumPayload } from "@/lib/hash-payload";
 import { BUNDLED_TEMPLATE } from "@/lib/template/vic-residential";
 import {
   FORMAT_VERSION,
@@ -14,9 +15,11 @@ import {
   progressForProject,
 } from "@/lib/types";
 import { validateProjectDocument, validateTemplateDocument } from "@/lib/validate";
+import type { ScoutFinding, ScoutProposed, ScoutReport } from "@/lib/scout/types";
+import type { PreviousSnapshot } from "@/lib/scout/watch-list";
 
 const DB_NAME = "vic-arch-checklist";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const MAX_ATTACHMENT_BYTES = 12 * 1024 * 1024;
 
 type AttachmentRecord = {
@@ -41,6 +44,12 @@ function openDb(): Promise<IDBDatabase> {
       }
       if (!db.objectStoreNames.contains("attachments")) {
         db.createObjectStore("attachments", { keyPath: "key" });
+      }
+      if (!db.objectStoreNames.contains("scoutReports")) {
+        db.createObjectStore("scoutReports", { keyPath: "projectId" });
+      }
+      if (!db.objectStoreNames.contains("scoutSnapshots")) {
+        db.createObjectStore("scoutSnapshots", { keyPath: "key" });
       }
     };
     request.onsuccess = () => resolve(request.result);
@@ -259,15 +268,27 @@ export async function readAttachment(
 
 export async function deleteProject(projectId: string): Promise<void> {
   const db = await openDb();
-  const tx = db.transaction(["projects", "templates", "attachments"], "readwrite");
+  const tx = db.transaction(
+    ["projects", "templates", "attachments", "scoutReports", "scoutSnapshots"],
+    "readwrite",
+  );
   tx.objectStore("projects").delete(projectId);
   tx.objectStore("templates").delete(projectId);
+  tx.objectStore("scoutReports").delete(projectId);
   const attachments = (await requestToPromise(
     tx.objectStore("attachments").getAll(),
   )) as AttachmentRecord[];
   for (const row of attachments) {
     if (row.projectId === projectId) {
       tx.objectStore("attachments").delete(row.key);
+    }
+  }
+  const snapshots = (await requestToPromise(
+    tx.objectStore("scoutSnapshots").getAll(),
+  )) as Array<{ key: string; projectId: string }>;
+  for (const row of snapshots) {
+    if (row.projectId === projectId) {
+      tx.objectStore("scoutSnapshots").delete(row.key);
     }
   }
   await txDone(tx);
@@ -341,4 +362,150 @@ export function openHtml(html: string): void {
   const blob = new Blob([html], { type: "text/html;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   window.open(url, "_blank");
+}
+
+export async function loadScoutReport(
+  projectId: string,
+): Promise<ScoutReport | null> {
+  const db = await openDb();
+  const tx = db.transaction("scoutReports", "readonly");
+  const report = (await requestToPromise(
+    tx.objectStore("scoutReports").get(projectId),
+  )) as ScoutReport | undefined;
+  await txDone(tx);
+  return report ?? null;
+}
+
+export async function loadScoutSnapshots(
+  projectId: string,
+): Promise<PreviousSnapshot[]> {
+  const db = await openDb();
+  const tx = db.transaction("scoutSnapshots", "readonly");
+  const rows = (await requestToPromise(
+    tx.objectStore("scoutSnapshots").getAll(),
+  )) as Array<{ key: string; projectId: string; sourceId: string; sha256: string }>;
+  await txDone(tx);
+  return rows
+    .filter((row) => row.projectId === projectId && row.sha256)
+    .map((row) => ({ sourceId: row.sourceId, sha256: row.sha256 }));
+}
+
+export async function saveScoutReport(report: ScoutReport): Promise<void> {
+  const db = await openDb();
+  const tx = db.transaction(["scoutReports", "scoutSnapshots"], "readwrite");
+  tx.objectStore("scoutReports").put(report);
+  for (const snapshot of report.snapshots) {
+    if (!snapshot.sha256) {
+      continue;
+    }
+    tx.objectStore("scoutSnapshots").put({
+      key: `${report.projectId}:${snapshot.sourceId}`,
+      projectId: report.projectId,
+      sourceId: snapshot.sourceId,
+      sha256: snapshot.sha256,
+    });
+  }
+  await txDone(tx);
+}
+
+export async function patchScoutFinding(
+  projectId: string,
+  findingId: string,
+  patch: { status: ScoutFinding["status"]; proposed?: ScoutProposed | null },
+): Promise<ScoutReport> {
+  const report = await loadScoutReport(projectId);
+  if (!report) {
+    throw new Error("No scout report on this project");
+  }
+  report.findings = report.findings.map((finding) =>
+    finding.id === findingId
+      ? {
+          ...finding,
+          status: patch.status,
+          proposed:
+            patch.proposed === undefined ? finding.proposed : patch.proposed,
+        }
+      : finding,
+  );
+  await saveScoutReport(report);
+  return report;
+}
+
+function bumpDraftVersion(version: string): string {
+  const match = version.match(/^(.*)-draft\.(\d+)$/);
+  if (match) {
+    return `${match[1]}-draft.${Number(match[2]) + 1}`;
+  }
+  return `${version}-draft.1`;
+}
+
+export async function applyProposedWording(input: {
+  projectId: string;
+  finding: ScoutFinding;
+  proposed: ScoutProposed;
+}): Promise<{ template: TemplateDocument; report: ScoutReport }> {
+  const { project, template } = await loadProject(input.projectId);
+  const next: TemplateDocument = structuredClone(template);
+  if (input.finding.action === "add" && input.proposed.newItem) {
+    next.items.push(input.proposed.newItem);
+  } else {
+    const targetId = input.finding.itemIds[0];
+    const item = next.items.find((entry) => entry.id === targetId);
+    if (!item) {
+      throw new Error("Checklist item is not in this template");
+    }
+    if (input.proposed.title) {
+      item.title = input.proposed.title;
+    }
+    if (input.proposed.detail) {
+      item.detail = input.proposed.detail;
+    }
+    if (input.proposed.references) {
+      item.references = input.proposed.references;
+    }
+    if (input.proposed.appliesTo) {
+      item.appliesTo = input.proposed.appliesTo;
+    }
+  }
+  next.version = bumpDraftVersion(next.version);
+  next.checksum = await sha256Json(
+    templateChecksumPayload(next as unknown as Record<string, unknown>),
+  );
+  project.template = {
+    id: next.id,
+    version: next.version,
+    checksum: next.checksum,
+  };
+  project.revision += 1;
+  project.updatedAt = new Date().toISOString();
+  await writeProject(project, next);
+  const report = await patchScoutFinding(input.projectId, input.finding.id, {
+    status: "accepted_draft",
+    proposed: input.proposed,
+  });
+  return { template: next, report };
+}
+
+export async function runProjectScout(projectId: string): Promise<ScoutReport> {
+  const { project } = await loadProject(projectId);
+  const previous = await loadScoutSnapshots(projectId);
+  const response = await fetch("/api/scout/run", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      projectId,
+      municipality: project.site.municipality,
+      typology: project.site.typology,
+      previous,
+    }),
+  });
+  const data = (await response.json()) as {
+    error?: string;
+    report?: ScoutReport;
+  };
+  if (!response.ok || !data.report) {
+    throw new Error(data.error ?? "Scout run failed");
+  }
+  await saveScoutReport(data.report);
+  return data.report;
 }

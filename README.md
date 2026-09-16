@@ -28,6 +28,12 @@ Open [http://127.0.0.1:43181](http://127.0.0.1:43181).
 
 In the UI: **Export ZIP** on a project, then **Import ZIP** on a fresh install (or another phone).
 
+## Code scout
+
+Each project has a **Code scout** screen. It fetches statewide Victorian / NCC pages plus that project’s municipality (from the site record). Alerts stay in the app. The first run stores a baseline; later runs (badge after seven days) compare hashes. You can tick flagged items yourself, or edit and accept proposed wording into a **draft template** — answers are never auto-changed.
+
+This is a practice aid, not legal advice. Some official sites block automated fetch; those findings still list the URL and item ids.
+
 ## Grok Bots
 
 Each stage has a named Grok Bot brief (copy the first task). Bots must not lodge permits or change the JSON except as a proposed patch.
