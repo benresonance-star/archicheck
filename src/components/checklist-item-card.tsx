@@ -48,14 +48,47 @@ export function AttachmentFileList({
   );
 }
 
+export function ProjectCheckList({
+  items,
+  project,
+  onProject,
+}: {
+  items: ChecklistItem[];
+  project: ProjectDocument;
+  onProject: (project: ProjectDocument) => void;
+}) {
+  const [openId, setOpenId] = useState<string | null>(null);
+  return (
+    <ul className="divide-y divide-border">
+      {items.map((item) => (
+        <li key={item.id}>
+          <ChecklistItemCard
+            item={item}
+            project={project}
+            onProject={onProject}
+            open={openId === item.id}
+            onOpenChange={() =>
+              setOpenId((current) => (current === item.id ? null : item.id))
+            }
+          />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export function ChecklistItemCard({
   item,
   project,
   onProject,
+  open,
+  onOpenChange,
 }: {
   item: ChecklistItem;
   project: ProjectDocument;
   onProject: (project: ProjectDocument) => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }) {
   const answer = project.answers[item.id];
   const status = answer?.status ?? "todo";
@@ -105,6 +138,8 @@ export function ChecklistItemCard({
       templateVersion={project.template.version}
       templateChecksum={project.template.checksum}
       pending={pending}
+      open={open}
+      onOpenChange={onOpenChange}
       actions={
         <div className="space-y-3">
           <div className="space-y-1">

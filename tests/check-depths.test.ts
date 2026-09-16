@@ -6,7 +6,9 @@ import {
   checkUnderstanding,
   deriveCheckSignal,
   itemRestrictionParts,
+  listRollup,
   requiredEvidenceMissing,
+  rowShowsSignal,
   templateCheckSignal,
 } from "../src/lib/check-depths";
 import { BUNDLED_TEMPLATE } from "../src/lib/template/vic-residential";
@@ -33,6 +35,21 @@ test("template ticks are only to do or done", () => {
   assert.equal(templateCheckSignal(false), "todo");
   assert.equal(templateCheckSignal(true), "done");
   assert.equal(checkSignalLabel("evidence_missing"), "Evidence missing");
+  assert.equal(rowShowsSignal("todo"), false);
+  assert.equal(rowShowsSignal("done"), true);
+  assert.equal(rowShowsSignal("evidence_missing"), true);
+  assert.equal(
+    listRollup({ done: 2, total: 7, needsEvidence: 0 }),
+    "2/7",
+  );
+  assert.equal(
+    listRollup({ done: 0, total: 7, needsEvidence: 2 }),
+    "2 need evidence",
+  );
+  assert.equal(
+    listRollup({ done: 0, total: 7, needsEvidence: 1 }),
+    "1 needs evidence",
+  );
 });
 
 test("needs recheck wins over missing evidence", () => {

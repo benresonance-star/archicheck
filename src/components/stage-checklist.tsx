@@ -4,7 +4,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { addAttachment } from "@/lib/client-store";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { projectListRollup } from "@/lib/check-depths";
 import {
   Card,
   CardDescription,
@@ -19,7 +21,7 @@ import {
 } from "@/components/deliverable-heading";
 import {
   AttachmentFileList,
-  ChecklistItemCard,
+  ProjectCheckList,
 } from "@/components/checklist-item-card";
 import {
   groupStageContent,
@@ -100,18 +102,17 @@ export function StageChecklist({
                     key="stage-checks"
                     className="space-y-3 rounded-2xl border border-border bg-muted/30 p-3"
                   >
-                    <StageChecksHeading />
-                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      Associated checklist
-                    </p>
-                    {section.items.map((item) => (
-                      <ChecklistItemCard
-                        key={item.id}
-                        item={item}
-                        project={local}
-                        onProject={onProject}
-                      />
-                    ))}
+                    <div className="flex items-start justify-between gap-3">
+                      <StageChecksHeading />
+                      <Badge variant="outline" className="shrink-0">
+                        {projectListRollup(section.items, local)}
+                      </Badge>
+                    </div>
+                    <ProjectCheckList
+                      items={section.items}
+                      project={local}
+                      onProject={onProject}
+                    />
                   </div>
                 );
               case "deliverable":
@@ -178,7 +179,12 @@ function DeliverableProjectBlock({
 
   return (
     <div className="space-y-3 rounded-2xl border border-border bg-muted/30 p-3">
-      <DeliverableHeading deliverable={deliverable} />
+      <div className="flex items-start justify-between gap-3">
+        <DeliverableHeading deliverable={deliverable} />
+        <Badge variant="outline" className="shrink-0">
+          {projectListRollup(items, project)}
+        </Badge>
+      </div>
       <div className="space-y-2">
         <Label htmlFor={`${deliverable.id}-file`}>File on this stage</Label>
         <input
@@ -202,17 +208,11 @@ function DeliverableProjectBlock({
           <AttachmentFileList projectId={project.id} files={files} />
         )}
       </div>
-      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-        Associated checklist
-      </p>
-      {items.map((item) => (
-        <ChecklistItemCard
-          key={item.id}
-          item={item}
-          project={project}
-          onProject={onProject}
-        />
-      ))}
+      <ProjectCheckList
+        items={items}
+        project={project}
+        onProject={onProject}
+      />
     </div>
   );
 }

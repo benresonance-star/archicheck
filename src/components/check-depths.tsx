@@ -1,6 +1,5 @@
 "use client";
 
-import { ChevronDownIcon, ChevronUpIcon, PaperclipIcon } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { ItemResources } from "@/components/item-resources";
 import { SourceCitations } from "@/components/source-citations";
@@ -13,6 +12,7 @@ import {
   deriveCheckSignal,
   findingsForItem,
   itemRestrictionParts,
+  rowShowsSignal,
   templateCheckSignal,
   type CheckSignal,
 } from "@/lib/check-depths";
@@ -55,64 +55,57 @@ function CheckDepthCard({
   title,
   restrictions,
   signal,
-  hasFiles,
   leading,
+  open,
+  onOpenChange,
   children,
 }: {
   title: string;
   restrictions: string[];
   signal: CheckSignal;
-  hasFiles: boolean;
   leading?: ReactNode;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   children: ReactNode;
 }) {
-  const [open, setOpen] = useState(false);
-
   return (
-    <article className="overflow-visible rounded-xl border border-border bg-background">
-      <div className="flex items-start gap-2 px-3 py-3">
+    <article className="overflow-visible">
+      <div className="flex items-center gap-3 py-1.5">
         {leading}
         <button
           type="button"
           aria-expanded={open}
-          className="flex min-h-11 min-w-0 flex-1 items-start gap-2 text-left"
-          onClick={() => setOpen((current) => !current)}
+          className="flex min-h-10 min-w-0 flex-1 items-center gap-2 text-left"
+          onClick={() => onOpenChange(!open)}
         >
-          <span className="min-w-0 flex-1">
-            <span className="block font-medium leading-snug break-words">
-              {title}
-            </span>
-            <span className="mt-1 flex flex-wrap items-center justify-between gap-2">
-              <span className="text-xs leading-relaxed text-muted-foreground break-words">
-                {restrictions.length > 0
-                  ? restrictions.join(" · ")
-                  : "No extra restriction"}
-              </span>
-              <span className="flex shrink-0 items-center gap-1.5">
-                {hasFiles ? (
-                  <PaperclipIcon
-                    className="size-3.5 text-muted-foreground"
-                    aria-hidden
-                  />
-                ) : null}
-                <SignalBadge signal={signal} />
-              </span>
-            </span>
+          <span className="min-w-0 flex-1 text-sm font-medium leading-snug break-words">
+            {title}
           </span>
-          {open ? (
-            <ChevronUpIcon className="mt-1 size-4 shrink-0 text-muted-foreground" />
-          ) : (
-            <ChevronDownIcon className="mt-1 size-4 shrink-0 text-muted-foreground" />
-          )}
+          {rowShowsSignal(signal) ? <SignalBadge signal={signal} /> : null}
         </button>
       </div>
       {open ? (
-        <div className="overflow-visible space-y-3 border-t border-border px-3 py-3">
+        <div className="overflow-visible space-y-3 border-t border-border pb-3 pt-3">
+          {restrictions.length > 0 ? (
+            <p className="text-xs leading-relaxed text-muted-foreground break-words">
+              {restrictions.join(" · ")}
+            </p>
+          ) : null}
           {children}
         </div>
       ) : null}
     </article>
   );
+}
+
+function useExclusiveOpen() {
+  const [openId, setOpenId] = useState<string | null>(null);
+  return {
+    openId,
+    toggle(id: string) {
+      setOpenId((current) => (current === id ? null : id));
+    },
+  };
 }
 
 function UnderstandingBody({
@@ -304,22 +297,27 @@ export function TemplateCheckDepths({
   onTicked,
   templateVersion,
   templateChecksum,
+  open,
+  onOpenChange,
 }: {
   item: ChecklistItem;
   ticked: boolean;
   onTicked: (ticked: boolean) => void;
   templateVersion: string;
   templateChecksum: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }) {
   return (
     <CheckDepthCard
       title={item.title}
       restrictions={itemRestrictionParts(item)}
       signal={templateCheckSignal(ticked)}
-      hasFiles={false}
+      open={open}
+      onOpenChange={onOpenChange}
       leading={
         <Checkbox
-          className="mt-1 size-5 shrink-0"
+          className="size-5 shrink-0"
           checked={ticked}
           aria-label={`Tick ${item.title}`}
           onCheckedChange={(value) => onTicked(value === true)}
@@ -339,6 +337,44 @@ export function TemplateCheckDepths({
   );
 }
 
+export function TemplateCheckList({
+  items,
+  ticks,
+  onTicked,
+  templateVersion,
+  templateChecksum,
+}: {
+  items: ChecklistItem[];
+  ticks: Record<string, boolean>;
+  onTicked: (itemId: string, ticked: boolean) => void;
+  templateVersion: string;
+  templateChecksum: string;
+}) {
+  const { openId, toggle } = useExclusiveOpen();
+  if (items.length === 0) {
+    return (
+      <p className="text-sm text-muted-foreground">No checks on this document.</p>
+    );
+  }
+  return (
+    <ul className="divide-y divide-border">
+      {items.map((item) => (
+        <li key={item.id}>
+          <TemplateCheckDepths
+            item={item}
+            ticked={Boolean(ticks[item.id])}
+            onTicked={(value) => onTicked(item.id, value)}
+            templateVersion={templateVersion}
+            templateChecksum={templateChecksum}
+            open={openId === item.id}
+            onOpenChange={() => toggle(item.id)}
+          />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export function ProjectCheckDepths({
   item,
   status,
@@ -351,6 +387,8 @@ export function ProjectCheckDepths({
   pending,
   leading,
   actions,
+  open,
+  onOpenChange,
 }: {
   item: ChecklistItem;
   status: ItemStatus;
@@ -363,6 +401,8 @@ export function ProjectCheckDepths({
   pending?: boolean;
   leading?: ReactNode;
   actions: ReactNode;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }) {
   return (
     <CheckDepthCard
@@ -375,8 +415,9 @@ export function ProjectCheckDepths({
         files,
         findings,
       })}
-      hasFiles={files.length > 0}
       leading={leading}
+      open={open}
+      onOpenChange={onOpenChange}
     >
       <UnderstandingBody
         item={item}

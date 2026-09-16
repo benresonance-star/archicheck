@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ChecklistItemCard } from "@/components/checklist-item-card";
+import { ProjectCheckList } from "@/components/checklist-item-card";
 import { arbvStageHeading, itemsGroupedByStage } from "@/lib/template/output-lens";
 import type {
   ChecklistItem,
@@ -69,14 +69,11 @@ export function DocumentChecklist({
             <h2 className="font-heading text-lg leading-tight">
               {arbvStageHeading(group.stage)}
             </h2>
-            {group.items.map((item) => (
-              <ChecklistItemCard
-                key={item.id}
-                item={item}
-                project={local}
-                onProject={onProject}
-              />
-            ))}
+            <ProjectCheckList
+              items={group.items}
+              project={local}
+              onProject={onProject}
+            />
           </div>
         ))
       )}

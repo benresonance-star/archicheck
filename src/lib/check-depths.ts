@@ -5,10 +5,12 @@ import {
   statusLabel,
   typologyLabel,
   TYPOLOGIES,
+  progressForItems,
   type AttachmentMeta,
   type ChecklistItem,
   type FindingDocument,
   type ItemStatus,
+  type ProjectDocument,
   type RequirementKind,
 } from "@/lib/types";
 
@@ -128,6 +130,56 @@ export function deriveCheckSignal(args: {
 
 export function templateCheckSignal(ticked: boolean): CheckSignal {
   return ticked ? "done" : "todo";
+}
+
+export function rowShowsSignal(signal: CheckSignal): boolean {
+  return signal !== "todo";
+}
+
+export function needsEvidenceCount(signals: CheckSignal[]): number {
+  return signals.filter(
+    (signal) => signal === "evidence_missing" || signal === "needs_recheck",
+  ).length;
+}
+
+export function listRollup(args: {
+  done: number;
+  total: number;
+  needsEvidence: number;
+}): string {
+  if (args.needsEvidence > 0) {
+    return args.needsEvidence === 1
+      ? "1 needs evidence"
+      : `${args.needsEvidence} need evidence`;
+  }
+  return `${args.done}/${args.total}`;
+}
+
+export function projectItemSignal(
+  item: ChecklistItem,
+  project: ProjectDocument,
+): CheckSignal {
+  const answer = project.answers[item.id];
+  return deriveCheckSignal({
+    item,
+    status: answer?.status ?? "todo",
+    notes: answer?.notes ?? "",
+    files: project.attachments.filter((file) => file.itemId === item.id),
+    findings: project.findings,
+  });
+}
+
+export function projectListRollup(
+  items: ChecklistItem[],
+  project: ProjectDocument,
+): string {
+  const signals = items.map((item) => projectItemSignal(item, project));
+  const progress = progressForItems(items, project.answers);
+  return listRollup({
+    done: progress.done,
+    total: items.length,
+    needsEvidence: needsEvidenceCount(signals),
+  });
 }
 
 export function checkSignalLabel(signal: CheckSignal): string {

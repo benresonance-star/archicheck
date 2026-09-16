@@ -11,11 +11,12 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArbvStageHeader } from "@/components/arbv-stage-header";
-import { TemplateCheckDepths } from "@/components/check-depths";
+import { TemplateCheckList } from "@/components/check-depths";
 import {
   DeliverableHeading,
   StageChecksHeading,
 } from "@/components/deliverable-heading";
+import { listRollup } from "@/lib/check-depths";
 import { BUNDLED_TEMPLATE } from "@/lib/template/vic-residential";
 import {
   emptyTemplateTicks,
@@ -398,35 +399,22 @@ function DocumentLensLists({
                           </span>
                         </span>
                         <Badge variant="outline" className="shrink-0">
-                          {progress.done}/{progress.total}
+                          {listRollup({
+                            done: progress.done,
+                            total: progress.total,
+                            needsEvidence: 0,
+                          })}
                         </Badge>
                       </span>
                     }
                   >
-                    <div className="space-y-3">
-                      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                        Associated checklist
-                      </p>
-                      {document.items.length === 0 ? (
-                        <p className="text-sm text-muted-foreground">
-                          No checks on this document.
-                        </p>
-                      ) : (
-                        <ul className="space-y-2">
-                          {document.items.map((item) => (
-                            <li key={item.id}>
-                              <TemplateCheckDepths
-                                item={item}
-                                ticked={Boolean(ticks[item.id])}
-                                onTicked={(value) => onTicked(item.id, value)}
-                                templateVersion={BUNDLED_TEMPLATE.version}
-                                templateChecksum={BUNDLED_TEMPLATE.checksum}
-                              />
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
+                    <TemplateCheckList
+                      items={document.items}
+                      ticks={ticks}
+                      onTicked={onTicked}
+                      templateVersion={BUNDLED_TEMPLATE.version}
+                      templateChecksum={BUNDLED_TEMPLATE.checksum}
+                    />
                   </CollapseSection>
                 );
               })}
@@ -462,26 +450,26 @@ function StageReferenceLists({
                 className="bg-muted/40"
                 rememberScroll={rememberScroll}
                 restoreScroll={restoreScroll}
-                header={<StageChecksHeading />}
+                header={
+                  <span className="flex items-start justify-between gap-3">
+                    <StageChecksHeading />
+                    <Badge variant="outline" className="shrink-0">
+                      {listRollup({
+                        done: referenceProgress(section.items, ticks).done,
+                        total: section.items.length,
+                        needsEvidence: 0,
+                      })}
+                    </Badge>
+                  </span>
+                }
               >
-                <div className="space-y-2">
-                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    Associated checklist
-                  </p>
-                  <ul className="space-y-2">
-                    {section.items.map((item) => (
-                      <li key={item.id}>
-                        <TemplateCheckDepths
-                          item={item}
-                          ticked={Boolean(ticks[item.id])}
-                          onTicked={(value) => onTicked(item.id, value)}
-                          templateVersion={BUNDLED_TEMPLATE.version}
-                          templateChecksum={BUNDLED_TEMPLATE.checksum}
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <TemplateCheckList
+                  items={section.items}
+                  ticks={ticks}
+                  onTicked={onTicked}
+                  templateVersion={BUNDLED_TEMPLATE.version}
+                  templateChecksum={BUNDLED_TEMPLATE.checksum}
+                />
               </CollapseSection>
             );
           case "deliverable":
@@ -491,26 +479,26 @@ function StageReferenceLists({
                 className="bg-muted/40"
                 rememberScroll={rememberScroll}
                 restoreScroll={restoreScroll}
-                header={<DeliverableHeading deliverable={section.deliverable} />}
+                header={
+                  <span className="flex items-start justify-between gap-3">
+                    <DeliverableHeading deliverable={section.deliverable} />
+                    <Badge variant="outline" className="shrink-0">
+                      {listRollup({
+                        done: referenceProgress(section.items, ticks).done,
+                        total: section.items.length,
+                        needsEvidence: 0,
+                      })}
+                    </Badge>
+                  </span>
+                }
               >
-                <div className="space-y-2">
-                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    Associated checklist
-                  </p>
-                  <ul className="space-y-2">
-                    {section.items.map((item) => (
-                      <li key={item.id}>
-                        <TemplateCheckDepths
-                          item={item}
-                          ticked={Boolean(ticks[item.id])}
-                          onTicked={(value) => onTicked(item.id, value)}
-                          templateVersion={BUNDLED_TEMPLATE.version}
-                          templateChecksum={BUNDLED_TEMPLATE.checksum}
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <TemplateCheckList
+                  items={section.items}
+                  ticks={ticks}
+                  onTicked={onTicked}
+                  templateVersion={BUNDLED_TEMPLATE.version}
+                  templateChecksum={BUNDLED_TEMPLATE.checksum}
+                />
               </CollapseSection>
             );
           default:
