@@ -14,8 +14,8 @@ const ARCHITECTS_ACT = link(
   "https://www.legislation.vic.gov.au/in-force/acts/architects-act-1991",
 );
 const LANDATA = link(
-  "LANDATA / Land Use Victoria",
-  "https://www.land.vic.gov.au/land-registration",
+  "LANDATA",
+  "https://www.landata.vic.gov.au/",
 );
 const VICPLAN = link("VicPlan maps", "https://mapshare.vic.gov.au/vicplan/");
 const VPP = link(
@@ -62,13 +62,26 @@ const BUILDING_REGS = link(
   "Building Regulations 2018 (Vic)",
   "https://www.legislation.vic.gov.au/in-force/statutory-rules/building-regulations-2018/007",
 );
-const NCC2025 = link(
-  "NCC 2025 (ABCB)",
-  "https://ncc.abcb.gov.au/editions/ncc-2025/adopted",
+const NCC2025 = link("NCC 2025 (ABCB)", "https://ncc.abcb.gov.au/ncc-2025");
+const NCC_LIVABLE = link(
+  "NCC 2025 livable housing (H8)",
+  "https://ncc.abcb.gov.au/editions/ncc-2025/adopted/volume-two/h-class-1-and-10-buildings/part-h8-livable-housing-design",
+);
+const NCC_ENERGY = link(
+  "NCC 2025 energy efficiency (H6)",
+  "https://ncc.abcb.gov.au/editions/ncc-2025/adopted/volume-two/h-class-1-and-10-buildings/part-h6-energy-efficiency",
 );
 const NCC_CONDENSATION = link(
   "NCC 2025 condensation changes",
   "https://ncc.abcb.gov.au/ncc-2025/ncc-2025-key-changes/ncc-2025-condensation-mitigation-changes",
+);
+const NCC_CONDENSATION_HP = link(
+  "NCC 2025 condensation (Housing Provisions 10.8)",
+  "https://ncc.abcb.gov.au/editions/ncc-2025/adopted/housing-provisions/10-health-and-amenity/part-108-condensation-management",
+);
+const NCC_WATERPROOF = link(
+  "NCC 2025 damp and weatherproofing (H2)",
+  "https://ncc.abcb.gov.au/editions/ncc-2025/adopted/volume-two/h-class-1-and-10-buildings/part-h2-damp-and-weatherproofing",
 );
 const NATHERS = link("NatHERS", "https://www.nathers.gov.au/");
 const BPC = link("Building and Plumbing Commission", "https://www.vba.vic.gov.au/");
@@ -105,8 +118,8 @@ const BESS = link("BESS", "https://bess.net.au/");
 const STANDARDS = link("Standards Australia", "https://www.standards.org.au/");
 const ATO_GST = link("ATO — GST", "https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst");
 const CFA = link(
-  "CFA — building in a bushfire area",
-  "https://www.cfa.vic.gov.au/plan-prepare/building-in-a-bushfire-prone-area",
+  "CFA — Bushfire Management Overlay",
+  "https://www.cfa.vic.gov.au/plan-prepare/building-planning-regulations/planning-controls/planning-and-bushfire-management-overlay",
 );
 const PLANNING_VIC = link(
   "planning.vic.gov.au",
@@ -139,13 +152,13 @@ export const ITEM_RESOURCES: Record<string, ChecklistResource[]> = {
   "cd-bads-depth": [BADS, CL58, CL5507],
   "cd-bads-setback": [BADS, CL58, CL5507],
   "cd-bads-storage": [BADS, CL58, CL5507],
-  "cd-energy": [NCC2025, NATHERS, BPC_NCC],
-  "cd-livable": [NCC2025, BPC_NCC],
+  "cd-energy": [NCC_ENERGY, NATHERS, BPC_NCC],
+  "cd-livable": [NCC_LIVABLE, BPC_NCC],
   "cd-parking": [CL5206],
   "cd-signoff": [ARBV_WORK],
   "dd-gas": [PLANNING_VIC, VPP],
   "dd-consultants": [ARBV, ARCHITECTS_ACT],
-  "dd-nathers": [NATHERS, NCC2025],
+  "dd-nathers": [NATHERS, NCC_ENERGY],
   "dd-storm": [CL5318, MW],
   "dd-amenity": [CL54, CL55],
   "dd-landscape": [CL55, CL58],
@@ -174,11 +187,11 @@ export const ITEM_RESOURCES: Record<string, ChecklistResource[]> = {
   "doc-tp-match": [PE_ACT, BUILDING_ACT],
   "doc-working": [NCC2025, BUILDING_ACT],
   "doc-ncc": [NCC2025, BPC_NCC],
-  "doc-energy": [NATHERS, NCC2025],
-  "doc-livable": [NCC2025],
-  "doc-condensation": [NCC_CONDENSATION, NCC2025],
+  "doc-energy": [NATHERS, NCC_ENERGY],
+  "doc-livable": [NCC_LIVABLE],
+  "doc-condensation": [NCC_CONDENSATION, NCC_CONDENSATION_HP],
   "doc-structure": [NCC2025, BUILDING_ACT],
-  "doc-waterproofing": [STANDARDS, NCC2025],
+  "doc-waterproofing": [NCC_WATERPROOF, STANDARDS],
   "doc-part5": [BUILDING_REGS],
   "doc-manual": [BUILDING_REGS, BUILDING_ACT],
   "tn-set": [DBC, CONSUMER],
@@ -209,10 +222,20 @@ export const ITEM_RESOURCES: Record<string, ChecklistResource[]> = {
   "fc-security": [DBC, SOP],
   "fc-archive": [ARBV_WORK, ARCHITECTS_ACT],
   "poe-survey": [ARBV, NCC2025],
-  "poe-energy": [NATHERS, NCC2025],
+  "poe-energy": [NATHERS, NCC_ENERGY],
   "poe-landscape": [CL55, CL58],
   "poe-lessons": [ARBV_WORK],
 };
+
+export function uniqueResourceUrls(): string[] {
+  const urls = new Set<string>();
+  for (const resources of Object.values(ITEM_RESOURCES)) {
+    for (const resource of resources) {
+      urls.add(resource.url);
+    }
+  }
+  return [...urls].sort();
+}
 
 export function resourcesForItem(itemId: string): ChecklistResource[] {
   return ITEM_RESOURCES[itemId] ?? [];

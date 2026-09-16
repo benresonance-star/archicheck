@@ -1130,7 +1130,7 @@ function withChecksum(
   return {
     ...template,
     checksum:
-      "5f8f8bd779ad0bec517a737a6e17a0ecc505d538151688ee1c2938bb4c250812",
+      "425063963fc4e193b44209ccb25b7e92db9ee9b88f538bef694032510410397d",
   };
 }
 
@@ -1138,7 +1138,7 @@ export const BUNDLED_TEMPLATE: TemplateDocument = withChecksum({
   format: TEMPLATE_FORMAT,
   formatVersion: FORMAT_VERSION,
   id: "vic-residential",
-  version: "1.0.4",
+  version: "1.0.5",
   title: "Victoria residential — houses, townhouses and apartments",
   jurisdiction: "Victoria, Australia",
   description:

@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start --hostname 0.0.0.0 --port 43181",
     "lint": "eslint",
-    "test": "tsx --test tests/round-trip.test.ts tests/scout.test.ts tests/template-reference.test.ts",
+    "test": "tsx --test tests/round-trip.test.ts tests/scout.test.ts tests/template-reference.test.ts tests/resource-urls.test.ts",
     "emit-schema": "tsx scripts/emit-public-schema.ts",
     "publish:web": "vercel deploy --temporary --yes --prod"
   },

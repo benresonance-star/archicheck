@@ -2,7 +2,7 @@
   "format": "vic-arch-checklist-template",
   "formatVersion": "1.0.0",
   "id": "vic-residential",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "title": "Victoria residential — houses, townhouses and apartments",
   "jurisdiction": "Victoria, Australia",
   "description": "ARBV-aligned stages from pre-design through post-occupancy, with Clause 54 / 55 / 58, Better Apartments Design Standards (BADS) on apartment items, NCC 2025 (in force in Victoria from 1 May 2026), and apartment developer-bond notes.",
@@ -167,8 +167,8 @@
       ],
       "resources": [
         {
-          "label": "LANDATA / Land Use Victoria",
-          "url": "https://www.land.vic.gov.au/land-registration"
+          "label": "LANDATA",
+          "url": "https://www.landata.vic.gov.au/"
         }
       ],
       "grokbotId": "bot-pre-design"
@@ -359,8 +359,8 @@
       ],
       "resources": [
         {
-          "label": "CFA — building in a bushfire area",
-          "url": "https://www.cfa.vic.gov.au/plan-prepare/building-in-a-bushfire-prone-area"
+          "label": "CFA — Bushfire Management Overlay",
+          "url": "https://www.cfa.vic.gov.au/plan-prepare/building-planning-regulations/planning-controls/planning-and-bushfire-management-overlay"
         },
         {
           "label": "Building Regulations 2018 (Vic)",
@@ -760,8 +760,8 @@
       ],
       "resources": [
         {
-          "label": "NCC 2025 (ABCB)",
-          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
+          "label": "NCC 2025 energy efficiency (H6)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted/volume-two/h-class-1-and-10-buildings/part-h6-energy-efficiency"
         },
         {
           "label": "NatHERS",
@@ -791,8 +791,8 @@
       ],
       "resources": [
         {
-          "label": "NCC 2025 (ABCB)",
-          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
+          "label": "NCC 2025 livable housing (H8)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted/volume-two/h-class-1-and-10-buildings/part-h8-livable-housing-design"
         },
         {
           "label": "NCC 2025 Victorian variations (BPC)",
@@ -920,8 +920,8 @@
           "url": "https://www.nathers.gov.au/"
         },
         {
-          "label": "NCC 2025 (ABCB)",
-          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
+          "label": "NCC 2025 energy efficiency (H6)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted/volume-two/h-class-1-and-10-buildings/part-h6-energy-efficiency"
         }
       ],
       "grokbotId": "bot-design-development"
@@ -1608,7 +1608,7 @@
       "resources": [
         {
           "label": "NCC 2025 (ABCB)",
-          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
         },
         {
           "label": "Building Act 1993 (Vic)",
@@ -1635,7 +1635,7 @@
       "resources": [
         {
           "label": "NCC 2025 (ABCB)",
-          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
         },
         {
           "label": "NCC 2025 Victorian variations (BPC)",
@@ -1665,8 +1665,8 @@
           "url": "https://www.nathers.gov.au/"
         },
         {
-          "label": "NCC 2025 (ABCB)",
-          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
+          "label": "NCC 2025 energy efficiency (H6)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted/volume-two/h-class-1-and-10-buildings/part-h6-energy-efficiency"
         }
       ],
       "grokbotId": "bot-documentation"
@@ -1687,8 +1687,8 @@
       ],
       "resources": [
         {
-          "label": "NCC 2025 (ABCB)",
-          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
+          "label": "NCC 2025 livable housing (H8)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted/volume-two/h-class-1-and-10-buildings/part-h8-livable-housing-design"
         }
       ],
       "grokbotId": "bot-documentation"
@@ -1714,8 +1714,8 @@
           "url": "https://ncc.abcb.gov.au/ncc-2025/ncc-2025-key-changes/ncc-2025-condensation-mitigation-changes"
         },
         {
-          "label": "NCC 2025 (ABCB)",
-          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
+          "label": "NCC 2025 condensation (Housing Provisions 10.8)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted/housing-provisions/10-health-and-amenity/part-108-condensation-management"
         }
       ],
       "grokbotId": "bot-documentation"
@@ -1738,7 +1738,7 @@
       "resources": [
         {
           "label": "NCC 2025 (ABCB)",
-          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
         },
         {
           "label": "Building Act 1993 (Vic)",
@@ -1765,12 +1765,12 @@
       ],
       "resources": [
         {
-          "label": "Standards Australia",
-          "url": "https://www.standards.org.au/"
+          "label": "NCC 2025 damp and weatherproofing (H2)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted/volume-two/h-class-1-and-10-buildings/part-h2-damp-and-weatherproofing"
         },
         {
-          "label": "NCC 2025 (ABCB)",
-          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
+          "label": "Standards Australia",
+          "url": "https://www.standards.org.au/"
         }
       ],
       "grokbotId": "bot-documentation"
@@ -2527,7 +2527,7 @@
         },
         {
           "label": "NCC 2025 (ABCB)",
-          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
+          "url": "https://ncc.abcb.gov.au/ncc-2025"
         }
       ],
       "grokbotId": "bot-post-occupancy"
@@ -2553,8 +2553,8 @@
           "url": "https://www.nathers.gov.au/"
         },
         {
-          "label": "NCC 2025 (ABCB)",
-          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted"
+          "label": "NCC 2025 energy efficiency (H6)",
+          "url": "https://ncc.abcb.gov.au/editions/ncc-2025/adopted/volume-two/h-class-1-and-10-buildings/part-h6-energy-efficiency"
         }
       ],
       "grokbotId": "bot-post-occupancy"
@@ -2798,5 +2798,5 @@
       ]
     }
   ],
-  "checksum": "5f8f8bd779ad0bec517a737a6e17a0ecc505d538151688ee1c2938bb4c250812"
+  "checksum": "425063963fc4e193b44209ccb25b7e92db9ee9b88f538bef694032510410397d"
 }
