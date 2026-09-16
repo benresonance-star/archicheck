@@ -32,7 +32,7 @@ export default async function TypologyStagePreviewPage({
       />
       <main className="mx-auto max-w-3xl space-y-4 px-4 py-6">
         <p className="text-sm text-muted-foreground leading-relaxed">
-          {meta.title} generic template · {items.length} items in this stage.
+          Template · {items.length} items in this stage.
           Ticks stay on this phone. Start a project for notes, attachments and
           a ZIP.
         </p>

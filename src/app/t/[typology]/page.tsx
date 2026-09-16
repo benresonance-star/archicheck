@@ -46,7 +46,7 @@ export default async function TypologyPage({
           </Button>
         </section>
         <section className="space-y-3">
-          <h2 className="font-heading text-2xl">Generic {meta.title.toLowerCase()} template</h2>
+          <h2 className="font-heading text-2xl">Template</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             Tick the bundled list as a quick reference. By document uses the
             ARBV stages (01–11) with Plans, Elevations and other outputs under
