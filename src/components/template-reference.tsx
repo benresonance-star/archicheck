@@ -15,6 +15,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { ArbvStageHeader } from "@/components/arbv-stage-header";
 import { ItemResources } from "@/components/item-resources";
 import { SourceCitations } from "@/components/source-citations";
 import { ItemAssessmentNote } from "@/components/item-assessment-note";
@@ -30,7 +31,6 @@ import {
   type TemplateTicks,
 } from "@/lib/template-reference";
 import {
-  arbvStageHeading,
   groupedOutputDocuments,
   type StagedOutputLensGroup,
 } from "@/lib/template/output-lens";
@@ -202,60 +202,55 @@ export function TemplateReference({
           restoreScroll={restoreScroll}
         />
       ) : (
-        <Accordion
-          type="multiple"
-          defaultValue={[]}
-          onValueChange={restoreScroll}
-          className="rounded-2xl border border-border bg-card px-3 [overflow-anchor:none]"
-        >
+        <div className="space-y-4">
           {visibleGroups.map((group) => {
             const stageProgress = referenceProgress(
               group.items,
               ticks[typology],
             );
             return (
-              <AccordionItem
+              <Accordion
                 key={group.stage.id}
-                value={group.stage.id}
-                className="[overflow-anchor:none]"
+                type="multiple"
+                defaultValue={[]}
+                onValueChange={restoreScroll}
+                className="overflow-hidden rounded-2xl border border-border bg-card [overflow-anchor:none]"
               >
-                <AccordionTrigger
-                  className="min-h-12 scroll-mt-[calc(env(safe-area-inset-top)+4.5rem)] py-3 text-base hover:no-underline"
-                  onPointerDown={(event) => {
-                    rememberScroll();
-                    if (event.pointerType !== "mouse") {
-                      event.currentTarget.focus({ preventScroll: true });
-                    }
-                  }}
-                  onKeyDown={rememberScroll}
+                <AccordionItem
+                  value={group.stage.id}
+                  className="border-b-0 [overflow-anchor:none]"
                 >
-                  <span className="flex min-w-0 flex-1 items-center justify-between gap-3 pr-2">
-                    <span className="min-w-0">
-                      <span className="block font-heading text-lg leading-tight">
-                        {arbvStageHeading(group.stage)}
-                      </span>
-                      <span className="block text-sm font-normal text-muted-foreground">
-                        {group.stage.summary}
-                      </span>
-                    </span>
-                    <Badge variant="secondary" className="shrink-0">
-                      {stageProgress.done}/{stageProgress.total}
-                    </Badge>
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="pb-2">
+                  <AccordionTrigger
+                    className="min-h-14 scroll-mt-[calc(env(safe-area-inset-top)+4.5rem)] rounded-none border-b border-border bg-muted/70 px-3 py-3 text-base hover:no-underline"
+                    onPointerDown={(event) => {
+                      rememberScroll();
+                      if (event.pointerType !== "mouse") {
+                        event.currentTarget.focus({ preventScroll: true });
+                      }
+                    }}
+                    onKeyDown={rememberScroll}
+                  >
+                    <ArbvStageHeader
+                      stage={group.stage}
+                      badge={
+                        <Badge variant="secondary" className="shrink-0">
+                          {stageProgress.done}/{stageProgress.total}
+                        </Badge>
+                      }
+                    />
+                  </AccordionTrigger>
+                  <AccordionContent className="px-3 pb-3 pt-3">
                     <StageReferenceLists
                       group={group}
                       ticks={ticks[typology]}
                       onTicked={setTicked}
                     />
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             );
           })}
-        </Accordion>
+        </div>
       )}
       <div className="flex flex-col gap-2 sm:flex-row">
         {showStartProject ? (
@@ -295,116 +290,119 @@ function DocumentLensLists({
   restoreScroll: () => void;
 }) {
   return (
-    <Accordion
-      type="multiple"
-      defaultValue={[]}
-      onValueChange={restoreScroll}
-      className="rounded-2xl border border-border bg-card px-3 [overflow-anchor:none]"
-      key={typology}
-    >
+    <div className="space-y-4" key={typology}>
       {groups.map((group) => {
         const stageItems = group.documents.flatMap((document) => document.items);
         const stageProgress = referenceProgress(stageItems, ticks);
         return (
-          <AccordionItem
+          <Accordion
             key={group.stage.id}
-            value={group.stage.id}
-            className="[overflow-anchor:none]"
+            type="multiple"
+            defaultValue={[]}
+            onValueChange={restoreScroll}
+            className="overflow-hidden rounded-2xl border border-border bg-card [overflow-anchor:none]"
           >
-            <AccordionTrigger
-              className="min-h-12 scroll-mt-[calc(env(safe-area-inset-top)+4.5rem)] py-3 text-base hover:no-underline"
-              onPointerDown={(event) => {
-                rememberScroll();
-                if (event.pointerType !== "mouse") {
-                  event.currentTarget.focus({ preventScroll: true });
-                }
-              }}
-              onKeyDown={rememberScroll}
+            <AccordionItem
+              value={group.stage.id}
+              className="border-b-0 [overflow-anchor:none]"
             >
-              <span className="flex min-w-0 flex-1 items-center justify-between gap-3 pr-2">
-                <span className="min-w-0">
-                  <span className="block font-heading text-lg leading-tight">
-                    {arbvStageHeading(group.stage)}
-                  </span>
-                  <span className="block text-sm font-normal text-muted-foreground">
-                    {group.stage.summary}
-                  </span>
-                </span>
-                <Badge variant="secondary" className="shrink-0">
-                  {stageProgress.done}/{stageProgress.total}
-                </Badge>
-              </span>
-            </AccordionTrigger>
-            <AccordionContent>
-              <Accordion
-                type="multiple"
-                defaultValue={[]}
-                className="[overflow-anchor:none]"
+              <AccordionTrigger
+                className="min-h-14 scroll-mt-[calc(env(safe-area-inset-top)+4.5rem)] rounded-none border-b border-border bg-muted/70 px-3 py-3 text-base hover:no-underline"
+                onPointerDown={(event) => {
+                  rememberScroll();
+                  if (event.pointerType !== "mouse") {
+                    event.currentTarget.focus({ preventScroll: true });
+                  }
+                }}
+                onKeyDown={rememberScroll}
               >
-                {group.documents.map((document) => {
-                  const progress = referenceProgress(document.items, ticks);
-                  return (
-                    <AccordionItem
-                      key={`${group.stage.id}-${document.kind}`}
-                      value={`${group.stage.id}-${document.kind}`}
-                      className="[overflow-anchor:none]"
-                    >
-                      <AccordionTrigger
-                        className="min-h-11 py-2 text-base hover:no-underline"
-                        onPointerDown={(event) => {
-                          rememberScroll();
-                          if (event.pointerType !== "mouse") {
-                            event.currentTarget.focus({ preventScroll: true });
-                          }
-                        }}
-                        onKeyDown={rememberScroll}
-                      >
-                        <span className="flex min-w-0 flex-1 items-center justify-between gap-3 pr-2">
-                          <span className="min-w-0">
-                            <span className="block font-medium leading-tight">
-                              {document.title}
+                <ArbvStageHeader
+                  stage={group.stage}
+                  badge={
+                    <Badge variant="secondary" className="shrink-0">
+                      {stageProgress.done}/{stageProgress.total}
+                    </Badge>
+                  }
+                />
+              </AccordionTrigger>
+              <AccordionContent className="px-3 pb-3 pt-3">
+                <div className="rounded-xl border border-border bg-background px-2">
+                  <p className="px-1 pt-3 text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                    Documents in this stage
+                  </p>
+                  <Accordion
+                    type="multiple"
+                    defaultValue={[]}
+                    className="[overflow-anchor:none]"
+                  >
+                    {group.documents.map((document) => {
+                      const progress = referenceProgress(document.items, ticks);
+                      return (
+                        <AccordionItem
+                          key={`${group.stage.id}-${document.kind}`}
+                          value={`${group.stage.id}-${document.kind}`}
+                          className="[overflow-anchor:none]"
+                        >
+                          <AccordionTrigger
+                            className="min-h-11 py-2 text-base hover:no-underline"
+                            onPointerDown={(event) => {
+                              rememberScroll();
+                              if (event.pointerType !== "mouse") {
+                                event.currentTarget.focus({ preventScroll: true });
+                              }
+                            }}
+                            onKeyDown={rememberScroll}
+                          >
+                            <span className="flex min-w-0 flex-1 items-center justify-between gap-3 pr-2">
+                              <span className="min-w-0">
+                                <span className="block font-medium leading-tight">
+                                  {document.title}
+                                </span>
+                                <span className="block text-sm font-normal text-muted-foreground">
+                                  {document.summary}
+                                </span>
+                              </span>
+                              <Badge variant="outline" className="shrink-0">
+                                {progress.done}/{progress.total}
+                              </Badge>
                             </span>
-                            <span className="block text-sm font-normal text-muted-foreground">
-                              {document.summary}
-                            </span>
-                          </span>
-                          <Badge variant="outline" className="shrink-0">
-                            {progress.done}/{progress.total}
-                          </Badge>
-                        </span>
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <div className="space-y-2 pb-2">
-                          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                            Associated checklist
-                          </p>
-                          <ul className="space-y-2">
-                            {document.items.map((item) => (
-                              <li key={item.id}>
-                                <ReferenceItem
-                                  title={item.title}
-                                  detail={item.detail}
-                                  required={item.required}
-                                  references={item.references}
-                                  resources={item.resources}
-                                  assessment={item.assessment}
-                                  ticked={Boolean(ticks[item.id])}
-                                  onTicked={(value) => onTicked(item.id, value)}
-                                />
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  );
-                })}
-              </Accordion>
-            </AccordionContent>
-          </AccordionItem>
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            <div className="space-y-2 pb-2">
+                              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                                Associated checklist
+                              </p>
+                              <ul className="space-y-2">
+                                {document.items.map((item) => (
+                                  <li key={item.id}>
+                                    <ReferenceItem
+                                      title={item.title}
+                                      detail={item.detail}
+                                      required={item.required}
+                                      references={item.references}
+                                      resources={item.resources}
+                                      assessment={item.assessment}
+                                      ticked={Boolean(ticks[item.id])}
+                                      onTicked={(value) =>
+                                        onTicked(item.id, value)
+                                      }
+                                    />
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </AccordionContent>
+                        </AccordionItem>
+                      );
+                    })}
+                  </Accordion>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         );
       })}
-    </Accordion>
+    </div>
   );
 }
 
