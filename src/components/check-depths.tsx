@@ -24,7 +24,9 @@ import {
   rowShowsSignal,
   templateCheckSignal,
   type CheckSignal,
+  type RequirementDot,
 } from "@/lib/check-depths";
+import { cn } from "@/lib/utils";
 import {
   checklistIssueKindLabel,
   findingResultLabel,
@@ -57,6 +59,32 @@ function DepthQuestion({
       </p>
       <div className="text-sm leading-relaxed break-words">{children}</div>
     </div>
+  );
+}
+
+function RequirementDotList({
+  dots,
+  nested = false,
+}: {
+  dots: RequirementDot[];
+  nested?: boolean;
+}) {
+  return (
+    <ul
+      className={cn(
+        "list-disc space-y-1",
+        nested ? "mt-1 pl-6" : "pl-4",
+      )}
+    >
+      {dots.map((dot, index) => (
+        <li key={`${index}-${dot.text}`}>
+          {dot.text}
+          {dot.children && dot.children.length > 0 ? (
+            <RequirementDotList dots={dot.children} nested />
+          ) : null}
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -149,18 +177,10 @@ function UnderstandingBody({
         </p>
       ) : null}
       <DepthQuestion question="What must be established?">
-        <ul className="list-disc space-y-1 pl-4">
-          {understanding.established.map((line, index) => (
-            <li key={`${index}-${line}`}>{line}</li>
-          ))}
-        </ul>
+        <RequirementDotList dots={understanding.established} />
       </DepthQuestion>
       <DepthQuestion question="Why?">
-        <ul className="list-disc space-y-1 pl-4">
-          {understanding.why.map((line, index) => (
-            <li key={`${index}-${line}`}>{line}</li>
-          ))}
-        </ul>
+        <RequirementDotList dots={understanding.why} />
       </DepthQuestion>
       <DepthQuestion question="What evidence exists?">
         <ul className="list-disc space-y-1 pl-4">
@@ -176,11 +196,9 @@ function UnderstandingBody({
           ))}
         </ul>
         {understanding.method.length > 0 ? (
-          <ul className="mt-2 list-disc space-y-1 pl-4 text-muted-foreground">
-            {understanding.method.map((line, index) => (
-              <li key={`${index}-${line}`}>{line}</li>
-            ))}
-          </ul>
+          <div className="mt-2 text-muted-foreground">
+            <RequirementDotList dots={understanding.method} />
+          </div>
         ) : null}
         {understanding.acceptanceCriteria.length > 0 ? (
           <ul className="mt-2 list-disc space-y-1 pl-4 text-muted-foreground">

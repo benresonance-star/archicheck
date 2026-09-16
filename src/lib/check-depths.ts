@@ -28,16 +28,21 @@ export const CHECK_SIGNALS = [
 ] as const;
 export type CheckSignal = (typeof CHECK_SIGNALS)[number];
 
+export type RequirementDot = {
+  text: string;
+  children?: RequirementDot[];
+};
+
 export type CheckUnderstanding = {
-  established: string[];
-  why: string[];
+  established: RequirementDot[];
+  why: RequirementDot[];
   evidence: string[];
   assessment: string[];
-  method: string[];
+  method: RequirementDot[];
   acceptanceCriteria: string[];
 };
 
-export function splitRequirementDots(text: string): string[] {
+export function splitRequirementDots(text: string): RequirementDot[] {
   const trimmed = text.trim();
   if (!trimmed) {
     return [];
@@ -49,19 +54,114 @@ export function splitRequirementDots(text: string): string[] {
   return sentences.flatMap((sentence) => splitSerialList(sentence));
 }
 
-function splitSerialList(sentence: string): string[] {
+function capitaliseDot(text: string): string {
+  const trimmed = text.trim();
+  if (!trimmed) {
+    return "";
+  }
+  return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+}
+
+function stripParenContents(text: string): string {
+  let out = "";
+  let depth = 0;
+  for (const ch of text) {
+    if (ch === "(") {
+      depth += 1;
+      continue;
+    }
+    if (ch === ")") {
+      depth = Math.max(0, depth - 1);
+      continue;
+    }
+    if (depth === 0) {
+      out += ch;
+    }
+  }
+  return out;
+}
+
+function splitAtTopLevel(
+  text: string,
+  joiners: { and: boolean },
+): string[] {
+  const parts: string[] = [];
+  let buf = "";
+  let depth = 0;
+  for (let i = 0; i < text.length; i += 1) {
+    const ch = text[i];
+    if (ch === "(") {
+      depth += 1;
+      buf += ch;
+      continue;
+    }
+    if (ch === ")") {
+      depth = Math.max(0, depth - 1);
+      buf += ch;
+      continue;
+    }
+    if (depth === 0 && text.startsWith(", ", i)) {
+      if (buf.trim()) {
+        parts.push(buf.trim());
+      }
+      buf = "";
+      i += 1;
+      continue;
+    }
+    if (joiners.and && depth === 0) {
+      const andMatch = text.slice(i).match(/^\s+and\s+/iu);
+      if (andMatch) {
+        if (buf.trim()) {
+          parts.push(buf.trim());
+        }
+        buf = "";
+        i += andMatch[0].length - 1;
+        continue;
+      }
+    }
+    buf += ch;
+  }
+  if (buf.trim()) {
+    parts.push(buf.trim());
+  }
+  return parts;
+}
+
+function expandParenList(part: string): RequirementDot {
+  const trimmed = part.trim();
+  const match = trimmed.match(/^(.*?)\s*\((.*)\)\s*$/u);
+  if (!match) {
+    return { text: capitaliseDot(trimmed) };
+  }
+  const label = match[1].trim();
+  const inner = match[2].replace(/[).]+$/u, "").trim();
+  if (!label || !/,\s/.test(inner)) {
+    return { text: capitaliseDot(trimmed) };
+  }
+  const children = splitAtTopLevel(inner, { and: false })
+    .map((child) => capitaliseDot(child.replace(/^and\s+/iu, "")))
+    .filter(Boolean)
+    .map((text) => ({ text }));
+  if (children.length < 2) {
+    return { text: capitaliseDot(trimmed) };
+  }
+  return { text: capitaliseDot(label), children };
+}
+
+function splitSerialList(sentence: string): RequirementDot[] {
   const cleaned = sentence.replace(/[.!?]+$/u, "").trim();
-  if (!/,\s/.test(cleaned) || !/\s+and\s+/u.test(cleaned)) {
-    return cleaned ? [cleaned] : [];
+  if (!cleaned) {
+    return [];
   }
-  const parts = cleaned
-    .split(/,\s+|\s+and\s+/u)
-    .map((part) => part.trim())
-    .filter(Boolean);
-  if (parts.length < 2) {
-    return [cleaned];
+  const surface = stripParenContents(cleaned);
+  const tops =
+    /,\s/.test(surface) && /\s+and\s+/u.test(surface)
+      ? splitAtTopLevel(cleaned, { and: true })
+      : [cleaned];
+  if (tops.length < 2 && tops[0] === cleaned) {
+    return [expandParenList(cleaned)];
   }
-  return parts.map((part) => part.charAt(0).toUpperCase() + part.slice(1));
+  return tops.map((part) => expandParenList(part)).filter((dot) => dot.text);
 }
 
 export function latestFindingForItem(

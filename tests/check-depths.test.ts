@@ -172,9 +172,11 @@ test("understanding uses the requirement statement, not the how-to title", () =>
     mode: "project",
   });
   assert.ok(
-    view.established.some((line) => /secluded private open space/i.test(line)),
+    view.established.some((dot) =>
+      /secluded private open space/i.test(dot.text),
+    ),
   );
-  assert.ok(view.why.some((line) => /Regulatory requirement/.test(line)));
+  assert.ok(view.why.some((dot) => /Regulatory requirement/.test(dot.text)));
   assert.ok(view.evidence.some((line) => /missing/i.test(line)));
   assert.ok(view.assessment.some((line) => /Insufficient information/.test(line)));
   assert.ok(view.method.length > 0);
@@ -185,9 +187,39 @@ test("livable housing detail splits into task dots", () => {
   assert.ok(livable);
   const dots = splitRequirementDots(livable.detail);
   assert.ok(dots.length >= 4);
-  assert.ok(dots.some((line) => /step-free/i.test(line)));
-  assert.ok(dots.some((line) => /850 mm/i.test(line)));
-  assert.ok(dots.some((line) => /Design A or B/i.test(line)));
+  assert.ok(dots.some((dot) => /step-free/i.test(dot.text)));
+  assert.ok(dots.some((dot) => /850 mm/i.test(dot.text)));
+  assert.ok(dots.some((dot) => /Design A or B/i.test(dot.text)));
+});
+
+test("parenthetical overlay list becomes indented sub-dots", () => {
+  const planning = BUNDLED_TEMPLATE.items.find(
+    (item) => item.id === "pd-planning-context",
+  );
+  assert.ok(planning);
+  const dots = splitRequirementDots(planning.detail);
+  const overlays = dots.find((dot) => /^overlays$/i.test(dot.text));
+  assert.ok(overlays);
+  assert.deepEqual(
+    overlays.children?.map((child) => child.text),
+    [
+      "Heritage",
+      "Flood",
+      "Bushfire",
+      "Special building",
+      "DDO",
+      "SLO",
+      "HO",
+      "BMO",
+      "LSIO",
+      "SBO",
+    ],
+  );
+  assert.ok(dots.some((dot) => /planning permit is likely/i.test(dot.text)));
+  assert.equal(
+    dots.some((dot) => /SBO\)/.test(dot.text) || /^Flood$/i.test(dot.text)),
+    false,
+  );
 });
 
 test("template understanding does not claim project evidence", () => {
