@@ -23,8 +23,10 @@ import {
 } from "@/lib/client-store";
 import { MUNICIPALITIES, resolveMunicipality } from "@/lib/scout/municipalities";
 import {
-  actionLabel,
+  findingActionBadge,
+  findingDisplayFlag,
   findingStatusLabel,
+  isBlockedFinding,
   type ScoutFinding,
   type ScoutReport,
 } from "@/lib/scout/types";
@@ -259,20 +261,27 @@ function FindingCard({
   const showAccept =
     Boolean(finding.proposed?.detail) &&
     finding.action !== "no_change" &&
-    finding.status === "open";
+    finding.status === "open" &&
+    !isBlockedFinding(finding);
+
+  const blocked = isBlockedFinding(finding);
 
   return (
     <Card>
       <CardHeader>
         <div className="flex flex-wrap items-center gap-2">
-          <Badge>{actionLabel(finding.action)}</Badge>
+          <Badge variant={blocked ? "outline" : "default"}>
+            {findingActionBadge(finding)}
+          </Badge>
           <Badge variant="outline">{finding.scope.replaceAll("_", " ")}</Badge>
-          <Badge variant="secondary">{findingStatusLabel(finding.status)}</Badge>
+          {blocked ? null : (
+            <Badge variant="secondary">{findingStatusLabel(finding.status)}</Badge>
+          )}
           {finding.hashChanged ? <Badge variant="destructive">Hash changed</Badge> : null}
           {finding.baseline ? <Badge variant="outline">Baseline</Badge> : null}
         </div>
         <CardTitle className="text-lg">{finding.sourceTitle}</CardTitle>
-        <CardDescription>{finding.flag}</CardDescription>
+        <CardDescription>{findingDisplayFlag(finding)}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         {finding.url ? (
@@ -297,7 +306,7 @@ function FindingCard({
             No checklist items for this typology on this source.
           </p>
         )}
-        {finding.proposed?.detail ? (
+        {blocked || !finding.proposed?.detail ? null : (
           <div className="space-y-1">
             <Label htmlFor={`${finding.id}-proposed`}>Proposed wording</Label>
             <Textarea

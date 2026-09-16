@@ -6,7 +6,7 @@ import {
   localUnconfiguredFinding,
 } from "../src/lib/scout/interpret";
 import { resolveMunicipality } from "../src/lib/scout/municipalities";
-import { isBlockedFinding, scoutIsDue } from "../src/lib/scout/types";
+import { findingActionBadge, findingDisplayFlag, isBlockedFinding, scoutIsDue } from "../src/lib/scout/types";
 import { applyProposedToTemplate } from "../src/lib/scout/apply-wording";
 import {
   defaultScoutSettings,
@@ -78,6 +78,7 @@ test("changed hash proposes replace wording and a flag", () => {
   assert.ok(finding.flag.includes("Clause 55"));
   assert.ok(finding.proposed?.detail);
   assert.ok(finding.itemIds.includes("cd-cl55"));
+  assert.ok(source.url.includes("/All%20schemes/55"));
 });
 
 test("blocked Cloudflare fetches are grouped separately from wording changes", () => {
@@ -94,6 +95,11 @@ test("blocked Cloudflare fetches are grouped separately from wording changes", (
     typology: "house",
   });
   assert.equal(isBlockedFinding(blocked), true);
+  assert.equal(findingActionBadge(blocked), "Blocked");
+  assert.equal(
+    findingDisplayFlag(blocked).includes("Automated fetch"),
+    false,
+  );
   const changed = interpretSource({
     source,
     snapshot: snapshot({ sourceId: source.id, sha256: "new" }),
@@ -167,6 +173,16 @@ test("bundled watch list includes NCC, ARBV, AIA and builders associations", () 
   assert.ok(ids.includes("aia-vic"));
   assert.ok(ids.includes("mbav"));
   assert.ok(ids.includes("hia"));
+  assert.ok(
+    settings.sources
+      .find((source) => source.id === "townhouse-code")
+      ?.url.includes("/All%20schemes/55"),
+  );
+  assert.ok(
+    settings.sources
+      .find((source) => source.id === "better-apartments")
+      ?.url.includes("/All%20schemes/58"),
+  );
 });
 
 test("mergeScoutSettings adds new bundled sites without dropping custom ones", () => {

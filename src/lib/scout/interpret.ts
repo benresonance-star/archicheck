@@ -31,7 +31,7 @@ export function interpretSource(input: {
       scope: "statewide",
       action: "needs_human",
       itemIds,
-      flag: `${input.source.flag} Automated fetch was blocked (${input.snapshot.error ?? "network"}). Tap Open source to read it in the browser.`,
+      flag: `${input.source.flag} Automated fetch was blocked (${input.snapshot.error ?? "network"}).`,
       proposed: applies
         ? {
             detail: input.source.proposedDetail,

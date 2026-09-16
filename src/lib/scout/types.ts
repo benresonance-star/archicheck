@@ -136,6 +136,22 @@ export function isBlockedFinding(finding: ScoutFinding): boolean {
   );
 }
 
+export function findingActionBadge(finding: ScoutFinding): string {
+  if (isBlockedFinding(finding)) {
+    return "Blocked";
+  }
+  return actionLabel(finding.action);
+}
+
+export function findingDisplayFlag(finding: ScoutFinding): string {
+  if (!isBlockedFinding(finding)) {
+    return finding.flag;
+  }
+  const marker = " Automated fetch was blocked";
+  const cut = finding.flag.indexOf(marker);
+  return (cut === -1 ? finding.flag : finding.flag.slice(0, cut)).trim();
+}
+
 export function openFindingCount(report: ScoutReport | null): number {
   if (!report) {
     return 0;

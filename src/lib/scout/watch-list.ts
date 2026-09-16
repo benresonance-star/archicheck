@@ -173,10 +173,10 @@ export const DEFAULT_WATCH_SOURCES: WatchSource[] = [
   builtin({
     id: "townhouse-code",
     title: "Townhouse and Low-Rise Code (Clause 55)",
-    url: "https://www.planning.vic.gov.au/guides-and-resources/guides/all-guides/residential-development/townhouse-and-low-rise-code",
+    url: "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/55",
     category: "planning",
     itemIds: ["cd-cl55", "tp-cl55", "cd-canopy"],
-    flag: "Deemed-to-comply Clause 55 standards, setbacks and tree-canopy percentages.",
+    flag: "Gazetted Clause 55 (Townhouse and Low-Rise Code): deemed-to-comply standards, setbacks and tree-canopy percentages.",
     proposedDetail:
       "Clause 55 / Townhouse and Low-Rise Code guidance has changed. Recheck deemed-to-comply standards, setbacks, and the 10%/20% tree canopy rule before freezing townhouse massing.",
     appliesTo: ["townhouse"],
@@ -184,10 +184,10 @@ export const DEFAULT_WATCH_SOURCES: WatchSource[] = [
   builtin({
     id: "better-apartments",
     title: "Better Apartments Design Standards",
-    url: "https://www.planning.vic.gov.au/guides-and-resources/guides/all-guides/better-apartments",
+    url: "https://planning-schemes.app.planning.vic.gov.au/All%20schemes/58",
     category: "planning",
     itemIds: ["cd-apartments", "tp-cl58", "dd-landscape"],
-    flag: "Better Apartments / Clause 55.07 and 58 landscaping, wind and internal amenity.",
+    flag: "Gazetted Clause 58 (Better Apartments): landscaping, wind and internal amenity.",
     proposedDetail:
       "Better Apartments / Clause 55.07 or 58 guidance has changed. Recheck communal open space, deep soil, wind and apartment layout standards.",
     appliesTo: ["apartment"],

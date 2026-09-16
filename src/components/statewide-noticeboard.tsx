@@ -29,7 +29,8 @@ import {
   type ScoutSettings,
 } from "@/lib/scout/settings";
 import {
-  actionLabel,
+  findingActionBadge,
+  findingDisplayFlag,
   findingStatusLabel,
   isBlockedFinding,
   openFindingCount,
@@ -178,8 +179,9 @@ export function StatewideNoticeboard({
               {blockedOpen ? (
                 <div className="space-y-2 border-t border-scout-border p-3">
                   <p className="text-sm text-scout-foreground/80">
-                    BPC and planning.vic.gov.au block automated checks. Open the
-                    official page in Safari.
+                    BPC pages block automated checks. Open the official page in
+                    Safari. Clause 55 and 58 are hash-checked from the gazetted
+                    scheme.
                   </p>
                   <FindingList
                     compact={compact}
@@ -237,16 +239,21 @@ function FindingList({
 }
 
 function CompactFinding({ finding }: { finding: ScoutFinding }) {
+  const blocked = isBlockedFinding(finding);
   return (
     <Card className="border-scout-border bg-scout-foreground/5">
       <CardHeader>
         <div className="flex flex-wrap gap-2">
-          <Badge>{actionLabel(finding.action)}</Badge>
-          <Badge variant="outline">{findingStatusLabel(finding.status)}</Badge>
+          <Badge variant={blocked ? "outline" : "default"}>
+            {findingActionBadge(finding)}
+          </Badge>
+          {blocked ? null : (
+            <Badge variant="outline">{findingStatusLabel(finding.status)}</Badge>
+          )}
         </div>
         <CardTitle className="text-lg">{finding.sourceTitle}</CardTitle>
         <CardDescription className="text-scout-foreground/80">
-          {finding.flag}
+          {findingDisplayFlag(finding)}
         </CardDescription>
       </CardHeader>
       {finding.url ? (
@@ -277,16 +284,21 @@ function BoardFinding({
     }
   }
 
+  const blocked = isBlockedFinding(finding);
   return (
     <Card className="border-scout-border bg-scout-foreground/5">
       <CardHeader>
         <div className="flex flex-wrap gap-2">
-          <Badge>{actionLabel(finding.action)}</Badge>
-          <Badge variant="outline">{findingStatusLabel(finding.status)}</Badge>
+          <Badge variant={blocked ? "outline" : "default"}>
+            {findingActionBadge(finding)}
+          </Badge>
+          {blocked ? null : (
+            <Badge variant="outline">{findingStatusLabel(finding.status)}</Badge>
+          )}
           {finding.hashChanged ? <Badge variant="destructive">Hash changed</Badge> : null}
         </div>
         <CardTitle className="text-lg">{finding.sourceTitle}</CardTitle>
-        <CardDescription>{finding.flag}</CardDescription>
+        <CardDescription>{findingDisplayFlag(finding)}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         {finding.url ? (
@@ -296,12 +308,14 @@ function BoardFinding({
             </a>
           </Button>
         ) : null}
-        {finding.proposed?.detail ? (
+        {blocked ? null : finding.proposed?.detail ? (
           <p className="text-sm">{finding.proposed.detail}</p>
         ) : null}
-        <p className="text-sm text-muted-foreground">
-          To push wording into a project template, open that project’s Code scout.
-        </p>
+        {blocked ? null : (
+          <p className="text-sm text-muted-foreground">
+            To push wording into a project template, open that project’s Code scout.
+          </p>
+        )}
         {finding.status === "open" ? (
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <Button variant="outline" className="min-h-11" onClick={() => void setStatus("flagged")}>
