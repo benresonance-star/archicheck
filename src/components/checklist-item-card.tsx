@@ -105,10 +105,12 @@ export function ChecklistItemCard({
   }
 
   return (
-    <Card>
+    <Card className="overflow-visible">
       <CardHeader>
         <div className="flex items-start justify-between gap-2">
-          <CardTitle className="text-lg leading-snug">{item.title}</CardTitle>
+          <CardTitle className="text-lg leading-snug break-words">
+            {item.title}
+          </CardTitle>
           <div className="flex shrink-0 flex-wrap justify-end gap-1">
             {status === "needs_recheck" ? (
               <Badge variant="destructive">Needs recheck</Badge>
@@ -116,7 +118,9 @@ export function ChecklistItemCard({
             {item.required ? <Badge>Required</Badge> : <Badge variant="outline">Optional</Badge>}
           </div>
         </div>
-        <CardDescription>{item.detail}</CardDescription>
+        <CardDescription className="leading-relaxed break-words">
+          {item.detail}
+        </CardDescription>
         {answer?.previousStatus ? (
           <p className="text-xs text-muted-foreground">
             Previous status kept on file: {statusLabel(answer.previousStatus)}.

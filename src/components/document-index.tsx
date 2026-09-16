@@ -50,7 +50,7 @@ export function DocumentIndex({
         return (
           <li
             key={group.stage.id}
-            className="overflow-hidden rounded-2xl border border-border bg-card"
+            className="rounded-2xl border border-border bg-card"
           >
             <div className="flex items-start justify-between gap-3 border-b border-border bg-muted/70 px-3 py-3">
               <ArbvStageHeader
