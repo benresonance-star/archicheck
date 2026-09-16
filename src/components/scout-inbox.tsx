@@ -317,7 +317,7 @@ function FindingCard({
               onChange={(event) => setDetail(event.target.value)}
             />
           </div>
-        ) : null}
+        )}
         {finding.status === "open" ? (
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             {showAccept ? (
