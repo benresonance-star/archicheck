@@ -15,6 +15,14 @@ export type GroupedStageContent = {
   processItems: ChecklistItem[];
 };
 
+export type StageContentSection =
+  | { kind: "stage-checks"; items: ChecklistItem[] }
+  | {
+      kind: "deliverable";
+      deliverable: StageDeliverable;
+      items: ChecklistItem[];
+    };
+
 export function groupStageContent(
   template: TemplateDocument,
   stageId: string,
@@ -35,4 +43,21 @@ export function groupStageContent(
     deliverables,
     processItems: items.filter((entry) => !entry.deliverableId),
   };
+}
+
+export function stageContentSections(
+  grouped: GroupedStageContent,
+): StageContentSection[] {
+  const sections: StageContentSection[] = [];
+  if (grouped.processItems.length > 0) {
+    sections.push({ kind: "stage-checks", items: grouped.processItems });
+  }
+  for (const entry of grouped.deliverables) {
+    sections.push({
+      kind: "deliverable",
+      deliverable: entry.deliverable,
+      items: entry.items,
+    });
+  }
+  return sections;
 }

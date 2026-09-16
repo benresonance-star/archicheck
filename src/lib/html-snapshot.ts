@@ -4,6 +4,7 @@ import type {
   TemplateDocument,
 } from "@/lib/types";
 import {
+  assertNever,
   deliverableKindLabel,
   itemsForTypology,
   requirementKindLabel,
@@ -16,7 +17,10 @@ import {
   siteZoneCodes,
 } from "@/lib/planning-controls";
 import { typologyMeta } from "@/lib/typology";
-import { groupStageContent } from "@/lib/template/group-stage";
+import {
+  groupStageContent,
+  stageContentSections,
+} from "@/lib/template/group-stage";
 
 function escapeHtml(value: string): string {
   return value
@@ -61,39 +65,55 @@ export function renderSnapshotHtml(input: {
         project.site.typology,
         stageItems,
       );
-      const deliverableHtml = grouped.deliverables
-        .map((entry) => {
-          const files = project.attachments.filter(
-            (file) => file.deliverableId === entry.deliverable.id,
-          );
-          const fileList = files.length
-            ? `<ul>${files
-                .map(
-                  (file) =>
-                    `<li>${escapeHtml(file.filename)} · ${file.size} bytes</li>`,
-                )
-                .join("")}</ul>`
-            : `<p class="empty">No file stored on this drawing or document.</p>`;
-          const rows = entry.items
-            .map((item) => itemRow(item, project))
-            .join("");
-          return `<div class="item">
-            <div class="status">${escapeHtml(deliverableKindLabel(entry.deliverable.kind))}</div>
-            <h3>${escapeHtml(entry.deliverable.title)}</h3>
-            <p>${escapeHtml(entry.deliverable.summary)}</p>
+      const sectionHtml = stageContentSections(grouped)
+        .map((section) => {
+          switch (section.kind) {
+            case "stage-checks": {
+              const rows = section.items
+                .map((item) => itemRow(item, project))
+                .join("");
+              return `<div class="item">
+            <div class="status">Stage</div>
+            <h3>Stage checks</h3>
+            <p>Agreement, consultant and compliance checks for this ARBV stage — not tied to one drawing or document.</p>
+            ${rows}
+          </div>`;
+            }
+            case "deliverable": {
+              const files = project.attachments.filter(
+                (file) => file.deliverableId === section.deliverable.id,
+              );
+              const fileList = files.length
+                ? `<ul>${files
+                    .map(
+                      (file) =>
+                        `<li>${escapeHtml(file.filename)} · ${file.size} bytes</li>`,
+                    )
+                    .join("")}</ul>`
+                : `<p class="empty">No file stored on this drawing or document.</p>`;
+              const rows = section.items
+                .map((item) => itemRow(item, project))
+                .join("");
+              return `<div class="item">
+            <div class="status">${escapeHtml(deliverableKindLabel(section.deliverable.kind))}</div>
+            <h3>${escapeHtml(section.deliverable.title)}</h3>
+            <p>${escapeHtml(section.deliverable.summary)}</p>
             ${fileList}
             ${rows}
           </div>`;
+            }
+            default:
+              return assertNever(
+                section,
+                `Unknown stage section: ${String(section)}`,
+              );
+          }
         })
-        .join("");
-      const processRows = grouped.processItems
-        .map((item) => itemRow(item, project))
         .join("");
       return `<section class="stage">
         <h2><span class="num">${stage.number}</span> ${escapeHtml(stage.title)}</h2>
         <p class="summary">${escapeHtml(stage.summary)}</p>
-        ${deliverableHtml}
-        ${processRows}
+        ${sectionHtml}
       </section>`;
     })
     .join("");

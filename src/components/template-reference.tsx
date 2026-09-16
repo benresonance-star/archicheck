@@ -12,7 +12,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArbvStageHeader } from "@/components/arbv-stage-header";
 import { TemplateCheckDepths } from "@/components/check-depths";
-import { DeliverableHeading } from "@/components/deliverable-heading";
+import {
+  DeliverableHeading,
+  StageChecksHeading,
+} from "@/components/deliverable-heading";
 import { BUNDLED_TEMPLATE } from "@/lib/template/vic-residential";
 import {
   emptyTemplateTicks,
@@ -23,11 +26,17 @@ import {
   type TemplateStageGroup,
   type TemplateTicks,
 } from "@/lib/template-reference";
+import { stageContentSections } from "@/lib/template/group-stage";
 import {
   groupedOutputDocuments,
   type StagedOutputLensGroup,
 } from "@/lib/template/output-lens";
-import { typologyLabel, type Stage, type Typology } from "@/lib/types";
+import {
+  assertNever,
+  typologyLabel,
+  type Stage,
+  type Typology,
+} from "@/lib/types";
 import { TYPOLOGY_ORDER, typologyMeta } from "@/lib/typology";
 
 export function TemplateReference({
@@ -444,59 +453,73 @@ function StageReferenceLists({
 }) {
   return (
     <div className="space-y-3">
-      {group.deliverables.map((entry) => (
-        <CollapseSection
-          key={entry.deliverable.id}
-          className="bg-muted/40"
-          rememberScroll={rememberScroll}
-          restoreScroll={restoreScroll}
-          header={<DeliverableHeading deliverable={entry.deliverable} />}
-        >
-          <div className="space-y-2">
-            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              Associated checklist
-            </p>
-            <ul className="space-y-2">
-              {entry.items.map((item) => (
-                <li key={item.id}>
-                  <TemplateCheckDepths
-                    item={item}
-                    ticked={Boolean(ticks[item.id])}
-                    onTicked={(value) => onTicked(item.id, value)}
-                    templateVersion={BUNDLED_TEMPLATE.version}
-                    templateChecksum={BUNDLED_TEMPLATE.checksum}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
-        </CollapseSection>
-      ))}
-      {group.processItems.length > 0 ? (
-        <CollapseSection
-          rememberScroll={rememberScroll}
-          restoreScroll={restoreScroll}
-          header={
-            <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              Stage checks
-            </span>
-          }
-        >
-          <ul className="space-y-2">
-            {group.processItems.map((item) => (
-              <li key={item.id}>
-                <TemplateCheckDepths
-                  item={item}
-                  ticked={Boolean(ticks[item.id])}
-                  onTicked={(value) => onTicked(item.id, value)}
-                  templateVersion={BUNDLED_TEMPLATE.version}
-                  templateChecksum={BUNDLED_TEMPLATE.checksum}
-                />
-              </li>
-            ))}
-          </ul>
-        </CollapseSection>
-      ) : null}
+      {stageContentSections(group).map((section) => {
+        switch (section.kind) {
+          case "stage-checks":
+            return (
+              <CollapseSection
+                key="stage-checks"
+                className="bg-muted/40"
+                rememberScroll={rememberScroll}
+                restoreScroll={restoreScroll}
+                header={<StageChecksHeading />}
+              >
+                <div className="space-y-2">
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    Associated checklist
+                  </p>
+                  <ul className="space-y-2">
+                    {section.items.map((item) => (
+                      <li key={item.id}>
+                        <TemplateCheckDepths
+                          item={item}
+                          ticked={Boolean(ticks[item.id])}
+                          onTicked={(value) => onTicked(item.id, value)}
+                          templateVersion={BUNDLED_TEMPLATE.version}
+                          templateChecksum={BUNDLED_TEMPLATE.checksum}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </CollapseSection>
+            );
+          case "deliverable":
+            return (
+              <CollapseSection
+                key={section.deliverable.id}
+                className="bg-muted/40"
+                rememberScroll={rememberScroll}
+                restoreScroll={restoreScroll}
+                header={<DeliverableHeading deliverable={section.deliverable} />}
+              >
+                <div className="space-y-2">
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    Associated checklist
+                  </p>
+                  <ul className="space-y-2">
+                    {section.items.map((item) => (
+                      <li key={item.id}>
+                        <TemplateCheckDepths
+                          item={item}
+                          ticked={Boolean(ticks[item.id])}
+                          onTicked={(value) => onTicked(item.id, value)}
+                          templateVersion={BUNDLED_TEMPLATE.version}
+                          templateChecksum={BUNDLED_TEMPLATE.checksum}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </CollapseSection>
+            );
+          default:
+            return assertNever(
+              section,
+              `Unknown stage section: ${String(section)}`,
+            );
+        }
+      })}
     </div>
   );
 }

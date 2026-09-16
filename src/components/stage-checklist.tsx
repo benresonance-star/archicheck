@@ -13,20 +13,27 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { GrokbotPanel } from "@/components/grokbot-panel";
-import { DeliverableHeading } from "@/components/deliverable-heading";
+import {
+  DeliverableHeading,
+  StageChecksHeading,
+} from "@/components/deliverable-heading";
 import {
   AttachmentFileList,
   ChecklistItemCard,
 } from "@/components/checklist-item-card";
-import type {
-  ChecklistItem,
-  GrokBotBrief,
-  ProjectDocument,
-  Stage,
-  StageDeliverable,
-  TemplateDocument,
+import {
+  groupStageContent,
+  stageContentSections,
+} from "@/lib/template/group-stage";
+import {
+  assertNever,
+  type ChecklistItem,
+  type GrokBotBrief,
+  type ProjectDocument,
+  type Stage,
+  type StageDeliverable,
+  type TemplateDocument,
 } from "@/lib/types";
-import { groupStageContent } from "@/lib/template/group-stage";
 
 export function StageChecklist({
   project,
@@ -85,30 +92,45 @@ export function StageChecklist({
         </Card>
       ) : (
         <>
-          {grouped.deliverables.map((entry) => (
-            <DeliverableProjectBlock
-              key={entry.deliverable.id}
-              deliverable={entry.deliverable}
-              items={entry.items}
-              project={local}
-              onProject={onProject}
-            />
-          ))}
-          {grouped.processItems.length > 0 ? (
-            <div className="space-y-3">
-              <h2 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Stage checks
-              </h2>
-              {grouped.processItems.map((item) => (
-                <ChecklistItemCard
-                  key={item.id}
-                  item={item}
-                  project={local}
-                  onProject={onProject}
-                />
-              ))}
-            </div>
-          ) : null}
+          {stageContentSections(grouped).map((section) => {
+            switch (section.kind) {
+              case "stage-checks":
+                return (
+                  <div
+                    key="stage-checks"
+                    className="space-y-3 rounded-2xl border border-border bg-muted/30 p-3"
+                  >
+                    <StageChecksHeading />
+                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                      Associated checklist
+                    </p>
+                    {section.items.map((item) => (
+                      <ChecklistItemCard
+                        key={item.id}
+                        item={item}
+                        project={local}
+                        onProject={onProject}
+                      />
+                    ))}
+                  </div>
+                );
+              case "deliverable":
+                return (
+                  <DeliverableProjectBlock
+                    key={section.deliverable.id}
+                    deliverable={section.deliverable}
+                    items={section.items}
+                    project={local}
+                    onProject={onProject}
+                  />
+                );
+              default:
+                return assertNever(
+                  section,
+                  `Unknown stage section: ${String(section)}`,
+                );
+            }
+          })}
         </>
       )}
       {grokbot ? (

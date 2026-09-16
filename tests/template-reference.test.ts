@@ -6,6 +6,7 @@ import {
   parseTemplateTicks,
   referenceProgress,
 } from "../src/lib/template-reference";
+import { stageContentSections } from "../src/lib/template/group-stage";
 import { BUNDLED_TEMPLATE } from "../src/lib/template/vic-residential";
 
 test("every bundled checklist item cites a source and helper resources", () => {
@@ -163,4 +164,16 @@ test("every stage has a drawing or document and an associated checklist", () => 
   assert.equal(apartmentIds?.includes("dw-cd-ga-types"), true);
   assert.ok(houseIds?.includes("dw-cd-north"));
   assert.ok(houseIds?.includes("doc-cd-closeout"));
+});
+
+test("stage checks list above drawings and documents", () => {
+  const group = groupedTemplateStages(BUNDLED_TEMPLATE, "house").find(
+    (entry) => entry.stage.id === "design-development",
+  );
+  assert.ok(group);
+  assert.ok(group.processItems.length > 0);
+  assert.ok(group.deliverables.length > 0);
+  const sections = stageContentSections(group);
+  assert.equal(sections[0]?.kind, "stage-checks");
+  assert.equal(sections[1]?.kind, "deliverable");
 });
