@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -56,6 +56,24 @@ export function TemplateReference({
     () => groupedTemplateStages(BUNDLED_TEMPLATE, typology),
     [typology],
   );
+  const scrollYRef = useRef(0);
+
+  function rememberScroll() {
+    scrollYRef.current = window.scrollY;
+  }
+
+  function restoreScroll() {
+    const top = scrollYRef.current;
+    const restore = () => {
+      window.scrollTo({ top, left: 0, behavior: "auto" });
+    };
+    restore();
+    requestAnimationFrame(() => {
+      restore();
+      requestAnimationFrame(restore);
+    });
+  }
+
   const visibleGroups = stageId
     ? groups.filter((group) => group.stage.id === stageId)
     : groups;
@@ -118,7 +136,11 @@ export function TemplateReference({
                 variant={id === typology ? "default" : "outline"}
                 className="min-h-11 flex-col gap-0 px-2 text-xs sm:text-sm"
                 aria-pressed={id === typology}
-                onClick={() => setSelected(id)}
+                onPointerDown={rememberScroll}
+                onClick={() => {
+                  setSelected(id);
+                  restoreScroll();
+                }}
               >
                 <span>{typologyLabel(id)}</span>
                 <span className="font-normal opacity-80">
@@ -162,10 +184,12 @@ export function TemplateReference({
         </ul>
       ) : (
         <Accordion
-          type="single"
-          collapsible
-          defaultValue={visibleGroups[0]?.stage.id}
-          className="rounded-2xl border border-border bg-card px-3"
+          type="multiple"
+          defaultValue={
+            visibleGroups[0]?.stage.id ? [visibleGroups[0].stage.id] : []
+          }
+          onValueChange={restoreScroll}
+          className="rounded-2xl border border-border bg-card px-3 [overflow-anchor:none]"
         >
           {visibleGroups.map((group) => {
             const stageProgress = referenceProgress(
@@ -173,8 +197,21 @@ export function TemplateReference({
               ticks[typology],
             );
             return (
-              <AccordionItem key={group.stage.id} value={group.stage.id}>
-                <AccordionTrigger className="min-h-12 py-3 text-base hover:no-underline">
+              <AccordionItem
+                key={group.stage.id}
+                value={group.stage.id}
+                className="[overflow-anchor:none]"
+              >
+                <AccordionTrigger
+                  className="min-h-12 scroll-mt-[calc(env(safe-area-inset-top)+4.5rem)] py-3 text-base hover:no-underline"
+                  onPointerDown={(event) => {
+                    rememberScroll();
+                    if (event.pointerType !== "mouse") {
+                      event.currentTarget.focus({ preventScroll: true });
+                    }
+                  }}
+                  onKeyDown={rememberScroll}
+                >
                   <span className="flex min-w-0 flex-1 items-center justify-between gap-3 pr-2">
                     <span className="min-w-0">
                       <span className="block font-heading text-lg leading-tight">
