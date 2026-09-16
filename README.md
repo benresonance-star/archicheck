@@ -52,4 +52,6 @@ Each stage has a named Grok Bot brief (copy the first task). Bots must not lodge
 
 Projects live **on the device** (IndexedDB JSON). The ZIP is the portable archive (manifest, project, template, attachments). Server files under `data/projects` are only used by the Node test harness.
 
+Agents can query the bundled checklist at `/api/checklist/query` (filters: typology, stage, deliverable, element type, requirement kind, item id, available inputs). Items may carry an optional `assessment` (requirement vs checking method, required inputs, evidence, human-review). Assessment results are a separate finding document (`/schema/finding.example.json`) and must not rewrite ticks or the approved template. Suggested checklist changes still go through sourced-proposal review.
+
 Source: [github.com/benresonance-star/archicheck](https://github.com/benresonance-star/archicheck). Production: [archicheck-gules.vercel.app](https://archicheck-gules.vercel.app).

@@ -25,7 +25,7 @@ test("every bundled checklist item cites a source and helper resources", () => {
       item.id,
     );
   }
-  assert.equal(BUNDLED_TEMPLATE.version, "1.0.6");
+  assert.equal(BUNDLED_TEMPLATE.version, "1.0.7");
   const nccNotes = BUNDLED_TEMPLATE.items.find((item) => item.id === "doc-ncc");
   assert.equal(nccNotes?.title, "NCC 2025 compliance notes");
   assert.ok(nccNotes?.detail.includes("1 May 2026"));

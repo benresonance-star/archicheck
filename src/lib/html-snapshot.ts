@@ -6,6 +6,7 @@ import type {
 import {
   deliverableKindLabel,
   itemsForTypology,
+  requirementKindLabel,
   statusLabel,
   typologyLabel,
 } from "@/lib/types";
@@ -211,6 +212,9 @@ function itemRow(item: ChecklistItem, project: ProjectDocument): string {
     <p>${escapeHtml(item.detail)}</p>
     ${item.references.length
       ? `<p class="meta">${escapeHtml(item.references.length === 1 ? "Source: " : "Sources: ")}${escapeHtml(item.references.join(" · "))}</p>`
+      : ""}
+    ${item.assessment
+      ? `<p class="meta">${escapeHtml(requirementKindLabel(item.assessment.requirement.kind))} · ${escapeHtml(item.assessment.applicability.elementTypes.join(", "))}${item.assessment.humanReview.required ? " · Needs human review to close" : ""}</p>`
       : ""}
     ${item.resources?.length
       ? `<div class="resources"><p><strong>${escapeHtml(item.resources.length === 1 ? "Resource" : "Resources")}</strong></p><ul>${item.resources

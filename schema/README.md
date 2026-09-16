@@ -29,6 +29,8 @@ A standalone `project.json` import restores answers, notes, and the template *as
 - `answers` is a map keyed by checklist item id. Unknown keys are kept. Notes are ordinary strings, including empty strings.
 - Checklist items cite `references` (instrument names). Optional `resources` are `{label, url}` helper links (`https://` only). Bundled items always include at least one. Older ZIPs without `resources` still validate.
 - Optional `deliverables` on the template name the drawing or document for each stage. Checklist items may set `deliverableId` to join that associated checklist. Attachments may set `deliverableId` for the file stored on that drawing or document. Older ZIPs without these fields still validate.
+- Optional `assessment` on a checklist item is the versioned agent contract (`schemaVersion` `1.0.0`). It keeps the **requirement** (regulatory / guidance / office practice, source refs, requirement version) separate from the **checking method** and acceptance criteria, and lists applicability (element types), required inputs, evidence, and whether a human must review. Item `id` values stay stable across template versions. Older ZIPs without `assessment` still validate.
+- Optional `findings` on `project.json` are a separate `findingDocument` (`format` `vic-arch-checklist-finding`, `formatVersion` `1.0.0`). Results are Pass, Fail, Not applicable, Insufficient information, Needs judgement, or Check error. A finding cites the checklist id/version/checksum, an external design revision, affected elements, evidence and assumptions. Findings must not rewrite answers, attachments, or the approved template. Suggested checklist changes on `checklistIssue` enter the existing sourced-proposal human-review path. Older ZIPs without `findings` still validate.
 - Attachment bytes are hashed with SHA-256 (lowercase hex). Import fails if any hash or size disagrees.
 
 ## Canonical checksum
@@ -38,6 +40,34 @@ A standalone `project.json` import restores answers, notes, and the template *as
 ## Schema file
 
 The machine-readable schema is [`vic-arch-checklist.schema.json`](./vic-arch-checklist.schema.json) (JSON Schema 2020-12). It is also served from `/schema/vic-arch-checklist.schema.json` in the running app.
+
+## Agent query interface
+
+Agents should **query** the checklist, then emit a **finding**. They must not tick items or rewrite the template.
+
+### Query
+
+`GET /api/checklist/query` (same filters as `queryChecklistItems` in `src/lib/agent/query.ts`):
+
+| Parameter | Meaning |
+| --- | --- |
+| `typology` | `house`, `townhouse` or `apartment` |
+| `stageId` | ARBV stage id |
+| `deliverableId` | Drawing or document id |
+| `elementType` | Target element type (e.g. `balcony`) |
+| `requirementKind` | `regulatory`, `guidance` or `office_practice` |
+| `itemId` | Repeatable stable item id |
+| `input` | Repeatable available input id. Omitted required inputs are listed as missing. |
+
+The response returns matching items (including optional `assessment`), `missingInformation` (required inputs/evidence not supplied, plus human-review needs), and `unstructuredItems` (matches with no `assessment` yet). Full checking of an external design is not in this version.
+
+Example: `/api/checklist/query?typology=apartment&elementType=balcony&itemId=cd-bads-pos&input=floor-plans`
+
+### Findings
+
+A standalone finding document (`$defs/findingDocument`) is demonstrated in [`finding.example.json`](./finding.example.json). Record it on `project.findings` so ZIP import/export keeps it. Do not copy `result` into `answers`. If `checklistIssue` suggests wording, convert it with `checklistIssueToSourcedProposal` and put it on the statewide noticeboard for a human to compare and publish.
+
+Two-way use (later): an agent can check a design against items, and can flag checklist ambiguity, contradiction, or missing coverage. Those flags still need a reviewer.
 
 ## Scout reports
 

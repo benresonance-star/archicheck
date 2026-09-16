@@ -2,6 +2,7 @@ import Ajv, { type ErrorObject } from "ajv/dist/2020";
 import addFormats from "ajv-formats";
 import schema from "../../schema/vic-arch-checklist.schema.json";
 import type {
+  FindingDocument,
   PackageManifest,
   ProjectDocument,
   TemplateDocument,
@@ -50,6 +51,10 @@ function validateDef<T>(def: string, data: unknown, kind: string): T {
     throw new SchemaValidationError(kind, formatIssues(validate.errors));
   }
   return data as T;
+}
+
+export function validateFindingDocument(data: unknown): FindingDocument {
+  return validateDef<FindingDocument>("findingDocument", data, "finding.json");
 }
 
 export function validateProjectDocument(data: unknown): ProjectDocument {

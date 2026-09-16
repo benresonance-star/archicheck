@@ -7,6 +7,7 @@ import type {
 } from "@/lib/types";
 import { TEMPLATE_FORMAT, FORMAT_VERSION } from "@/lib/types";
 import { resourcesForItem } from "@/lib/template/item-resources";
+import { assessmentForItem } from "@/lib/template/item-assessments";
 import {
   DELIVERABLE_CHECKS,
   STAGE_DELIVERABLES,
@@ -118,6 +119,7 @@ function item(
   ) {
     throw new Error(`Checklist item ${id} must list at least one helper resource`);
   }
+  const assessment = assessmentForItem(id);
   return {
     id,
     stageId,
@@ -129,6 +131,7 @@ function item(
     resources,
     grokbotId: `bot-${stageId}`,
     ...(deliverableId ? { deliverableId } : {}),
+    ...(assessment ? { assessment } : {}),
   };
 }
 
@@ -1148,7 +1151,7 @@ function withChecksum(
   return {
     ...template,
     checksum:
-      "889ff9a21d5f4e3e33a8f879c57cc63ee0fe10c65a445c8da9bb4277b4b6a9e4",
+      "98d45ded619d7b2fb71c9bd9e7e9fdf66fb66e0440137da96662e25d1c407a31",
   };
 }
 
@@ -1156,7 +1159,7 @@ export const BUNDLED_TEMPLATE: TemplateDocument = withChecksum({
   format: TEMPLATE_FORMAT,
   formatVersion: FORMAT_VERSION,
   id: "vic-residential",
-  version: "1.0.6",
+  version: "1.0.7",
   title: "Victoria residential — houses, townhouses and apartments",
   jurisdiction: "Victoria, Australia",
   description:

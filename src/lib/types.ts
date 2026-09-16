@@ -3,6 +3,9 @@ export const FORMAT_VERSION = "1.0.0" as const;
 export const PROJECT_FORMAT = "vic-arch-checklist-project" as const;
 export const TEMPLATE_FORMAT = "vic-arch-checklist-template" as const;
 export const PACKAGE_FORMAT = "vic-arch-checklist-package" as const;
+export const FINDING_FORMAT = "vic-arch-checklist-finding" as const;
+export const FINDING_FORMAT_VERSION = "1.0.0" as const;
+export const ITEM_ASSESSMENT_SCHEMA_VERSION = "1.0.0" as const;
 
 export const TYPOLOGIES = ["house", "townhouse", "apartment"] as const;
 export type Typology = (typeof TYPOLOGIES)[number];
@@ -19,6 +22,55 @@ export type ItemStatus = (typeof ITEM_STATUSES)[number];
 
 export const IMPACT_STATUSES = ["open", "adopted", "dismissed"] as const;
 export type ImpactStatus = (typeof IMPACT_STATUSES)[number];
+
+export const REQUIREMENT_KINDS = [
+  "regulatory",
+  "guidance",
+  "office_practice",
+] as const;
+export type RequirementKind = (typeof REQUIREMENT_KINDS)[number];
+
+export const ELEMENT_TYPES = [
+  "site",
+  "building",
+  "dwelling",
+  "private_open_space",
+  "communal_open_space",
+  "balcony",
+  "facade",
+  "landscape",
+  "drawing",
+  "document",
+  "practice",
+] as const;
+export type ElementType = (typeof ELEMENT_TYPES)[number];
+
+export const INPUT_DATA_KINDS = [
+  "drawing",
+  "document",
+  "measurement",
+  "site_data",
+  "certificate",
+  "note",
+] as const;
+export type InputDataKind = (typeof INPUT_DATA_KINDS)[number];
+
+export const FINDING_RESULTS = [
+  "pass",
+  "fail",
+  "not_applicable",
+  "insufficient_information",
+  "needs_judgement",
+  "check_error",
+] as const;
+export type FindingResult = (typeof FINDING_RESULTS)[number];
+
+export const CHECKLIST_ISSUE_KINDS = [
+  "ambiguity",
+  "contradiction",
+  "missing_coverage",
+] as const;
+export type ChecklistIssueKind = (typeof CHECKLIST_ISSUE_KINDS)[number];
 
 export type TemplateRef = {
   id: string;
@@ -110,6 +162,7 @@ export type ProjectDocument = {
   answers: Record<string, Answer>;
   attachments: AttachmentMeta[];
   impacts?: ImpactNotice[];
+  findings?: FindingDocument[];
 };
 
 export type Stage = {
@@ -136,6 +189,58 @@ export type ChecklistResource = {
   url: string;
 };
 
+export type SourceReference = {
+  citation: string;
+  url?: string;
+  version?: string;
+};
+
+export type RequirementSpec = {
+  kind: RequirementKind;
+  statement: string;
+  version?: string;
+  sourceRefs: SourceReference[];
+};
+
+export type ApplicabilitySpec = {
+  elementTypes: string[];
+  conditions?: string;
+};
+
+export type RequiredInput = {
+  id: string;
+  label: string;
+  kind: InputDataKind;
+  required: boolean;
+};
+
+export type RequiredEvidence = {
+  id: string;
+  label: string;
+  kind: InputDataKind;
+};
+
+export type CheckingMethod = {
+  id: string;
+  description: string;
+  acceptanceCriteria: string[];
+};
+
+export type HumanReviewNeed = {
+  required: boolean;
+  reason?: string;
+};
+
+export type ItemAssessment = {
+  schemaVersion: typeof ITEM_ASSESSMENT_SCHEMA_VERSION;
+  requirement: RequirementSpec;
+  method: CheckingMethod;
+  applicability: ApplicabilitySpec;
+  requiredInputs: RequiredInput[];
+  requiredEvidence: RequiredEvidence[];
+  humanReview: HumanReviewNeed;
+};
+
 export type ChecklistItem = {
   id: string;
   stageId: string;
@@ -147,6 +252,57 @@ export type ChecklistItem = {
   resources: ChecklistResource[];
   grokbotId: string;
   deliverableId?: string;
+  assessment?: ItemAssessment;
+};
+
+export type DesignRevisionRef = {
+  id: string;
+  label: string;
+  capturedAt?: string;
+};
+
+export type AffectedElement = {
+  id?: string;
+  type: string;
+  label: string;
+};
+
+export type FindingEvidence = {
+  id: string;
+  inputId?: string;
+  description: string;
+  present: boolean;
+  location?: string;
+};
+
+export type SuggestedChecklistChange = {
+  title?: string;
+  detail?: string;
+  references?: string[];
+};
+
+export type ChecklistIssue = {
+  kind: ChecklistIssueKind;
+  itemId?: string;
+  detail: string;
+  suggestedChange?: SuggestedChecklistChange;
+};
+
+export type FindingDocument = {
+  format: typeof FINDING_FORMAT;
+  formatVersion: typeof FINDING_FORMAT_VERSION;
+  id: string;
+  createdAt: string;
+  itemId: string;
+  checklist: TemplateRef;
+  designRevision: DesignRevisionRef;
+  result: FindingResult;
+  summary: string;
+  affectedElements: AffectedElement[];
+  evidence: FindingEvidence[];
+  assumptions: string[];
+  missingInputs: string[];
+  checklistIssue?: ChecklistIssue;
 };
 
 export type GrokBotBrief = {
@@ -225,6 +381,22 @@ export function isImpactStatus(value: string): value is ImpactStatus {
   return (IMPACT_STATUSES as readonly string[]).includes(value);
 }
 
+export function isRequirementKind(value: string): value is RequirementKind {
+  return (REQUIREMENT_KINDS as readonly string[]).includes(value);
+}
+
+export function isInputDataKind(value: string): value is InputDataKind {
+  return (INPUT_DATA_KINDS as readonly string[]).includes(value);
+}
+
+export function isFindingResult(value: string): value is FindingResult {
+  return (FINDING_RESULTS as readonly string[]).includes(value);
+}
+
+export function isChecklistIssueKind(value: string): value is ChecklistIssueKind {
+  return (CHECKLIST_ISSUE_KINDS as readonly string[]).includes(value);
+}
+
 export function openImpactCount(project: ProjectDocument): number {
   return (project.impacts ?? []).filter((notice) => notice.status === "open")
     .length;
@@ -300,6 +472,70 @@ export function statusLabel(status: ItemStatus): string {
       return "Needs recheck";
     default:
       return assertNever(status, `Unknown status: ${String(status)}`);
+  }
+}
+
+export function requirementKindLabel(kind: RequirementKind): string {
+  switch (kind) {
+    case "regulatory":
+      return "Regulatory requirement";
+    case "guidance":
+      return "Guidance";
+    case "office_practice":
+      return "Office practice";
+    default:
+      return assertNever(kind, `Unknown requirement kind: ${String(kind)}`);
+  }
+}
+
+export function findingResultLabel(result: FindingResult): string {
+  switch (result) {
+    case "pass":
+      return "Pass";
+    case "fail":
+      return "Fail";
+    case "not_applicable":
+      return "Not applicable";
+    case "insufficient_information":
+      return "Insufficient information";
+    case "needs_judgement":
+      return "Needs judgement";
+    case "check_error":
+      return "Check error";
+    default:
+      return assertNever(result, `Unknown finding result: ${String(result)}`);
+  }
+}
+
+export function checklistIssueKindLabel(kind: ChecklistIssueKind): string {
+  switch (kind) {
+    case "ambiguity":
+      return "Ambiguity";
+    case "contradiction":
+      return "Contradiction";
+    case "missing_coverage":
+      return "Missing coverage";
+    default:
+      return assertNever(kind, `Unknown checklist issue: ${String(kind)}`);
+  }
+}
+
+export function inputDataKindLabel(kind: InputDataKind): string {
+  switch (kind) {
+    case "drawing":
+      return "Drawing";
+    case "document":
+      return "Document";
+    case "measurement":
+      return "Measurement";
+    case "site_data":
+      return "Site data";
+    case "certificate":
+      return "Certificate";
+    case "note":
+      return "Note";
+    default:
+      return assertNever(kind, `Unknown input kind: ${String(kind)}`);
   }
 }
 

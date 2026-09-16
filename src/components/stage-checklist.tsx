@@ -18,6 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { GrokbotPanel } from "@/components/grokbot-panel";
 import { ItemResources } from "@/components/item-resources";
 import { SourceCitations } from "@/components/source-citations";
+import { ItemAssessmentNote } from "@/components/item-assessment-note";
 import { DeliverableHeading } from "@/components/deliverable-heading";
 import type {
   AttachmentMeta,
@@ -300,6 +301,7 @@ function ItemCard({
         ) : null}
         <div className="space-y-2">
           <SourceCitations references={item.references} />
+          <ItemAssessmentNote assessment={item.assessment} />
           <ItemResources resources={item.resources} />
         </div>
       </CardHeader>

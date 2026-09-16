@@ -6,6 +6,7 @@ import {
   FORMAT_VERSION,
   PROJECT_FORMAT,
   type AttachmentMeta,
+  type FindingDocument,
   type ItemStatus,
   type ProjectDocument,
   type ProjectSummary,
@@ -16,6 +17,7 @@ import {
   progressForProject,
 } from "@/lib/types";
 import { BUNDLED_TEMPLATE } from "@/lib/template/vic-residential";
+import { appendFinding } from "@/lib/agent/findings";
 import {
   attachmentFilePath,
   attachmentsDir,
@@ -185,6 +187,16 @@ export async function setAnswer(
       patch,
       new Date().toISOString(),
     );
+  });
+}
+
+export async function recordFinding(
+  projectId: string,
+  finding: FindingDocument,
+): Promise<ProjectDocument> {
+  return persistMutatedProject(projectId, (project) => {
+    const next = appendFinding(project, finding);
+    project.findings = next.findings;
   });
 }
 

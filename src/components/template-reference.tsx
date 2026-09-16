@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/accordion";
 import { ItemResources } from "@/components/item-resources";
 import { SourceCitations } from "@/components/source-citations";
+import { ItemAssessmentNote } from "@/components/item-assessment-note";
 import { DeliverableHeading } from "@/components/deliverable-heading";
 import { BUNDLED_TEMPLATE } from "@/lib/template/vic-residential";
 import {
@@ -284,6 +285,7 @@ function StageReferenceLists({
                   required={item.required}
                   references={item.references}
                   resources={item.resources}
+                  assessment={item.assessment}
                   ticked={Boolean(ticks[item.id])}
                   onTicked={(value) => onTicked(item.id, value)}
                 />
@@ -306,6 +308,7 @@ function StageReferenceLists({
                   required={item.required}
                   references={item.references}
                   resources={item.resources}
+                  assessment={item.assessment}
                   ticked={Boolean(ticks[item.id])}
                   onTicked={(value) => onTicked(item.id, value)}
                 />
@@ -324,6 +327,7 @@ function ReferenceItem({
   required,
   references,
   resources,
+  assessment,
   ticked,
   onTicked,
 }: {
@@ -332,6 +336,7 @@ function ReferenceItem({
   required: boolean;
   references: string[];
   resources: ChecklistItem["resources"];
+  assessment: ChecklistItem["assessment"];
   ticked: boolean;
   onTicked: (ticked: boolean) => void;
 }) {
@@ -359,6 +364,7 @@ function ReferenceItem({
       </label>
       <div className="mt-2 space-y-2 pl-8">
         <SourceCitations references={references} />
+        <ItemAssessmentNote assessment={assessment} />
         <ItemResources resources={resources} />
       </div>
     </div>
