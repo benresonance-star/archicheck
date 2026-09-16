@@ -11,7 +11,7 @@ export function ItemResources({
   const label = resources.length === 1 ? "Resource" : "Resources";
   return (
     <div className="rounded-lg border border-border bg-muted px-3 py-2">
-      <p className="text-xs font-medium leading-relaxed text-muted-foreground">
+      <p className="font-heading text-sm font-semibold leading-snug">
         {label}
       </p>
       <ul className="mt-1 space-y-1">

@@ -53,12 +53,12 @@ function DepthQuestion({
   children: ReactNode;
 }) {
   return (
-    <div className="space-y-1">
-      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+    <section className="space-y-2">
+      <h3 className="font-heading text-base font-semibold leading-snug">
         {question}
-      </p>
+      </h3>
       <div className="text-sm leading-relaxed break-words">{children}</div>
-    </div>
+    </section>
   );
 }
 
@@ -170,9 +170,9 @@ function UnderstandingBody({
   const restrictions = itemRestrictionParts(item);
 
   return (
-    <>
+    <div className="space-y-6">
       {restrictions.length > 0 ? (
-        <p className="text-xs leading-relaxed text-muted-foreground break-words">
+        <p className="text-sm leading-relaxed text-muted-foreground break-words">
           {restrictions.join(" · ")}
         </p>
       ) : null}
@@ -317,7 +317,7 @@ function UnderstandingBody({
           </DepthQuestion>
         </div>
       ) : null}
-    </>
+    </div>
   );
 }
 
@@ -351,9 +351,9 @@ function CheckRequirementSheet({
     >
       <SheetContent
         side="bottom"
-        className="h-[92dvh] max-h-[92dvh] gap-0 overflow-hidden rounded-t-2xl pb-[env(safe-area-inset-bottom)] md:inset-y-0 md:right-0 md:left-auto md:h-full md:max-h-none md:w-[28rem] md:max-w-none md:rounded-none md:border-t-0 md:border-l"
+        className="flex h-[92dvh] max-h-[92dvh] min-h-0 flex-col gap-0 overflow-hidden rounded-t-2xl pb-[env(safe-area-inset-bottom)] data-[side=bottom]:h-[92dvh] data-[side=bottom]:max-h-[92dvh] md:inset-y-0 md:right-0 md:left-auto md:h-full md:max-h-none md:w-[28rem] md:max-w-none md:rounded-none md:border-t-0 md:border-l md:data-[side=bottom]:h-full md:data-[side=bottom]:max-h-none"
       >
-        <SheetHeader className="border-b border-border pr-12">
+        <SheetHeader className="shrink-0 border-b border-border pr-12">
           <SheetTitle className="text-lg leading-snug break-words">
             {item?.title ?? "Check"}
           </SheetTitle>
@@ -361,10 +361,10 @@ function CheckRequirementSheet({
             Requirement — inspect this check, then close to return to the list.
           </SheetDescription>
         </SheetHeader>
-        <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-4 py-4">
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-4 py-4 [-webkit-overflow-scrolling:touch]">
           {item ? <div key={item.id}>{children}</div> : null}
         </div>
-        <SheetFooter className="flex-row gap-2 border-t border-border">
+        <SheetFooter className="shrink-0 flex-row gap-2 border-t border-border">
           <Button
             type="button"
             variant="outline"
